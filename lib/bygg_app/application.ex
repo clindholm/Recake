@@ -11,7 +11,8 @@ defmodule ByggApp.Application do
       # Start the Ecto repository
       ByggApp.Repo,
       # Start the endpoint when the application starts
-      ByggAppWeb.Endpoint
+      ByggAppWeb.Endpoint,
+      {Phoenix.PubSub, [name: ByggApp.PubSub, adapter: Phoenix.PubSub.PG2]}
       # Starts a worker by calling: ByggApp.Worker.start_link(arg)
       # {ByggApp.Worker, arg},
     ]

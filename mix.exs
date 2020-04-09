@@ -34,8 +34,7 @@ defmodule ByggApp.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 2.2"},
-      {:phoenix, "~> 1.4"},
-      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix, github: "phoenixframework/phoenix", override: true},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},

@@ -15,7 +15,6 @@ config :bygg_app, ByggAppWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "U+hNteAXXgrBffv7zk/C8WJVodkLeOEwn1VTc0iK2uaF0tchDb9My+DD6MF/Ng40",
   render_errors: [view: ByggAppWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: ByggApp.PubSub, adapter: Phoenix.PubSub.PG2],
   live_view: [signing_salt: "2EhAYCIL"]
 
 # Configures Elixir's Logger

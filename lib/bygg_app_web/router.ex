@@ -19,6 +19,12 @@ defmodule ByggAppWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/", ByggAppWeb do
+    pipe_through [:browser]
+
+    get "/users/login", UserSessionController, :new
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", ByggAppWeb do
   #   pipe_through :api
