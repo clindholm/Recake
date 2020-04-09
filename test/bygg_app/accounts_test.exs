@@ -247,7 +247,7 @@ defmodule ByggApp.AccountsTest do
 
       assert %{
                password: ["should be at least 8 character(s)"],
-               password_confirmation: ["does not match confirmation"]
+               password_confirmation: ["does not match password"]
              } = errors_on(changeset)
     end
 
@@ -456,7 +456,7 @@ defmodule ByggApp.AccountsTest do
 
       assert %{
                password: ["should be at least 8 character(s)"],
-               password_confirmation: ["does not match confirmation"]
+               password_confirmation: ["does not match password"]
              } = errors_on(changeset)
     end
 

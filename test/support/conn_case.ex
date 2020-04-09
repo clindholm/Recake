@@ -40,4 +40,17 @@ defmodule ByggAppWeb.ConnCase do
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
+  def register_and_login_user(%{conn: conn}) do
+    user = ByggApp.AccountsFixtures.user_fixture()
+    %{conn: login_user(conn, user), user: user}
+  end
+
+  def login_user(conn, user) do
+    token = ByggApp.Accounts.generate_session_token(user)
+
+    conn
+    |> Phoenix.ConnTest.init_test_session(%{})
+    |> Plug.Conn.put_session(:user_token, token)
+  end
 end
