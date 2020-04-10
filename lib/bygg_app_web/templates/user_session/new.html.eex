@@ -7,17 +7,19 @@
     </div>
   <% end %>
 
-  <%= label f, :email %>
-  <%= text_input f, :email, required: true %>
+  <%= label f, :email, class: "block" %>
+  <%= text_input f, :email, required: true, class: "form-input" %>
 
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
-
-  <%= label f, :remember_me, "Keep me logged in for 60 days" %>
-  <%= checkbox f, :remember_me %>
+  <%= label f, :password, class: "block" %>
+  <%= password_input f, :password, required: true, class: "form-input" %>
 
   <div>
-    <%= submit "Login" %>
+    <%= label f, :remember_me, "Keep me logged in for 60 days" %>
+    <%= checkbox f, :remember_me, class: "form-checkbox" %>
+  </div>
+
+  <div>
+    <%= submit "Login", class: "btn" %>
   </div>
 <% end %>
 

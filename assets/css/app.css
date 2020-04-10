@@ -1,3 +1,6 @@
-/* This file is for your main application css. */
-
-@import "./phoenix.css";
+/* purgecss start ignore */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "./components.css";
+/* purgecss end ignore */
+@import "tailwindcss/utilities";
