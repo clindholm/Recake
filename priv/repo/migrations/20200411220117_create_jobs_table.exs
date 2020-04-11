@@ -9,7 +9,7 @@ defmodule ByggApp.Repo.Migrations.CreateJobsTable do
       add :description, :text, null: false
       add :location, :string, null: false
       add :timespan, :string, null: false
-      add :status, JobStatusEnum.type(), null: false, default: "opened"
+      add :status, JobStatusEnum.type(), null: false, default: "published"
       timestamps()
     end
   end

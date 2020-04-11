@@ -7,7 +7,7 @@ defmodule ByggApp.Jobs.Job do
     field :description, :string
     field :location, :string
     field :timespan, :string
-    field :status, JobStatusEnum
+    field :status, JobStatusEnum, default: :published
     belongs_to :user, ByggApp.Accounts.User
 
     timestamps()

@@ -1,2 +1,2 @@
 import EctoEnum
-defenum JobStatusEnum, :job_status, [:opened, :closed, :completed]
+defenum JobStatusEnum, :job_status, [:published, :closed, :completed]
