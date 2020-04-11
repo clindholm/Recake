@@ -3,5 +3,26 @@
 }
 
 .btn:hover {
- @apply border-blue-600 bg-blue-400;
+  @apply border-blue-600 bg-blue-400;
+}
+
+.btn:focus {
+  @apply outline-none;
+  box-shadow: 0 0 0 3px rgba(225, 191, 66, 0.5);
+}
+
+.alert {
+  @apply border-l-4 p-4;
+}
+
+.alert-info {
+  @apply bg-blue-100 text-blue-700 border-blue-400;
+}
+
+.alert-success {
+  @apply bg-green-100 text-green-700 border-green-400;
+}
+
+.alert-error {
+  @apply bg-red-200 text-red-700 border-red-500;
 }

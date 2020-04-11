@@ -1,29 +1,22 @@
-<h1>Login</h1>
+<h1 class="text-blue-700 text-xl text-center mb-6">Login</h1>
 
 <%= form_for @conn, Routes.user_session_path(@conn, :create), [as: :user], fn f -> %>
   <%= if @error_message do %>
-    <div class="alert alert-danger">
+    <div class="alert alert-error -mr-4 -ml-4 mb-4">
       <p><%= @error_message %></p>
     </div>
   <% end %>
+  <%= render_alert(@conn, :info) %>
+  <%= render_alert(@conn, :error) %>
+  <%= render_alert(@conn, :success) %>
 
-  <%= label f, :email, class: "block" %>
-  <%= text_input f, :email, required: true, class: "form-input" %>
-
-  <%= label f, :password, class: "block" %>
-  <%= password_input f, :password, required: true, class: "form-input" %>
-
-  <div>
-    <%= label f, :remember_me, "Keep me logged in for 60 days" %>
-    <%= checkbox f, :remember_me, class: "form-checkbox" %>
-  </div>
-
-  <div>
-    <%= submit "Login", class: "btn" %>
-  </div>
+  <%= Form.text_input f, :email %>
+  <%= Form.password_input f, :password %>
+  <%= Form.checkbox f, :remember_me %>
+  <%= Form.submit "Login", class: "w-full" %>
 <% end %>
 
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
-</p>
+<div class="mt-12 text-center">
+  <p><%= link "Forgot password?", to: Routes.user_reset_password_path(@conn, :new) %></p>
+  <p class="text-gray-600">Not a member? <%= link "Create account", to: Routes.user_registration_path(@conn, :new) %></p>
+</div>

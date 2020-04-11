@@ -20,9 +20,9 @@ defmodule ByggAppWeb.UserResetPasswordController do
     conn
     |> put_flash(
       :info,
-      "If your e-mail is in our system, you will receive instructions to reset your password shortly."
+      "You will receive instructions to reset your password to your e-mail shortly."
     )
-    |> redirect(to: "/")
+    |> redirect(to: Routes.user_session_path(conn, :new))
   end
 
   def edit(conn, _params) do
@@ -33,7 +33,7 @@ defmodule ByggAppWeb.UserResetPasswordController do
     case Accounts.reset_user_password(conn.assigns.user, user_params) do
       {:ok, _} ->
         conn
-        |> put_flash(:info, "Password reset successfully")
+        |> put_flash(:success, "Password reset successfully")
         |> redirect(to: Routes.user_session_path(conn, :new))
 
       {:error, changeset} ->
@@ -48,8 +48,8 @@ defmodule ByggAppWeb.UserResetPasswordController do
       conn |> assign(:user, user) |> assign(:token, token)
     else
       conn
-      |> put_flash(:error, "Reset password token is invalid or it has expired")
-      |> redirect(to: "/")
+      |> put_flash(:error, "Reset password link has expired. Send a new link below.")
+      |> redirect(to: Routes.user_reset_password_path(conn, :new))
       |> halt()
     end
   end

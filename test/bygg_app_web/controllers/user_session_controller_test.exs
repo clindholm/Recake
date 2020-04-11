@@ -11,9 +11,47 @@ defmodule ByggAppWeb.UserSessionControllerTest do
     test "renders login page", %{conn: conn} do
       conn = get(conn, Routes.user_session_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Login</h1>"
-      assert response =~ "Login</a>"
-      assert response =~ "Register</a>"
+      assert response =~ "Login</h1>"
+      assert response =~ "<form action=\"#{Routes.user_session_path(conn, :create)}\""
+      assert response =~ "name=\"user[email]\""
+      assert response =~ "name=\"user[password]\""
+      assert response =~ "type=\"submit\""
+    end
+
+    test "renders info flash", %{conn: conn} do
+      conn =
+        conn
+        |> init_test_session(%{})
+        |> fetch_flash()
+        |> put_flash(:info, "Info flash")
+        |> get(Routes.user_session_path(conn, :new))
+
+      response = html_response(conn, 200)
+      assert response =~ "Info flash"
+    end
+
+    test "renders error flash", %{conn: conn} do
+      conn =
+        conn
+        |> init_test_session(%{})
+        |> fetch_flash()
+        |> put_flash(:error, "Error flash")
+        |> get(Routes.user_session_path(conn, :new))
+
+      response = html_response(conn, 200)
+      assert response =~ "Error flash"
+    end
+
+    test "renders success flash", %{conn: conn} do
+      conn =
+        conn
+        |> init_test_session(%{})
+        |> fetch_flash()
+        |> put_flash(:success, "Success flash")
+        |> get(Routes.user_session_path(conn, :new))
+
+      response = html_response(conn, 200)
+      assert response =~ "Success flash"
     end
 
     test "redirects if already logged in", %{conn: conn, user: user} do
@@ -61,7 +99,6 @@ defmodule ByggAppWeb.UserSessionControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "<h1>Login</h1>"
       assert response =~ "Invalid e-mail or password"
     end
   end
@@ -76,7 +113,7 @@ defmodule ByggAppWeb.UserSessionControllerTest do
       conn = conn |> login_user(user) |> delete(Routes.user_session_path(conn, :delete))
       assert redirected_to(conn) == "/"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :info) =~ "Logged out successfully"
+      assert get_flash(conn, :success) && get_flash(conn, :success) =~ "Logged out successfully"
     end
   end
 end

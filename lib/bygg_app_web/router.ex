@@ -12,6 +12,10 @@ defmodule ByggAppWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :minimal_layout do
+    plug :put_layout, {ByggAppWeb.LayoutView, :minimal}
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -28,7 +32,7 @@ defmodule ByggAppWeb.Router do
   # end
 
   scope "/", ByggAppWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+    pipe_through [:browser, :minimal_layout, :redirect_if_user_is_authenticated]
 
     get "/users/register", UserRegistrationController, :new
     post "/users/register", UserRegistrationController, :create

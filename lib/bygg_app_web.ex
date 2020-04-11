@@ -40,7 +40,9 @@ defmodule ByggAppWeb do
       use Phoenix.HTML
 
       import ByggAppWeb.ErrorHelpers
+      import ByggAppWeb.HtmlHelpers
       import ByggAppWeb.Gettext
+      alias ByggAppWeb.FormHelpers, as: Form
       alias ByggAppWeb.Router.Helpers, as: Routes
     end
   end
