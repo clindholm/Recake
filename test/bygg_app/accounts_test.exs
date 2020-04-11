@@ -86,13 +86,13 @@ defmodule ByggApp.AccountsTest do
 
     test "downcases email" do
       email = "UPCASE@EXAMPLE.COM"
-      {:ok, user} = Accounts.register_user(%{email: email, password: valid_user_password()})
+      {:ok, user} = Accounts.register_user(%{email: email, password: valid_user_password(), company: "C", phone: "123"})
       assert user.email == "upcase@example.com"
     end
 
     test "registers users with a hashed password" do
       email = unique_user_email()
-      {:ok, user} = Accounts.register_user(%{email: email, password: valid_user_password()})
+      {:ok, user} = Accounts.register_user(%{email: email, password: valid_user_password(), company: "C", phone: "123"})
       assert user.email == email
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)
@@ -103,7 +103,7 @@ defmodule ByggApp.AccountsTest do
   describe "change_user_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_user_registration(%User{})
-      assert changeset.required == [:password, :email]
+      assert changeset.required == [:password, :email, :company, :phone]
     end
   end
 

@@ -3,6 +3,8 @@
 <%= form_for @changeset, Routes.user_registration_path(@conn, :create), fn f -> %>
   <%= Form.text_input f, :email %>
   <%= Form.password_input f, :password %>
+  <%= Form.text_input f, :company, label: "Company name" %>
+  <%= Form.text_input f, :phone, label: "Phone number" %>
   <%= Form.submit "Register", class: "w-full" %>
 <% end %>
 

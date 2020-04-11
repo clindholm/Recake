@@ -9,13 +9,16 @@ defmodule ByggApp.Accounts.User do
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
+    field :company, :string
+    field :phone, :string
 
     timestamps()
   end
 
   def registration_changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :company, :phone])
+    |> validate_required([:company, :phone])
     |> validate_email()
     |> validate_password()
   end

@@ -11,6 +11,8 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
       assert response =~ "<form action=\"#{Routes.user_registration_path(conn, :create)}\""
       assert response =~ "name=\"user[email]\""
       assert response =~ "name=\"user[password]\""
+      assert response =~ "name=\"user[company]\""
+      assert response =~ "name=\"user[phone]\""
       assert response =~ "type=\"submit\""
     end
 
@@ -27,7 +29,12 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
 
       conn =
         post(conn, Routes.user_registration_path(conn, :create), %{
-          "user" => %{"email" => email, "password" => valid_user_password()}
+          "user" => %{
+            "email" => email,
+            "password" => valid_user_password(),
+            "company" => "Company name",
+            "phone" => "12334556"
+          }
         })
 
       assert get_session(conn, :user_token)

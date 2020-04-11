@@ -7,7 +7,9 @@ defmodule ByggApp.AccountsFixtures do
       attrs
       |> Enum.into(%{
         email: unique_user_email(),
-        password: valid_user_password()
+        password: valid_user_password(),
+        company: "Company Inc.",
+        phone: "(233) 555-123 456"
       })
       |> ByggApp.Accounts.register_user()
 
