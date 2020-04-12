@@ -40,12 +40,9 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
       assert get_session(conn, :user_token)
       assert redirected_to(conn) =~ "/"
 
-      # Now do a logged in request and assert on the menu
+      # Now do a logged in request
       conn = get(conn, "/")
-      response = html_response(conn, 200)
-      assert response =~ email
-      assert response =~ "Settings</a>"
-      assert response =~ "Logout</a>"
+      assert html_response(conn, 200)
     end
 
     test "render errors for invalid data", %{conn: conn} do

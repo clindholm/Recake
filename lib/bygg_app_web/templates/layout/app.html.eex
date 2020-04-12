@@ -8,27 +8,22 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <%= csrf_meta_tag() %>
   </head>
-  <body>
-    <header class="bg-blue-800 text-white">
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-          <%= if @current_user do %>
-            <li><%= @current_user.email %></li>
-            <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %></li>
-            <li><%= link "Logout", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
-          <% else %>
-            <li><%= link "Register", to: Routes.user_registration_path(@conn, :new) %></li>
-            <li><%= link "Login", to: Routes.user_session_path(@conn, :new) %></li>
-          <% end %>
-          </ul>
+  <body class="bg-gray-100">
+    <header class="bg-blue-900 text-white pb-40">
+      <section class="container mx-auto px-2">
+        <nav role="navigation" class="border-b border-blue-700">
+          <div class="flex py-3">
+            <%= nav_link @conn, "Jobs", to: Routes.job_path(@conn, :new) %>
+            <%= nav_link @conn, "Logout", to: Routes.user_session_path(@conn, :delete), method: :delete %>
+          </div>
         </nav>
       </section>
     </header>
-    <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= @inner_content %>
+    <main role="main" class="container mx-auto px-2 -mt-32">
+      <h1 class="section-title"><%= assigns[:section_title] %></h1>
+      <div class="bg-white shadow p-8 mt-6 rounded">
+        <%= @inner_content %>
+      </div>
     </main>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </body>

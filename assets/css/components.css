@@ -1,5 +1,5 @@
 .btn {
-  @apply bg-blue-500 py-2 px-4 border-b-4 border-blue-800 rounded text-white;
+  @apply bg-blue-500 py-2 px-6 border-b-4 border-blue-800 rounded text-white;
 }
 
 .btn:hover {
@@ -25,4 +25,8 @@
 
 .alert-error {
   @apply bg-red-200 text-red-700 border-red-500;
+}
+
+.section-title {
+  @apply text-4xl text-blue-100;
 }

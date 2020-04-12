@@ -41,6 +41,10 @@ defmodule ByggAppWeb.ConnCase do
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 
+  def assert_section_header(response, label) do
+    assert response =~ "<h1 class=\"section-title\">#{label}</h1>"
+  end
+
   def register_and_login_user(%{conn: conn}) do
     user = ByggApp.AccountsFixtures.user_fixture()
     %{conn: login_user(conn, user), user: user}

@@ -32,13 +32,32 @@ defmodule ByggAppWeb.FormHelpers do
     """
   end
 
-  def checkbox(form, field) do
-    label = Phoenix.HTML.Form.humanize(field)
+  def textarea(form, field, opts \\ []) do
+    label = Keyword.get(opts, :label) || Phoenix.HTML.Form.humanize(field)
+    errors = error_tag(form, field)
+    input_classes = class_list([
+        {"form-textarea mt-1 block w-full", true},
+        {"border-red-500 border-2", errors}
+      ])
+
+    ~E"""
+    <div class="mb-4">
+      <label class="block">
+        <span class="text-gray-700"><%= label %></span>
+        <%= Phoenix.HTML.Form.textarea form, field, class: input_classes, rows: Keyword.get(opts, :rows) %>
+      </label>
+      <%= errors %>
+    </div>
+    """
+  end
+
+  def checkbox(form, field, opts \\ []) do
+    label = Keyword.get(opts, :label) || Phoenix.HTML.Form.humanize(field)
 
     ~E"""
     <div class="mb-4">
       <label class="flex items-center mb-4">
-        <%= Phoenix.HTML.Form.checkbox form, :remember_me, class: "form-checkbox" %>
+        <%= Phoenix.HTML.Form.checkbox form, field, class: "form-checkbox" %>
         <span class="text-gray-700 ml-2"><%= label %></span>
       </label>
     </div>
@@ -52,6 +71,14 @@ defmodule ByggAppWeb.FormHelpers do
 
     ~E"""
     <%= Phoenix.HTML.Form.submit label, class: class %>
+    """
+  end
+
+  def layout_right(do: block) do
+    ~E"""
+    <div class="flex justify-end">
+      <%= block %>
+    </div>
     """
   end
 
