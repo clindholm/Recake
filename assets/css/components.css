@@ -30,3 +30,7 @@
 .section-title {
   @apply text-4xl text-blue-100;
 }
+
+.card {
+  @apply bg-white shadow p-8 rounded;
+}

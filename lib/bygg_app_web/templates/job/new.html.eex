@@ -1,8 +1,10 @@
-<%= form_for @changeset, Routes.job_path(@conn, :create), fn f -> %>
-  <%= Form.textarea f, :description, rows: 6 %>
-  <%= Form.text_input f, :location %>
-  <%= Form.text_input f, :timespan %>
-  <%= Form.layout_right do %>
-    <%= Form.submit "Create" %>
+<div class="card mt-6">
+  <%= form_for @changeset, Routes.job_path(@conn, :create), fn f -> %>
+    <%= Form.textarea f, :description, rows: 6 %>
+    <%= Form.text_input f, :location %>
+    <%= Form.text_input f, :timespan %>
+    <%= Form.layout_right do %>
+      <%= Form.submit "Create" %>
+    <% end %>
   <% end %>
-<% end %>
+</div>

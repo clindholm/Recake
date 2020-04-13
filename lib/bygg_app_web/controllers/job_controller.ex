@@ -4,6 +4,10 @@ defmodule ByggAppWeb.JobController do
   alias ByggApp.Jobs
   alias ByggApp.Jobs.Job
 
+  def index(conn, _params) do
+    render(conn, "index.html", section_title: "Your jobs")
+  end
+
   def new(conn, _params) do
     changeset = Jobs.change_job(%Job{})
     render(conn, "new.html", section_title: "Create new job", changeset: changeset)

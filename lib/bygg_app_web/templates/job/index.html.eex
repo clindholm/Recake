@@ -1,0 +1,10 @@
+<div class="mt-6">
+  <%= render_alert(@conn, :success) %>
+  
+  <div class="card my-6">
+    <div class="bg-gray-100 text-center flex flex-col max-w-md mx-auto my-32 py-12 rounded">
+      <h2 class="text-2xl mb-4">You have no active jobs</h2>
+      <p class=""><%= link "Create a new job", to: Routes.job_path(@conn, :new), class: "text-blue-600 underline hover:text-blue-400" %> if you're looking for workers.</p>
+    </div>
+  </div>
+</div>

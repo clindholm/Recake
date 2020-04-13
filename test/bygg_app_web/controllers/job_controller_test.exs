@@ -20,6 +20,32 @@ defmodule ByggAppWeb.JobControllerTest do
     }
   end
 
+  describe "GET /jobs" do
+    test "redirects if user is not logged in" do
+      conn = build_conn()
+      conn = get(conn, Routes.job_path(conn, :index))
+      assert redirected_to(conn) == "/users/login"
+    end
+
+    test "renders empty state", %{conn: conn} do
+      conn = get(conn, Routes.job_path(conn, :index))
+      response = html_response(conn, 200)
+      assert_section_header response, "Your jobs"
+      assert response =~ "You have no active jobs"
+    end
+
+    test "renders success flash", %{conn: conn} do
+      conn =
+        conn
+        |> fetch_flash()
+        |> put_flash(:success, "Success flash")
+        |> get(Routes.job_path(conn, :index))
+
+      response = html_response(conn, 200)
+      assert response =~ "Success flash"
+    end
+  end
+
   describe "GET /jobs/new" do
     test "redirects if user is not logged in" do
       conn = build_conn()
@@ -40,6 +66,12 @@ defmodule ByggAppWeb.JobControllerTest do
   end
 
   describe "POST /jobs/new" do
+    test "redirects if user is not logged in" do
+      conn = build_conn()
+      conn = post(conn, Routes.job_path(conn, :new), %{"job" => %{}})
+      assert redirected_to(conn) == "/users/login"
+    end
+
     test "creates a job", %{conn: conn, user: user} do
       post(conn, Routes.job_path(conn, :create), %{
         "job" => %{
