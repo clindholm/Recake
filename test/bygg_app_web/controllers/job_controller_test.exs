@@ -2,6 +2,7 @@ defmodule ByggAppWeb.JobControllerTest do
   use ByggAppWeb.ConnCase, async: true
 
   import ByggApp.AccountsFixtures
+  import ByggApp.JobsFixtures
 
   alias ByggApp.Repo
   alias ByggApp.Jobs.Job
@@ -27,13 +28,6 @@ defmodule ByggAppWeb.JobControllerTest do
       assert redirected_to(conn) == "/users/login"
     end
 
-    test "renders empty state", %{conn: conn} do
-      conn = get(conn, Routes.job_path(conn, :index))
-      response = html_response(conn, 200)
-      assert_section_header response, "Your jobs"
-      assert response =~ "You have no active jobs"
-    end
-
     test "renders success flash", %{conn: conn} do
       conn =
         conn
@@ -43,6 +37,26 @@ defmodule ByggAppWeb.JobControllerTest do
 
       response = html_response(conn, 200)
       assert response =~ "Success flash"
+    end
+
+    test "renders empty state", %{conn: conn} do
+      conn = get(conn, Routes.job_path(conn, :index))
+      response = html_response(conn, 200)
+      assert_section_header response, "Your jobs"
+      assert response =~ "You have no active jobs"
+      assert response =~ "href=\"#{Routes.job_path(conn, :new)}\""
+    end
+
+    test "renders active user jobs", %{conn: conn, user: user} do
+      active_job = job_fixture(user, %{description: "Active Job"})
+      closed_job = job_fixture(user, %{status: :closed, description: "Closed Job"})
+
+      conn = get(conn, Routes.job_path(conn, :index))
+      response = html_response(conn, 200)
+      assert_section_header response, "Your jobs"
+
+      assert response =~ active_job.description
+      refute response =~ closed_job.description
     end
   end
 

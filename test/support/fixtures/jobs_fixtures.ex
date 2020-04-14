@@ -5,11 +5,13 @@ defmodule ByggApp.JobsFixtures do
 
   def job_fixture(%User{} = user, attrs \\ %{}) do
     %Job{
-      user_id: user.id,
-      description: Map.get(attrs, :description, "Job description"),
-      location: Map.get(attrs, :location, "Job location"),
-      timespan: Map.get(attrs, :timespan, "Timespan")
+      user_id: user.id
     }
+    |> Ecto.Changeset.change(Enum.into(attrs, %{
+      description: "Job description",
+      location: "Job location",
+      timespan: "Timespan"
+    }))
     |> Repo.insert!()
   end
 end

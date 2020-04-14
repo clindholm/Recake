@@ -1,20 +1,42 @@
 defmodule ByggApp.Jobs do
+  import Ecto.Query, only: [from: 2]
+
   alias ByggApp.Repo
-
   alias ByggApp.Accounts.User
-
-  alias ByggApp.Jobs.Job
-
+  alias ByggApp.Jobs.{Job, Request}
 
   def get_job(id), do: Repo.get(Job, id)
+
+  def list_user_jobs(user) do
+    (from j in Job,
+      where: j.user_id == ^user.id and j.status == ^:published)
+    |> Repo.all()
+  end
 
   def change_job(%Job{} = job, attrs \\ %{}) do
     Job.changeset(job, attrs)
   end
 
   def publish_job(%User{} = user, attrs) do
-    %Job{ user_id: user.id }
-    |> Job.changeset(attrs)
-    |> Repo.insert()
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:job, Job.changeset(%Job{ user_id: user.id }, attrs))
+    |> Ecto.Multi.run(:requests, fn repo, %{job: job} ->
+      now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
+
+      recipients =
+        (from u in User,
+          where: u.id != ^user.id,
+          select: u.id)
+        |> repo.all()
+        |> Enum.map(&(%{recipient_id: &1, job_id: job.id, inserted_at: now, updated_at: now}))
+
+      result = repo.insert_all(Request, recipients)
+      {:ok, result}
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{job: job}} -> {:ok, job}
+      {:error, :job, changeset, _} -> {:error, changeset}
+    end
   end
 end

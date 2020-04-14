@@ -8,6 +8,7 @@ defmodule ByggApp.Jobs.Job do
     field :timespan, :string
     field :status, JobStatusEnum, default: :published
     belongs_to :user, ByggApp.Accounts.User
+    has_many(:requests, ByggApp.Jobs.Request)
 
     timestamps()
   end

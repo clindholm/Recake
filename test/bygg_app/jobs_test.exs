@@ -22,6 +22,31 @@ defmodule ByggApp.JobsTest do
     end
   end
 
+  describe "list_user_jobs/1" do
+    test "no jobs" do
+      user = user_fixture()
+
+      assert Enum.empty?(Jobs.list_user_jobs(user))
+    end
+
+    test "returns active jobs" do
+      user = user_fixture()
+      active_job = job_fixture(user)
+      _closed_job = job_fixture(user, %{status: :closed})
+
+      assert Jobs.list_user_jobs(user) == [active_job]
+    end
+
+    test "returns only jobs created by the user" do
+      user = user_fixture()
+      user2 = user_fixture()
+      user1_job = job_fixture(user)
+      _user2_job = job_fixture(user2)
+
+      assert Jobs.list_user_jobs(user) == [user1_job]
+    end
+  end
+
   describe "change_job/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Jobs.change_job(%Job{})
@@ -64,6 +89,32 @@ defmodule ByggApp.JobsTest do
       assert job == Jobs.get_job(job.id)
       job = ByggApp.Repo.preload(job, :user)
       assert job.user == user
+    end
+
+    test "creates job requests for other users", %{user: job_creator} do
+      recipient1 = user_fixture()
+      recipient2 = user_fixture()
+
+      {:ok, job} = Jobs.publish_job(job_creator, %{
+        description: "Description",
+        location: "Location",
+        timespan: "Timespan",
+        })
+
+      job = ByggApp.Repo.preload(job, :requests)
+      job_creator = ByggApp.Repo.preload(job_creator, :job_requests)
+      recipient1 = ByggApp.Repo.preload(recipient1, :job_requests)
+      recipient2 = ByggApp.Repo.preload(recipient2, :job_requests)
+
+      [request1 | [] ] = recipient1.job_requests
+      [request2 | [] ] = recipient2.job_requests
+
+      recipient_requests = MapSet.new([request1, request2])
+      job_requests = MapSet.new(job.requests)
+
+      assert Map.equal?(recipient_requests, job_requests)
+
+      assert Enum.empty?(job_creator.job_requests)
     end
   end
 

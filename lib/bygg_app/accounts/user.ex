@@ -12,6 +12,8 @@ defmodule ByggApp.Accounts.User do
     field :company, :string
     field :phone, :string
 
+    has_many(:job_requests, ByggApp.Jobs.Request, foreign_key: :recipient_id)
+
     timestamps()
   end
 

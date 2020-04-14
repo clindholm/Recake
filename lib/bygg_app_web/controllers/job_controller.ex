@@ -5,7 +5,8 @@ defmodule ByggAppWeb.JobController do
   alias ByggApp.Jobs.Job
 
   def index(conn, _params) do
-    render(conn, "index.html", section_title: "Your jobs")
+    jobs = Jobs.list_user_jobs(conn.assigns.current_user)
+    render(conn, "index.html", section_title: "Your jobs", jobs: jobs)
   end
 
   def new(conn, _params) do
