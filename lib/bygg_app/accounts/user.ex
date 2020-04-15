@@ -2,6 +2,7 @@ defmodule ByggApp.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   import Utils.Changeset
+  import ByggAppWeb.Gettext
 
   @derive {Inspect, except: [:password]}
   schema "users" do
@@ -28,7 +29,7 @@ defmodule ByggApp.Accounts.User do
   defp validate_email(changeset) do
     changeset
     |> validate_required([:email])
-    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must include @ sign and no spaces")
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: dgettext("errors", "must include @ sign and no spaces"))
     |> validate_length(:email, max: 160)
     |> downcase_field(:email)
     |> unsafe_validate_unique(:email, ByggApp.Repo)
@@ -60,14 +61,14 @@ defmodule ByggApp.Accounts.User do
     |> validate_email()
     |> case do
       %{changes: %{email: _}} = changeset -> changeset
-      %{} = changeset -> add_error(changeset, :email, "did not change")
+      %{} = changeset -> add_error(changeset, :email, dgettext("errors", "did not change"))
     end
   end
 
   def password_changeset(user, attrs) do
     user
     |> cast(attrs, [:password])
-    |> validate_confirmation(:password, message: "does not match password")
+    |> validate_confirmation(:password, message: dgettext("errors", "does not match password"))
     |> validate_password()
   end
 
@@ -90,7 +91,7 @@ defmodule ByggApp.Accounts.User do
     if valid_password?(changeset.data, password) do
       changeset
     else
-      add_error(changeset, :current_password, "is not valid")
+      add_error(changeset, :current_password, dgettext("errors", "is not valid"))
     end
   end
 end

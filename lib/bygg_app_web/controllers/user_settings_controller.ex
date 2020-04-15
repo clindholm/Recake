@@ -16,7 +16,7 @@ defmodule ByggAppWeb.UserSettingsController do
     case Accounts.update_user_password(user, password, user_params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "Password updated successfully")
+        |> put_flash(:info, gettext("Password updated successfully"))
         |> put_session(:user_return_to, Routes.user_settings_path(conn, :edit))
         |> UserAuth.login_user(user)
 
@@ -39,7 +39,7 @@ defmodule ByggAppWeb.UserSettingsController do
         conn
         |> put_flash(
           :info,
-          "A link to confirm your e-mail change has been sent to the new address."
+          gettext("A link to confirm your e-mail change has been sent to the new address.")
         )
         |> redirect(to: Routes.user_settings_path(conn, :edit))
 
@@ -52,12 +52,12 @@ defmodule ByggAppWeb.UserSettingsController do
     case Accounts.update_user_email(conn.assigns.current_user, token) do
       :ok ->
         conn
-        |> put_flash(:info, "E-mail changed successfully")
+        |> put_flash(:info, gettext("E-mail changed successfully"))
         |> redirect(to: Routes.user_settings_path(conn, :edit))
 
       :error ->
         conn
-        |> put_flash(:error, "E-mail change token is invalid or it has expired.")
+        |> put_flash(:error, gettext("E-mail change url is invalid. Try again below."))
         |> redirect(to: Routes.user_settings_path(conn, :edit))
     end
   end

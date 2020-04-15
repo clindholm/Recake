@@ -41,8 +41,8 @@ defmodule ByggAppWeb.JobRequestControllerTest do
     test "renders empty state", %{conn: conn} do
       conn = get(conn, Routes.job_request_path(conn, :index))
       response = html_response(conn, 200)
-      assert_section_header response, "Current requests"
-      assert response =~ "You have no requests at this time"
+      assert_section_header response, gettext("Current requests")
+      assert response =~ gettext("You have no requests at this time")
     end
 
     test "lists current pending requests of the user", %{conn: conn, user: user} do

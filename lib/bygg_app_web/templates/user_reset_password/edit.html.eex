@@ -1,13 +1,13 @@
-<h1 class="text-blue-700 text-xl text-center mb-6">Reset password</h1>
+<h1 class="text-blue-700 text-xl text-center mb-6"><%= gettext "Reset password" %></h1>
 
 <%= form_for @changeset, Routes.user_reset_password_path(@conn, :update, @token), fn f -> %>
-  <%= Form.password_input f, :password, label: "New password" %>
-  <%= Form.password_input f, :password_confirmation, label: "Confirm new password" %>
-  <%= Form.submit "Reset password", class: "w-full" %>
+  <%= Form.password_input f, :password, label: gettext("New password") %>
+  <%= Form.password_input f, :password_confirmation, label: gettext("Confirm new password") %>
+  <%= Form.submit gettext("Reset password"), class: "w-full" %>
 
 <% end %>
 
 <div class="mt-12 text-center">
-  <p><%= link "Login", to: Routes.user_session_path(@conn, :new) %></p>
-  <p class="text-gray-600">Not a member? <%= link "Create account", to: Routes.user_registration_path(@conn, :new) %></p>
+  <p><%= link gettext("Login"), to: Routes.user_session_path(@conn, :new) %></p>
+  <p class="text-gray-600"><%= gettext("Not a member?") %> <%= link gettext("Create account"), to: Routes.user_registration_path(@conn, :new) %></p>
 </div>

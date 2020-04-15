@@ -18,6 +18,8 @@ config :bygg_app, ByggAppWeb.Endpoint,
   pubsub_server: ByggApp.PubSub,
   live_view: [signing_salt: "2EhAYCIL"]
 
+config :bygg_app, ByggAppWeb.Gettext, default_locale: "sv", locales: ~w(sv en)
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

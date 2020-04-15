@@ -18,8 +18,7 @@ defmodule ByggAppWeb.UserConfirmationController do
     conn
     |> put_flash(
       :info,
-      "If your e-mail is in our system and it has not been confirmed yet, " <>
-      "you will receive an e-mail with instructions shortly."
+      gettext("If your e-mail is in our system and it has not been confirmed yet, you will receive an e-mail with instructions shortly.")
     )
     |> redirect(to: "/")
   end
@@ -28,12 +27,12 @@ defmodule ByggAppWeb.UserConfirmationController do
     case Accounts.confirm_user(token) do
       :ok ->
         conn
-        |> put_flash(:info, "Account confirmed successfully")
+        |> put_flash(:info, gettext("Account confirmed successfully"))
         |> redirect(to: "/")
 
       :error ->
         conn
-        |> put_flash(:error, "Confirmation token is invalid or it has expired")
+        |> put_flash(:error, gettext("Confirmation token is invalid or it has expired"))
         |> redirect(to: "/")
     end
   end

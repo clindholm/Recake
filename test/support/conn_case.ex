@@ -22,6 +22,7 @@ defmodule ByggAppWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
+      import ByggAppWeb.Gettext
       import ByggAppWeb.ConnCase
 
       alias ByggAppWeb.Router.Helpers, as: Routes

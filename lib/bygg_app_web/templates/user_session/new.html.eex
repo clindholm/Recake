@@ -1,4 +1,4 @@
-<h1 class="text-blue-700 text-xl text-center mb-6">Login</h1>
+<h1 class="text-blue-700 text-xl text-center mb-6"><%= gettext "Login" %></h1>
 
 <%= form_for @conn, Routes.user_session_path(@conn, :create), [as: :user], fn f -> %>
   <%= if @error_message do %>
@@ -10,13 +10,13 @@
   <%= render_alert(@conn, :error) %>
   <%= render_alert(@conn, :success) %>
 
-  <%= Form.text_input f, :email %>
-  <%= Form.password_input f, :password %>
-  <%= Form.checkbox f, :remember_me %>
-  <%= Form.submit "Login", class: "w-full" %>
+  <%= Form.text_input f, :email, label: gettext("Email") %>
+  <%= Form.password_input f, :password, label: gettext("Password") %>
+  <%= Form.checkbox f, :remember_me, label: gettext("Remember me") %>
+  <%= Form.submit gettext("Login"), class: "w-full" %>
 <% end %>
 
 <div class="mt-12 text-center">
-  <p><%= link "Forgot password?", to: Routes.user_reset_password_path(@conn, :new) %></p>
-  <p class="text-gray-600">Not a member? <%= link "Create account", to: Routes.user_registration_path(@conn, :new) %></p>
+  <p><%= link gettext("Forgot password?"), to: Routes.user_reset_password_path(@conn, :new) %></p>
+  <p class="text-gray-600"><%= gettext "Not a member?" %> <%= link gettext("Create account"), to: Routes.user_registration_path(@conn, :new) %></p>
 </div>

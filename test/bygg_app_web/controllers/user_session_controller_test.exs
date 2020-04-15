@@ -11,7 +11,7 @@ defmodule ByggAppWeb.UserSessionControllerTest do
     test "renders login page", %{conn: conn} do
       conn = get(conn, Routes.user_session_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "Login</h1>"
+      assert response =~ "#{gettext "Login"}</h1>"
       assert response =~ "<form action=\"#{Routes.user_session_path(conn, :create)}\""
       assert response =~ "name=\"user[email]\""
       assert response =~ "name=\"user[password]\""
@@ -96,7 +96,7 @@ defmodule ByggAppWeb.UserSessionControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "Invalid e-mail or password"
+      assert response =~ gettext("Invalid e-mail or password")
     end
   end
 
@@ -110,7 +110,7 @@ defmodule ByggAppWeb.UserSessionControllerTest do
       conn = conn |> login_user(user) |> delete(Routes.user_session_path(conn, :delete))
       assert redirected_to(conn) == "/"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :success) && get_flash(conn, :success) =~ "Logged out successfully"
+      assert get_flash(conn, :success) && get_flash(conn, :success) =~ gettext("Logged out successfully")
     end
   end
 end

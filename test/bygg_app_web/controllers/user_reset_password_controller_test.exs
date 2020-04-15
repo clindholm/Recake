@@ -13,7 +13,7 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
     test "renders the reset password page", %{conn: conn} do
       conn = get(conn, Routes.user_reset_password_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "Forgot your password?</h1>"
+      assert response =~ "#{gettext("Forgot your password?")}</h1>"
       assert response =~ "<form action=\"#{Routes.user_reset_password_path(conn, :create)}\""
       assert response =~ "name=\"user[email]\""
       assert response =~ "type=\"submit\""
@@ -41,7 +41,7 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
         })
 
       assert redirected_to(conn) == "/users/login"
-      assert get_flash(conn, :info) =~ "You will receive instructions to reset your password to your e-mail shortly."
+      assert get_flash(conn, :info) =~ gettext("You will receive instructions to reset your password to your e-mail shortly.")
       assert Repo.get_by!(Accounts.UserToken, user_id: user.id).context == "reset_password"
     end
 
@@ -52,7 +52,7 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
         })
 
       assert redirected_to(conn) == "/users/login"
-      assert get_flash(conn, :info) =~ "You will receive instructions to reset your password to your e-mail shortly."
+      assert get_flash(conn, :info) =~ gettext("You will receive instructions to reset your password to your e-mail shortly.")
       assert Repo.all(Accounts.UserToken) == []
     end
   end
@@ -70,7 +70,7 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
     test "renders reset password", %{conn: conn, token: token} do
       conn = get(conn, Routes.user_reset_password_path(conn, :edit, token))
       response = html_response(conn, 200)
-      assert response =~ "Reset password</h1>"
+      assert response =~ "#{gettext "Reset password"}</h1>"
       assert response =~ "<form action=\"#{Routes.user_reset_password_path(conn, :update, token)}\""
       assert response =~ "name=\"user[password]\""
       assert response =~ "name=\"user[password_confirmation]\""
@@ -79,7 +79,7 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
     test "does not render reset password with invalid token", %{conn: conn} do
       conn = get(conn, Routes.user_reset_password_path(conn, :edit, "oops"))
       assert redirected_to(conn) == "/users/reset_password"
-      assert get_flash(conn, :error) =~ "Reset password link has expired. Send a new link below."
+      assert get_flash(conn, :error) =~ gettext("Reset password link has expired. Send a new link below.")
     end
   end
 
@@ -104,7 +104,7 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
 
       assert redirected_to(conn) == "/users/login"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :success) && get_flash(conn, :success)  =~ "Password reset successfully"
+      assert get_flash(conn, :success) && get_flash(conn, :success)  =~ gettext("Password reset successfully")
       assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
     end
 
@@ -118,15 +118,15 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "Reset password</h1>"
-      assert response =~ "should be at least 8 character(s)"
-      assert response =~ "does not match password"
+      assert response =~ "#{gettext "Reset password"}</h1>"
+      assert response =~ dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8)
+      assert response =~ dgettext("errors", "does not match password")
     end
 
     test "does not reset password with invalid token", %{conn: conn} do
       conn = put(conn, Routes.user_reset_password_path(conn, :update, "oops"))
       assert redirected_to(conn) == "/users/reset_password"
-      assert get_flash(conn, :error) =~ "Reset password link has expired. Send a new link below."
+      assert get_flash(conn, :error) =~ gettext("Reset password link has expired. Send a new link below.")
     end
   end
 end

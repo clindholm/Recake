@@ -7,7 +7,7 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
     test "renders registration page", %{conn: conn} do
       conn = get(conn, Routes.user_registration_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "Register</h1>"
+      assert response =~ "#{gettext "Register"}</h1>"
       assert response =~ "<form action=\"#{Routes.user_registration_path(conn, :create)}\""
       assert response =~ "name=\"user[email]\""
       assert response =~ "name=\"user[password]\""
@@ -52,9 +52,9 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "Register</h1>"
-      assert response =~ "must include @ sign and no spaces"
-      assert response =~ "should be at least 8 character"
+      assert response =~ "#{gettext "Register"}</h1>"
+      assert response =~ dgettext("errors", "must include @ sign and no spaces")
+      assert response =~ dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8)
     end
   end
 end

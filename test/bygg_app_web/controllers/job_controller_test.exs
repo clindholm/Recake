@@ -42,8 +42,8 @@ defmodule ByggAppWeb.JobControllerTest do
     test "renders empty state", %{conn: conn} do
       conn = get(conn, Routes.job_path(conn, :index))
       response = html_response(conn, 200)
-      assert_section_header response, "Your jobs"
-      assert response =~ "You have no active jobs"
+      assert_section_header response, gettext("Your jobs")
+      assert response =~ gettext("You have no active jobs")
       assert response =~ "href=\"#{Routes.job_path(conn, :new)}\""
     end
 
@@ -53,7 +53,7 @@ defmodule ByggAppWeb.JobControllerTest do
 
       conn = get(conn, Routes.job_path(conn, :index))
       response = html_response(conn, 200)
-      assert_section_header response, "Your jobs"
+      assert_section_header response, gettext("Your jobs")
 
       assert response =~ active_job.description
       refute response =~ closed_job.description
@@ -70,7 +70,7 @@ defmodule ByggAppWeb.JobControllerTest do
     test "renders job creation page", %{conn: conn} do
       conn = get(conn, Routes.job_path(conn, :new))
       response = html_response(conn, 200)
-      assert_section_header response, "Create new job"
+      assert_section_header response, gettext("Create new job")
       assert response =~ "<form action=\"#{Routes.job_path(conn, :create)}\""
       assert response =~ "name=\"job[description]\""
       assert response =~ "name=\"job[location]\""
@@ -111,8 +111,8 @@ defmodule ByggAppWeb.JobControllerTest do
         post(conn, Routes.job_path(conn, :create), %{"job" => %{}})
 
       response = html_response(conn, 200)
-      assert_section_header response, "Create new job"
-      assert response =~ "can&#39;t be blank"
+      assert_section_header response, gettext("Create new job")
+      assert response =~ dgettext("errors", "can't be blank")
     end
   end
 

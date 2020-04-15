@@ -8,6 +8,7 @@ defmodule ByggApp.JobsTest do
 
   import ByggApp.AccountsFixtures
   import ByggApp.JobsFixtures
+  import ByggAppWeb.Gettext
 
   describe "get_job/1" do
     test "returns nil for non-existant job" do
@@ -111,11 +112,12 @@ defmodule ByggApp.JobsTest do
     test "validates required fields" do
       {:error, changeset} = Jobs.publish_job(%User{}, %{})
 
+      error = dgettext("errors", "can't be blank")
       assert %{
-        user_id: ["can't be blank"],
-        description: ["can't be blank"],
-        location: ["can't be blank"],
-        timespan: ["can't be blank"],
+        user_id: [^error],
+        description: [^error],
+        location: [^error],
+        timespan: [^error],
       } = errors_on(changeset)
     end
 
@@ -123,8 +125,9 @@ defmodule ByggApp.JobsTest do
       description = String.duplicate("A", 301)
       {:error, changeset} = Jobs.publish_job(%User{}, %{description: description})
 
+      error = dngettext("errors", "should be at most %{count} character(s)", "should be at most %{count} character(s)", 300)
       assert %{
-        description: ["should be at most 300 character(s)"],
+        description: [^error],
       } = errors_on(changeset)
     end
 

@@ -4,8 +4,8 @@ defmodule ByggAppWeb.JobController do
   alias ByggApp.Jobs
   alias ByggApp.Jobs.Job
 
-  plug :section_title, "Your jobs" when action in [:index]
-  plug :section_title, "Create new job" when action in [:new, :create]
+  plug :section_title, gettext("Your jobs") when action in [:index]
+  plug :section_title, gettext("Create new job") when action in [:new, :create]
 
   def index(conn, _params) do
     jobs = Jobs.list_user_jobs(conn.assigns.current_user)
@@ -21,7 +21,7 @@ defmodule ByggAppWeb.JobController do
     case Jobs.publish_job(conn.assigns.current_user, job_params) do
       {:ok, _job} ->
         conn
-        |> put_flash(:success, "Job published")
+        |> put_flash(:success, gettext("Job created"))
         |> redirect(to: Routes.job_path(conn, :index))
 
       {:error, changeset} ->

@@ -20,7 +20,7 @@ defmodule ByggAppWeb.UserRegistrationController do
           )
 
         conn
-        |> put_flash(:info, "User created successfully")
+        |> put_flash(:info, gettext("User created successfully"))
         |> UserAuth.login_user(user)
 
       {:error, %Ecto.Changeset{} = changeset} ->
