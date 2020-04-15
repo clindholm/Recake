@@ -24,6 +24,7 @@ defmodule ByggAppWeb do
       import Plug.Conn
       import ByggAppWeb.Gettext
       alias ByggAppWeb.Router.Helpers, as: Routes
+      import ByggAppWeb.Plugs
     end
   end
 

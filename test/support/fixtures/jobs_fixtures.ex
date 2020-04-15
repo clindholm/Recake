@@ -1,6 +1,6 @@
 defmodule ByggApp.JobsFixtures do
   alias ByggApp.Repo
-  alias ByggApp.Jobs.Job
+  alias ByggApp.Jobs.{Job, Request}
   alias ByggApp.Accounts.User
 
   def job_fixture(%User{} = user, attrs \\ %{}) do
@@ -12,6 +12,15 @@ defmodule ByggApp.JobsFixtures do
       location: "Job location",
       timespan: "Timespan"
     }))
+    |> Repo.insert!()
+  end
+
+  def job_request_fixture(%User{} = user, %Job{} = job, status \\ :pending) do
+    %Request{
+      job_id: job.id,
+      recipient_id: user.id,
+      status: status
+    }
     |> Repo.insert!()
   end
 end

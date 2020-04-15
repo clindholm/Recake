@@ -47,6 +47,55 @@ defmodule ByggApp.JobsTest do
     end
   end
 
+  describe "list_user_job_requests/1" do
+    test "no requests" do
+      user = user_fixture()
+
+      assert Enum.empty?(Jobs.list_user_job_requests(user))
+    end
+
+    test "returns pending requests" do
+      user = user_fixture()
+      job = job_fixture(user)
+      job2 = job_fixture(user)
+      request1 = job_request_fixture(user, job, :pending)
+      _request2 = job_request_fixture(user, job2, :accepted)
+
+      request_ids =
+        Jobs.list_user_job_requests(user)
+        |> Enum.map(&(&1.id))
+
+      assert request_ids == [request1.id]
+    end
+
+    test "returns only requests of the user" do
+      user = user_fixture()
+      user2 = user_fixture()
+      job = job_fixture(user)
+      request1 = job_request_fixture(user, job, :pending)
+      _request2 = job_request_fixture(user2, job, :pending)
+
+      request_ids =
+        Jobs.list_user_job_requests(user)
+        |> Enum.map(&(&1.id))
+
+      assert request_ids == [request1.id]
+    end
+
+    test "preloads job and job creator" do
+      user = user_fixture()
+      job = job_fixture(user)
+      _request = job_request_fixture(user, job)
+
+      request =
+        Jobs.list_user_job_requests(user)
+        |> List.first()
+
+      assert request.job.description == job.description
+      assert request.job.user.company == user.company
+    end
+  end
+
   describe "change_job/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Jobs.change_job(%Job{})

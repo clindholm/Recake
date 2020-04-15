@@ -4,14 +4,17 @@ defmodule ByggAppWeb.JobController do
   alias ByggApp.Jobs
   alias ByggApp.Jobs.Job
 
+  plug :section_title, "Your jobs" when action in [:index]
+  plug :section_title, "Create new job" when action in [:new, :create]
+
   def index(conn, _params) do
     jobs = Jobs.list_user_jobs(conn.assigns.current_user)
-    render(conn, "index.html", section_title: "Your jobs", jobs: jobs)
+    render(conn, "index.html", jobs: jobs)
   end
 
   def new(conn, _params) do
     changeset = Jobs.change_job(%Job{})
-    render(conn, "new.html", section_title: "Create new job", changeset: changeset)
+    render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"job" => job_params}) do
@@ -22,7 +25,7 @@ defmodule ByggAppWeb.JobController do
         |> redirect(to: Routes.job_path(conn, :index))
 
       {:error, changeset} ->
-        render(conn, "new.html", section_title: "Create new job", changeset: changeset)
+        render(conn, "new.html", changeset: changeset)
     end
   end
 end

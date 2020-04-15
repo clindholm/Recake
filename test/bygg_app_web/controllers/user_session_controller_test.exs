@@ -72,7 +72,7 @@ defmodule ByggAppWeb.UserSessionControllerTest do
 
       # Now do a logged in request
       conn = get(conn, "/")
-      response = html_response(conn, 200)
+      _response = html_response(conn, 200)
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do

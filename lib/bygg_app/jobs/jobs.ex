@@ -13,6 +13,13 @@ defmodule ByggApp.Jobs do
     |> Repo.all()
   end
 
+  def list_user_job_requests(user) do
+    (from r in Request,
+      where: r.recipient_id == ^user.id and r.status == ^:pending,
+      preload: [job: :user])
+    |> Repo.all()
+  end
+
   def change_job(%Job{} = job, attrs \\ %{}) do
     Job.changeset(job, attrs)
   end

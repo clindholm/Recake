@@ -56,6 +56,8 @@ defmodule ByggAppWeb.Router do
     get "/jobs", JobController, :index
     get "/jobs/new", JobController, :new
     post "/jobs/new", JobController, :create
+
+    get "/requests", JobRequestController, :index
   end
 
   scope "/", ByggAppWeb do
