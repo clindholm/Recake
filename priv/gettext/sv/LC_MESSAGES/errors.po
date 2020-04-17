@@ -100,3 +100,8 @@ msgstr "matchar inte lösenordet"
 #: lib/bygg_app/accounts/user.ex:32
 msgid "must include @ sign and no spaces"
 msgstr "måste inkludera @ och inga mellanslag"
+
+#, elixir-format, fuzzy
+#: lib/bygg_app/accounts/user.ex:94
+msgid "is not valid"
+msgstr "är felaktigt"

@@ -9,7 +9,7 @@ defmodule ByggApp.Jobs do
 
   def list_user_jobs(user) do
     (from j in Job,
-      where: j.user_id == ^user.id and j.status == ^:published)
+      where: j.user_id == ^user.id and not j.is_closed)
     |> Repo.all()
   end
 

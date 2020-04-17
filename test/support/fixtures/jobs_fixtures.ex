@@ -8,6 +8,7 @@ defmodule ByggApp.JobsFixtures do
       user_id: user.id
     }
     |> Ecto.Changeset.change(Enum.into(attrs, %{
+      identifier: "ID",
       description: "Job description",
       location: "Job location",
       timespan: "Timespan"

@@ -37,7 +37,7 @@ msgid "Confirmation token is invalid or it has expired"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:7
+#: lib/bygg_app_web/templates/job/new.html.eex:8
 msgid "Create"
 msgstr ""
 
@@ -205,7 +205,7 @@ msgid "if you're looking for workers."
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:3
+#: lib/bygg_app_web/templates/job/new.html.eex:4
 msgid "Description"
 msgstr ""
 
@@ -216,7 +216,7 @@ msgid "Email"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:4
+#: lib/bygg_app_web/templates/job/new.html.eex:5
 msgid "Location"
 msgstr ""
 
@@ -232,6 +232,11 @@ msgid "Remember me"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:5
+#: lib/bygg_app_web/templates/job/new.html.eex:6
 msgid "Timespan"
+msgstr ""
+
+#, elixir-format
+#: lib/bygg_app_web/templates/job/new.html.eex:3
+msgid "Identifier"
 msgstr ""

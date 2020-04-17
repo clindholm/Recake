@@ -49,7 +49,7 @@ defmodule ByggAppWeb.JobControllerTest do
 
     test "renders active user jobs", %{conn: conn, user: user} do
       active_job = job_fixture(user, %{description: "Active Job"})
-      closed_job = job_fixture(user, %{status: :closed, description: "Closed Job"})
+      closed_job = job_fixture(user, %{is_closed: true, description: "Closed Job"})
 
       conn = get(conn, Routes.job_path(conn, :index))
       response = html_response(conn, 200)
@@ -72,6 +72,7 @@ defmodule ByggAppWeb.JobControllerTest do
       response = html_response(conn, 200)
       assert_section_header response, gettext("Create new job")
       assert response =~ "<form action=\"#{Routes.job_path(conn, :create)}\""
+      assert response =~ "name=\"job[identifier]\""
       assert response =~ "name=\"job[description]\""
       assert response =~ "name=\"job[location]\""
       assert response =~ "name=\"job[timespan]\""
@@ -89,6 +90,7 @@ defmodule ByggAppWeb.JobControllerTest do
     test "creates a job", %{conn: conn, user: user} do
       post(conn, Routes.job_path(conn, :create), %{
         "job" => %{
+          "identifier" => "Identifier",
           "description" => "Description",
           "location" => "Location",
           "timespan" => "Timespan",
