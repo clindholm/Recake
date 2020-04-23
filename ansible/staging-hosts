@@ -1,0 +1,4 @@
+main ansible_host=94.237.124.54
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3

@@ -34,3 +34,7 @@ npm-debug.log
 /priv/static/
 
 .elixir_ls
+
+/ansible/.vault_password
+
+/tmp

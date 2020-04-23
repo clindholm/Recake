@@ -1,0 +1,7 @@
+---
+create_user: cal
+copy_local_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
+sys_packages: [ 'ufw', 'unattended-upgrades', 'python3-psycopg2' ]
+
+db_name: byggapp
+db_user: byggapp-user

@@ -1,0 +1,10 @@
+_build
+.elixir_ls
+ansible
+deps
+tmp
+release.sh
+.dockerignore
+Dockerfile.releaser
+priv/static
+**/node_modules

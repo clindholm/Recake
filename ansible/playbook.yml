@@ -1,0 +1,153 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+    - vars/secrets.yml
+  
+  tasks:
+    - name: Install prerequisites
+      apt: name=aptitude update_cache=yes state=latest force_apt_get=yes
+
+# Sudo group setup
+
+    - name: Check for 'wheel' group
+      group:
+        name: wheel
+        state: present
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'
+
+# User + Key setup
+
+    - name: Create user with sudo privileges
+      user:
+        name: "{{ create_user }}"
+        state: present
+        groups: wheel
+        append: true
+        create_home: true
+        shell: /bin/bash
+
+    - name: Set authorized key for remote user
+      authorized_key:
+        user: "{{ create_user }}"
+        state: present
+        key: "{{ copy_local_key }}"
+
+    - name: Disable password authentication for root
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        state: present
+        regexp: '^#?PermitRootLogin'
+        line: 'PermitRootLogin prohibit-password'
+
+# Install packages
+
+    - name: Update apt
+      apt: update_cache=yes
+
+    - name: Install required packages
+      apt: 
+        name: ['ufw', 'unattended-upgrades', 'python3-psycopg2', 'nginx']
+        state: latest
+
+# Setup unattended-upgrades
+
+    - name: Update-Package-Lists frequency
+      lineinfile:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        state: present
+        regexp: '^APT::Periodic::Update-Package-Lists'
+        line: 'APT::Periodic::Update-Package-Lists "1";'
+
+    - name: Unattended-Upgrade frequency
+      lineinfile:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        state: present
+        regexp: '^APT::Periodic::Unattended-Upgrade'
+        line: 'APT::Periodic::Unattended-Upgrade "1";'
+
+    - name: Download-Upgradeable-Packages frequency
+      lineinfile:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        state: present
+        regexp: '^APT::Periodic::Download-Upgradeable-Packages'
+        line: 'APT::Periodic::Download-Upgradeable-Packages "1";'
+
+    - name: APT::Periodic::AutocleanInterval frequency
+      lineinfile:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        state: present
+        regexp: '^APT::Periodic::APT::Periodic::AutocleanInterval'
+        line: 'APT::Periodic::APT::Periodic::AutocleanInterval "7";'
+
+# NGINX
+    - name: Start NGINX
+      service:
+        name: nginx
+        state: started
+
+    
+
+# UFW Setup
+
+    - name: UFW - Allow SSH connections
+      ufw:
+        rule: allow
+        name: OpenSSH
+
+    - name: UFW - Allow HTTP/S
+      ufw:
+        rule: allow
+        name: Nginx Full
+
+    - name: UFW - Deny all other incoming traffic by default
+      ufw:
+        state: enabled
+        policy: deny
+        direction: incoming
+
+# Postgres
+    - name: Add Postgres sources
+      lineinfile: 
+        path: /etc/apt/sources.list.d/pgdg.list 
+        state: present
+        create: yes
+        regexp: '^deb http://apt.postgresql.org'
+        line: 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main'
+
+    - name: Add Postgres apt key
+      apt_key:
+        url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+        state: present
+
+    - name: Update apt
+      apt: update_cache=yes
+      
+    - name: Install Postgres
+      apt: name=postgresql-12 state=latest
+
+    - name: Ensure Postgres is running
+      service: name=postgresql state=started enabled=yes
+
+    - name: Create database
+      postgresql_db:
+        name: "{{ db_name }}"
+      become_user: postgres
+
+    - name: Create db user
+      postgresql_user:
+        db: "{{ db_name }}"
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: ALL
+        role_attr_flags: NOSUPERUSER,NOCREATEDB
+        state: present
+      become_user: postgres
