@@ -10,7 +10,10 @@ defmodule ByggApp.Application do
     children = [
       # Start the Ecto repository
       ByggApp.Repo,
-      {Phoenix.PubSub, [name: ByggApp.PubSub, adapter: Phoenix.PubSub.PG2]},
+
+      ByggAppWeb.Telemetry,
+
+      {Phoenix.PubSub, name: ByggApp.PubSub},
       # Start the endpoint when the application starts
       ByggAppWeb.Endpoint,
       # Starts a worker by calling: ByggApp.Worker.start_link(arg)

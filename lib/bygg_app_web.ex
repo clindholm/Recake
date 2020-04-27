@@ -40,6 +40,8 @@ defmodule ByggAppWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
+      import Phoenix.View
+
       import ByggAppWeb.ErrorHelpers
       import ByggAppWeb.HtmlHelpers
       import ByggAppWeb.Gettext
