@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -12,10 +12,10 @@
     <header class="bg-blue-900 text-white pb-56">
       <section class="container mx-auto px-2">
         <nav role="navigation" class="border-b border-blue-700">
-          <div class="flex pt-3">
+          <div class="flex pt-3 space-x-4">
             <%= nav_link @conn, gettext("Requests"), to: Routes.job_request_path(@conn, :index) %>
             <%= nav_link @conn, gettext("Jobs"), to: Routes.job_path(@conn, :index) %>
-            <%= nav_link @conn, gettext("Logout"), to: Routes.user_session_path(@conn, :delete), method: :delete %>
+            <%# nav_link @conn, gettext("Logout"), to: Routes.user_session_path(@conn, :delete), method: :delete %>
           </div>
         </nav>
       </section>

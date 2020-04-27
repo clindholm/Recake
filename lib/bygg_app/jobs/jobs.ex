@@ -7,6 +7,13 @@ defmodule ByggApp.Jobs do
 
   def get_job(id), do: Repo.get(Job, id)
 
+  def get_job_request(id) do
+    (from r in Request,
+      where: r.id == ^id,
+      preload: [job: :user])
+    |> Repo.one()
+  end
+
   def list_user_jobs(user) do
     (from j in Job,
       where: j.user_id == ^user.id and not j.is_closed)
@@ -46,4 +53,18 @@ defmodule ByggApp.Jobs do
       {:error, :job, changeset, _} -> {:error, changeset}
     end
   end
+
+  def resolve_request(request, :accept) do
+    request
+    |> Ecto.Changeset.change(status: :accepted)
+    |> Repo.update()
+  end
+
+  def resolve_request(request, :reject) do
+    request
+    |> Ecto.Changeset.change(status: :rejected)
+    |> Repo.update()
+  end
+
+  def resolve_request(_request, _status), do: {:error, :invalid_resolution}
 end

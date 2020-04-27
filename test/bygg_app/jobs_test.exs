@@ -2,7 +2,7 @@ defmodule ByggApp.JobsTest do
   use ByggApp.DataCase, async: true
 
   alias ByggApp.Jobs
-  alias ByggApp.Jobs.Job
+  alias ByggApp.Jobs.{Job, Request}
 
   alias ByggApp.Accounts.User
 
@@ -20,6 +20,30 @@ defmodule ByggApp.JobsTest do
       job = job_fixture(user)
 
       assert job == Jobs.get_job(job.id)
+    end
+  end
+
+  describe "get_job_request/1" do
+    test "returns nil for non-existant job request" do
+      refute Jobs.get_job_request(1)
+    end
+
+    test "returns the job request if it exists" do
+      user = user_fixture()
+      job = job_fixture(user)
+      request = job_request_fixture(user, job)
+
+      assert request.id == Jobs.get_job_request(request.id).id
+    end
+
+    test "preloads job and job creator" do
+      user = user_fixture()
+      job = job_fixture(user)
+      request = job_request_fixture(user, job)
+      request = Jobs.get_job_request(request.id)
+
+      assert request.job.description == job.description
+      assert request.job.user.company == user.company
     end
   end
 
@@ -172,6 +196,35 @@ defmodule ByggApp.JobsTest do
       assert Map.equal?(recipient_requests, job_requests)
 
       assert Enum.empty?(job_creator.job_requests)
+    end
+  end
+
+  describe "resolve_request/2" do
+    setup do
+      user = user_fixture()
+      job = job_fixture(user)
+      request = job_request_fixture(user, job)
+      %{
+        request: request
+      }
+    end
+
+    test "accepts request", %{request: request} do
+      {:ok, updated_request} = Jobs.resolve_request(request, :accept)
+
+      assert updated_request.status == :accepted
+      assert ^updated_request = Repo.get!(Request, request.id)
+    end
+
+    test "rejects request", %{request: request} do
+      {:ok, updated_request} = Jobs.resolve_request(request, :reject)
+
+      assert updated_request.status == :rejected
+      assert ^updated_request = Repo.get!(Request, request.id)
+    end
+
+    test "invalid resolution", %{request: request} do
+      assert Jobs.resolve_request(request, :invalid) == {:error, :invalid_resolution}
     end
   end
 

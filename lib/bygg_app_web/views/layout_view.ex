@@ -7,7 +7,7 @@ defmodule ByggAppWeb.LayoutView do
     current_page? = opts[:to] == conn.request_path
 
     classes = class_list([
-      {"mr-4 py-2 px-4 text-gray-100 border-b-4 border-transparent hover:no-underline", true},
+      {"py-2 px-4 text-gray-100 border-b-4 border-transparent hover:no-underline", true},
       {"border-blue-500", current_page?},
       {"hover:border-orange-600", !current_page?}
     ])

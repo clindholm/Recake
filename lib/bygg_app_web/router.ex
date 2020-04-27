@@ -20,12 +20,6 @@ defmodule ByggAppWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", ByggAppWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
-  end
-
   # Other scopes may use custom stacks.
   # scope "/api", ByggAppWeb do
   #   pipe_through :api
@@ -53,11 +47,12 @@ defmodule ByggAppWeb.Router do
     put "/users/settings/update_email", UserSettingsController, :update_email
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
+    get "/", JobRequestController, :index
+    post "/requests/:id/resolve", JobRequestController, :resolve
+
     get "/jobs", JobController, :index
     get "/jobs/new", JobController, :new
     post "/jobs/new", JobController, :create
-
-    get "/requests", JobRequestController, :index
   end
 
   scope "/", ByggAppWeb do
