@@ -28,9 +28,9 @@ secret_key_base =
 config :bygg_app, ByggAppWeb.Endpoint,
   http: [
     port: String.to_integer(System.get_env("PORT") || "4000"),
-    transport_options: [socket_opts: [:inet6]],
-    url: [host: host_url, port: 443, scheme: "https"]
+    #transport_options: [socket_opts: [:inet6]],
   ],
+  url: [host: host_url, port: 443, scheme: "https"],
   secret_key_base: secret_key_base,
   server: true
 
