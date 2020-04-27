@@ -1,0 +1,20 @@
+[Unit]
+Description=Runner for ByggApp
+After=network.target
+
+[Service]
+User={{ create_user }}
+Group=wheel
+WorkingDirectory=/home/{{ create_user }}/bygg_app
+Environment=LANG=en_US.UTF-8
+Environment=HOST_URL="{{ domain }}"
+Environment=SECRET_KEY_BASE="{{ secret_key_base }}"
+Environment=DATABASE_URL="postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ db_name }}"
+ExecStart=/home/{{ create_user }}/bygg_app/bin/bygg_app start
+SyslogIdentifier=bygg_app
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

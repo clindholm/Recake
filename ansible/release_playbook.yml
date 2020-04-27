@@ -1,0 +1,49 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yml
+    - vars/secrets.yml
+
+  tasks:
+    - name: stop service
+      systemd:
+        name: bygg_app
+        state: stopped
+
+    - name: ensure directory
+      file:
+        path: /home/{{ create_user }}/bygg_app
+        state: directory
+        owner: "{{ create_user }}"
+        group: wheel
+        mode: '0777'
+
+
+    - name: copy release
+      unarchive:
+        src: ../tmp/bygg_app.tar.gz
+        dest: /home/{{ create_user }}/bygg_app
+
+    - name: set ownership
+      file:
+        path: /home/{{ create_user }}/bygg_app
+        state: directory
+        owner: "{{ create_user }}"
+        group: wheel
+        mode: '0777'
+        recurse: yes
+
+    - name: run migrations
+      command: /home/{{ create_user }}/bygg_app/bin/bygg_app eval "ByggApp.ReleaseTasks.migrate()"
+      become_user: "{{ create_user }}"
+      environment:
+        LANG: en_US.UTF-8
+        HOST_URL: "{{ domain }}"
+        SECRET_KEY_BASE: "{{ secret_key_base }}"
+        DATABASE_URL: "postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ db_name }}"
+
+    - name: start service
+      systemd:
+        name: bygg_app
+        state: started
