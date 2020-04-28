@@ -40,7 +40,7 @@ defmodule ByggApp.Accounts.User do
     changeset
     |> validate_required([:password])
     |> validate_length(:password, min: 8, max: 80)
-    |> maybe_hash_password()
+    |> prepare_changes(&maybe_hash_password/1)
   end
 
   defp maybe_hash_password(changeset) do
