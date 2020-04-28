@@ -83,7 +83,7 @@ defmodule ByggApp.JobsTest do
       user = user_fixture()
       recipient = user_fixture()
       job = job_fixture(user)
-      request = job_request_fixture(recipient, job)
+      _request = job_request_fixture(recipient, job)
 
       jobs = Jobs.list_user_jobs(user)
 

@@ -17,4 +17,20 @@ defmodule ByggAppWeb.LayoutView do
       <%= link label, opts %>
     """
   end
+
+  def page_header(%{title: title, action: %{label: label, url: url}}) do
+    ~E"""
+    <div class="flex justify-between items-center">
+      <h1 class="section-title"><%= title %></h1>
+      <a href="<%= url %>" class="bg-white rounded p-2 hover:no-underline hover:bg-blue-100 text-blue-900 font-bold lowercase"><%= label %></a>
+    </div>
+    """
+  end
+  def page_header(header) when is_binary(header) do
+    ~E"""
+      <h1 class="section-title"><%= header %></h1>
+    """
+  end
+
+  def page_header(_), do: nil
 end

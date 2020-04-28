@@ -1,5 +1,5 @@
 defmodule ByggAppWeb.Plugs do
-  def section_title(conn, title) do
-    Plug.Conn.assign(conn, :section_title, title)
+  def page_header(conn, header) do
+    Plug.Conn.assign(conn, :page_header, header)
   end
 end

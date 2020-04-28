@@ -3,7 +3,7 @@ defmodule ByggAppWeb.JobRequestController do
 
   alias ByggApp.Jobs
 
-  plug :section_title, gettext("Current requests") when action in [:index]
+  plug :page_header, gettext("Current requests") when action in [:index]
 
   def index(conn, _params) do
     job_requests = Jobs.list_user_job_requests(conn.assigns.current_user)

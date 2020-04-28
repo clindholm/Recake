@@ -21,7 +21,7 @@
       </section>
     </header>
     <main role="main" class="container mx-auto px-2 -mt-48">
-      <h1 class="section-title"><%= assigns[:section_title] %></h1>
+      <%= page_header(assigns[:page_header]) %>
 
       <%= @inner_content %>
 

@@ -4,12 +4,17 @@ defmodule ByggAppWeb.JobController do
   alias ByggApp.Jobs
   alias ByggApp.Jobs.Job
 
-  plug :section_title, gettext("Your jobs") when action in [:index]
-  plug :section_title, gettext("Create new job") when action in [:new, :create]
+  plug :page_header, gettext("Create new job") when action in [:new, :create]
 
   def index(conn, _params) do
     jobs = Jobs.list_user_jobs(conn.assigns.current_user)
-    render(conn, "index.html", jobs: jobs)
+
+    conn
+    |> assign(:page_header, %{
+      title: gettext("Your jobs"),
+      action: %{label: gettext("Create new job"), url: Routes.job_path(conn, :new)}
+    })
+    |> render("index.html", jobs: jobs)
   end
 
   def new(conn, _params) do
