@@ -1,6 +1,6 @@
 <div class="mt-6">
   <%= render_alert(@conn, :success) %>
-  
+
   <%= if Enum.empty?(@jobs) do %>
   <div class="card my-6">
     <div class="bg-gray-100 text-center flex flex-col max-w-md mx-auto my-32 py-12 rounded">
@@ -9,12 +9,40 @@
     </div>
   </div>
   <% else %>
-  <div class="mt-6">
+  <div class="mt-6 space-y-8">
     <%= for job <- @jobs do %>
-    <div class="card">
-      <p>
-        <%= job.description %>
-      </p>
+    <div class="card space-y-4">
+      <div class="flex justify-between">
+        <h3 class="text-lg">
+          <%= job.identifier %>
+        </h3>
+        <p><%= ngettext("%{count} sent request", "%{count} sent requests", Enum.count(job.requests)) %></p>
+      </div>
+
+      <h4 class="uppercase text-gray-600"><%= gettext("Interested recipients") %></h4>
+      <%= for request <- filter_requests(job.requests, :accepted) do %>
+      <div class="bg-gray-300 rounded p-4">
+        <p class="text-lg font-bold">
+          <%= request.recipient.company %>
+        </p>
+        <p class="text-2xl">
+          <a href="tel:<%= request.recipient.phone %>" class="text-gray-900 underline"><%= request.recipient.phone %></a>
+        </p>
+        <p>
+          <a href="mailto:<%= request.recipient.email %>" class="text-gray-900 underline"><%= request.recipient.email %></a>
+        </p>
+      </div>
+      <% end %>
+      <details>
+        <summary class="uppercase text-gray-600"><%= gettext("Pending or declined") %></summary>
+
+        <%= for request <- filter_requests(job.requests, [:pending, :rejected]) do %>
+        <p class="mt-2">
+          <%= request_status_badge(request) %>
+          <%= request.recipient.company %>
+        </p>
+        <% end %>
+      </details>
     </div>
     <% end %>
   </div>

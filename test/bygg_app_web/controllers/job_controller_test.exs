@@ -48,15 +48,15 @@ defmodule ByggAppWeb.JobControllerTest do
     end
 
     test "renders active user jobs", %{conn: conn, user: user} do
-      active_job = job_fixture(user, %{description: "Active Job"})
-      closed_job = job_fixture(user, %{is_closed: true, description: "Closed Job"})
+      active_job = job_fixture(user, %{identifier: "Active Job"})
+      closed_job = job_fixture(user, %{is_closed: true, identifier: "Closed Job"})
 
       conn = get(conn, Routes.job_path(conn, :index))
       response = html_response(conn, 200)
       assert_section_header response, gettext("Your jobs")
 
-      assert response =~ active_job.description
-      refute response =~ closed_job.description
+      assert response =~ active_job.identifier
+      refute response =~ closed_job.identifier
     end
   end
 

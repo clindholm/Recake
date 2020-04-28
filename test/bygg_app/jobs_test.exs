@@ -59,7 +59,11 @@ defmodule ByggApp.JobsTest do
       active_job = job_fixture(user)
       _closed_job = job_fixture(user, %{is_closed: true})
 
-      assert Jobs.list_user_jobs(user) == [active_job]
+      job_ids =
+        Jobs.list_user_jobs(user)
+        |> Enum.map(& &1.id)
+
+      assert job_ids == [active_job.id]
     end
 
     test "returns only jobs created by the user" do
@@ -68,7 +72,29 @@ defmodule ByggApp.JobsTest do
       user1_job = job_fixture(user)
       _user2_job = job_fixture(user2)
 
-      assert Jobs.list_user_jobs(user) == [user1_job]
+      job_ids =
+        Jobs.list_user_jobs(user)
+        |> Enum.map(& &1.id)
+
+      assert job_ids == [user1_job.id]
+    end
+
+    test "preloads requests and recipients" do
+      user = user_fixture()
+      recipient = user_fixture()
+      job = job_fixture(user)
+      request = job_request_fixture(recipient, job)
+
+      jobs = Jobs.list_user_jobs(user)
+
+      preloaded_recipient =
+        jobs
+        |> List.first()
+        |> (& &1.requests).()
+        |> List.first()
+        |> (& &1.recipient).()
+
+      assert preloaded_recipient.id == recipient.id
     end
   end
 
@@ -88,7 +114,7 @@ defmodule ByggApp.JobsTest do
 
       request_ids =
         Jobs.list_user_job_requests(user)
-        |> Enum.map(&(&1.id))
+        |> Enum.map(& &1.id)
 
       assert request_ids == [request1.id]
     end
@@ -102,7 +128,7 @@ defmodule ByggApp.JobsTest do
 
       request_ids =
         Jobs.list_user_job_requests(user)
-        |> Enum.map(&(&1.id))
+        |> Enum.map(& &1.id)
 
       assert request_ids == [request1.id]
     end
@@ -124,46 +150,72 @@ defmodule ByggApp.JobsTest do
   describe "change_job/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Jobs.change_job(%Job{})
-      assert changeset.required == [:identifier, :description, :location, :timespan, :is_closed, :user_id]
+
+      assert changeset.required == [
+               :identifier,
+               :description,
+               :location,
+               :timespan,
+               :is_closed,
+               :user_id
+             ]
     end
   end
 
   describe "publish_job/2" do
     setup do
-      %{ user: user_fixture() }
+      %{user: user_fixture()}
     end
 
     test "validates required fields" do
       {:error, changeset} = Jobs.publish_job(%User{}, %{})
 
       error = dgettext("errors", "can't be blank")
+
       assert %{
-        user_id: [^error],
-        identifier: [^error],
-        description: [^error],
-        location: [^error],
-        timespan: [^error],
-      } = errors_on(changeset)
+               user_id: [^error],
+               identifier: [^error],
+               description: [^error],
+               location: [^error],
+               timespan: [^error]
+             } = errors_on(changeset)
     end
 
     test "validates maximum length" do
       too_long = String.duplicate("A", 301)
-      {:error, changeset} = Jobs.publish_job(%User{}, %{identifier: too_long, description: too_long})
 
-      identifier_error = dngettext("errors", "should be at most %{count} character(s)", "should be at most %{count} character(s)", 40)
-      description_error = dngettext("errors", "should be at most %{count} character(s)", "should be at most %{count} character(s)", 300)
+      {:error, changeset} =
+        Jobs.publish_job(%User{}, %{identifier: too_long, description: too_long})
+
+      identifier_error =
+        dngettext(
+          "errors",
+          "should be at most %{count} character(s)",
+          "should be at most %{count} character(s)",
+          40
+        )
+
+      description_error =
+        dngettext(
+          "errors",
+          "should be at most %{count} character(s)",
+          "should be at most %{count} character(s)",
+          300
+        )
+
       assert %{
-        identifier: [^identifier_error],
-        description: [^description_error],
-      } = errors_on(changeset)
+               identifier: [^identifier_error],
+               description: [^description_error]
+             } = errors_on(changeset)
     end
 
     test "publishes job for user", %{user: user} do
-      {:ok, job} = Jobs.publish_job(user, %{
-        identifier: "Identifier",
-        description: "Description",
-        location: "Location",
-        timespan: "Timespan",
+      {:ok, job} =
+        Jobs.publish_job(user, %{
+          identifier: "Identifier",
+          description: "Description",
+          location: "Location",
+          timespan: "Timespan"
         })
 
       assert job == Jobs.get_job(job.id)
@@ -175,11 +227,12 @@ defmodule ByggApp.JobsTest do
       recipient1 = user_fixture()
       recipient2 = user_fixture()
 
-      {:ok, job} = Jobs.publish_job(job_creator, %{
-        identifier: "Identifier",
-        description: "Description",
-        location: "Location",
-        timespan: "Timespan",
+      {:ok, job} =
+        Jobs.publish_job(job_creator, %{
+          identifier: "Identifier",
+          description: "Description",
+          location: "Location",
+          timespan: "Timespan"
         })
 
       job = ByggApp.Repo.preload(job, :requests)
@@ -187,8 +240,8 @@ defmodule ByggApp.JobsTest do
       recipient1 = ByggApp.Repo.preload(recipient1, :job_requests)
       recipient2 = ByggApp.Repo.preload(recipient2, :job_requests)
 
-      [request1 | [] ] = recipient1.job_requests
-      [request2 | [] ] = recipient2.job_requests
+      [request1 | []] = recipient1.job_requests
+      [request2 | []] = recipient2.job_requests
 
       recipient_requests = MapSet.new([request1, request2])
       job_requests = MapSet.new(job.requests)
@@ -204,6 +257,7 @@ defmodule ByggApp.JobsTest do
       user = user_fixture()
       job = job_fixture(user)
       request = job_request_fixture(user, job)
+
       %{
         request: request
       }
@@ -227,5 +281,4 @@ defmodule ByggApp.JobsTest do
       assert Jobs.resolve_request(request, :invalid) == {:error, :invalid_resolution}
     end
   end
-
 end

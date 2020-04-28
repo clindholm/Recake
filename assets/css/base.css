@@ -4,3 +4,7 @@ a {
 a:hover {
   @apply underline;
 }
+
+summary {
+  @apply cursor-pointer select-none;
+}

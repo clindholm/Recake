@@ -8,22 +8,26 @@ defmodule ByggApp.Jobs do
   def get_job(id), do: Repo.get(Job, id)
 
   def get_job_request(id) do
-    (from r in Request,
+    from(r in Request,
       where: r.id == ^id,
-      preload: [job: :user])
+      preload: [job: :user]
+    )
     |> Repo.one()
   end
 
   def list_user_jobs(user) do
-    (from j in Job,
-      where: j.user_id == ^user.id and not j.is_closed)
+    from(j in Job,
+      where: j.user_id == ^user.id and not j.is_closed,
+      preload: [requests: :recipient]
+    )
     |> Repo.all()
   end
 
   def list_user_job_requests(user) do
-    (from r in Request,
+    from(r in Request,
       where: r.recipient_id == ^user.id and r.status == ^:pending,
-      preload: [job: :user])
+      preload: [job: :user]
+    )
     |> Repo.all()
   end
 
@@ -33,16 +37,17 @@ defmodule ByggApp.Jobs do
 
   def publish_job(%User{} = user, attrs) do
     Ecto.Multi.new()
-    |> Ecto.Multi.insert(:job, Job.changeset(%Job{ user_id: user.id }, attrs))
+    |> Ecto.Multi.insert(:job, Job.changeset(%Job{user_id: user.id}, attrs))
     |> Ecto.Multi.run(:requests, fn repo, %{job: job} ->
       now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
 
       recipients =
-        (from u in User,
+        from(u in User,
           where: u.id != ^user.id,
-          select: u.id)
+          select: u.id
+        )
         |> repo.all()
-        |> Enum.map(&(%{recipient_id: &1, job_id: job.id, inserted_at: now, updated_at: now}))
+        |> Enum.map(&%{recipient_id: &1, job_id: job.id, inserted_at: now, updated_at: now})
 
       result = repo.insert_all(Request, recipients)
       {:ok, result}
