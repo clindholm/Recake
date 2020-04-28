@@ -136,5 +136,56 @@ defmodule ByggAppWeb.JobRequestControllerTest do
 
       assert Repo.get!(ByggApp.Jobs.Request, request.id).status == :pending
     end
+
+    test "does nothing to already accepted requests", %{conn: conn, request: request} do
+      accepted_request =
+        request
+        |> Ecto.Changeset.change(status: :accepted)
+        |> Repo.update!()
+
+      conn = post(conn, Routes.job_request_path(conn, :resolve, accepted_request.id), %{"accept" => ""})
+      assert redirected_to(conn) == Routes.job_request_path(conn, :index)
+      refute get_flash(conn, :success)
+      refute get_flash(conn, :info)
+
+      assert Repo.get!(ByggApp.Jobs.Request, accepted_request.id).status == :accepted
+
+      conn = post(conn, Routes.job_request_path(conn, :resolve, accepted_request.id), %{"reject" => ""})
+      assert redirected_to(conn) == Routes.job_request_path(conn, :index)
+      refute get_flash(conn, :success)
+      refute get_flash(conn, :info)
+
+      assert Repo.get!(ByggApp.Jobs.Request, accepted_request.id).status == :accepted
+    end
+
+    test "does nothing to already rejected requests", %{conn: conn, request: request} do
+      rejected_request =
+        request
+        |> Ecto.Changeset.change(status: :rejected)
+        |> Repo.update!()
+
+      conn = post(conn, Routes.job_request_path(conn, :resolve, rejected_request.id), %{"accept" => ""})
+      assert redirected_to(conn) == Routes.job_request_path(conn, :index)
+      refute get_flash(conn, :success)
+      refute get_flash(conn, :info)
+
+      assert Repo.get!(ByggApp.Jobs.Request, rejected_request.id).status == :rejected
+
+      conn = post(conn, Routes.job_request_path(conn, :resolve, rejected_request.id), %{"reject" => ""})
+      assert redirected_to(conn) == Routes.job_request_path(conn, :index)
+      refute get_flash(conn, :success)
+      refute get_flash(conn, :info)
+
+      assert Repo.get!(ByggApp.Jobs.Request, rejected_request.id).status == :rejected
+    end
+
+    test "does nothing on invalid resolution", %{conn: conn, request: request} do
+      conn = post(conn, Routes.job_request_path(conn, :resolve, request.id))
+      assert redirected_to(conn) == Routes.job_request_path(conn, :index)
+      refute get_flash(conn, :success)
+      refute get_flash(conn, :info)
+
+      assert Repo.get!(ByggApp.Jobs.Request, request.id).status == :pending
+    end
   end
 end

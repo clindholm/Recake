@@ -11,24 +11,43 @@ defmodule ByggAppWeb.JobRequestController do
   end
 
   def resolve(conn, %{"id" => id, "accept" => _}) do
-    request = Jobs.get_job_request(id)
-    if request.recipient_id == conn.assigns.current_user.id do
-      Jobs.resolve_request(request, :accept)
-
-      conn
-      |> put_flash(:success, gettext("%{company} has been notifed of your interest", company: request.job.user.company))
-      |> redirect(to: Routes.job_request_path(conn, :index))
-    else
-      redirect(conn, to: Routes.job_request_path(conn, :index))
-    end
+    resolve(
+      conn,
+      id,
+      :accept,
+      &put_flash(
+        &1,
+        :success,
+        gettext("%{company} has been notifed of your interest", company: &2)
+      )
+    )
   end
+
   def resolve(conn, %{"id" => id, "reject" => _}) do
-    request = Jobs.get_job_request(id)
-    if request.recipient_id == conn.assigns.current_user.id do
-      Jobs.resolve_request(request, :reject)
+    resolve(
+      conn,
+      id,
+      :reject,
+      &put_flash(
+        &1,
+        :info,
+        gettext("%{company} has been notifed of your lack of interest", company: &2)
+      )
+    )
+  end
+
+  def resolve(conn, _) do
+    redirect(conn, to: Routes.job_request_path(conn, :index))
+  end
+
+  defp resolve(conn, request_id, action, flash_f) do
+    request = Jobs.get_job_request(request_id)
+
+    if request.recipient_id == conn.assigns.current_user.id && request.status == :pending do
+      Jobs.resolve_request(request, action)
 
       conn
-      |> put_flash(:info, gettext("%{company} has been notifed of your lack of interest", company: request.job.user.company))
+      |> flash_f.(request.job.user.company)
       |> redirect(to: Routes.job_request_path(conn, :index))
     else
       redirect(conn, to: Routes.job_request_path(conn, :index))
