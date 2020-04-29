@@ -4,6 +4,7 @@ defmodule ByggAppWeb.FormHelpers do
   """
   import Phoenix.HTML, only: [sigil_E: 2]
   import ByggAppWeb.HtmlHelpers
+  import ByggAppWeb.Gettext
 
   def text_input(form, field, opts \\ []) do
     input(&Phoenix.HTML.Form.text_input/3, form, field, opts)
@@ -16,7 +17,9 @@ defmodule ByggAppWeb.FormHelpers do
   defp input(type_f, form, field, opts) do
     label = Keyword.get(opts, :label) || Phoenix.HTML.Form.humanize(field)
     errors = error_tag(form, field)
-    input_classes = class_list([
+
+    input_classes =
+      class_list([
         {"form-input mt-1 block w-full", true},
         {"border-red-500 border-2", errors}
       ])
@@ -33,18 +36,52 @@ defmodule ByggAppWeb.FormHelpers do
   end
 
   def textarea(form, field, opts \\ []) do
+    textarea(form, field, false, opts)
+  end
+
+  def textarea_with_counter(form, field, opts \\ []) do
+    textarea(form, field, true, opts)
+  end
+
+  defp textarea(form, field, include_counter, opts) do
     label = Keyword.get(opts, :label) || Phoenix.HTML.Form.humanize(field)
+
+    max_count =
+      Phoenix.HTML.Form.input_validations(form, field)
+      |> Keyword.get(:maxlength, 0)
+
     errors = error_tag(form, field)
-    input_classes = class_list([
+
+    input_classes =
+      class_list([
         {"form-textarea mt-1 block w-full", true},
         {"border-red-500 border-2", errors}
       ])
 
+    textarea_opts = [
+      class: input_classes,
+      rows: Keyword.get(opts, :rows)
+      ]
+
+    textarea_opts =
+      if include_counter do
+        textarea_opts
+        |> Keyword.put(:data_target, "character-counter.input")
+        |> Keyword.put(:data_action, "input->character-counter#count")
+      else
+        textarea_opts
+      end
+
     ~E"""
-    <div class="mb-4">
+    <div class="mb-4"<%= if include_counter, do: " data-controller=character-counter data-character-counter-max-count=#{max_count}" %>>
       <label class="block">
         <span class="text-gray-700"><%= label %></span>
-        <%= Phoenix.HTML.Form.textarea form, field, class: input_classes, rows: Keyword.get(opts, :rows) %>
+        <%= Phoenix.HTML.Form.textarea form,
+              field,
+              textarea_opts %>
+        <%= if include_counter do %>
+        <p class="text-sm text-right mt-1" data-target="character-counter.counter"><%= gettext("Max %{count} characters", count: max_count) %></p>
+        <% end %>
       </label>
       <%= errors %>
     </div>
@@ -83,9 +120,10 @@ defmodule ByggAppWeb.FormHelpers do
   end
 
   defp error_tag(form, field) do
-    errors = Enum.map(Keyword.get_values(form.errors, field), fn error ->
-      Phoenix.HTML.Tag.content_tag(:li, ByggAppWeb.ErrorHelpers.translate_error(error))
-    end)
+    errors =
+      Enum.map(Keyword.get_values(form.errors, field), fn error ->
+        Phoenix.HTML.Tag.content_tag(:li, ByggAppWeb.ErrorHelpers.translate_error(error))
+      end)
 
     if Enum.empty?(errors) do
       nil
