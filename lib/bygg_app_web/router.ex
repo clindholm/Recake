@@ -68,7 +68,7 @@ defmodule ByggAppWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: ScrapWeb.Telemetry
+      live_dashboard "/dashboard", metrics: ByggAppWeb.Telemetry
     end
   end
 end

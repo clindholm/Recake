@@ -17,8 +17,14 @@
           <%= request.job.user.company %>
         </h3>
         <div class="flex justify-between">
-          <p><%= request.job.location %></p>
-          <p><%= request.job.timespan %></p>
+          <p>
+            <i class="fas fa-map-marker-alt text-blue-600"></i>
+            <%= request.job.location %>
+          </p>
+          <p>
+            <i class="far fa-stopwatch text-blue-600"></i>
+            <%= request.job.timespan %>
+          </p>
         </div>
         <p class="mt-2">
           <%= request.job.description %>
