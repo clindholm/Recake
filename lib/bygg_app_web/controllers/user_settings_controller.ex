@@ -4,6 +4,7 @@ defmodule ByggAppWeb.UserSettingsController do
   alias ByggApp.Accounts
   alias ByggAppWeb.UserAuth
 
+  plug :page_header, gettext("Settings")
   plug :assign_email_and_password_changesets
 
   def edit(conn, _params) do
@@ -16,7 +17,7 @@ defmodule ByggAppWeb.UserSettingsController do
     case Accounts.update_user_password(user, password, user_params) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, gettext("Password updated successfully"))
+        |> put_flash(:success, gettext("Password updated successfully"))
         |> put_session(:user_return_to, Routes.user_settings_path(conn, :edit))
         |> UserAuth.login_user(user)
 
@@ -39,7 +40,7 @@ defmodule ByggAppWeb.UserSettingsController do
         conn
         |> put_flash(
           :info,
-          gettext("A link to confirm your e-mail change has been sent to the new address.")
+          gettext("A link to confirm your e-mail has been sent to the new address.")
         )
         |> redirect(to: Routes.user_settings_path(conn, :edit))
 
@@ -52,12 +53,12 @@ defmodule ByggAppWeb.UserSettingsController do
     case Accounts.update_user_email(conn.assigns.current_user, token) do
       :ok ->
         conn
-        |> put_flash(:info, gettext("E-mail changed successfully"))
+        |> put_flash(:success, gettext("E-mail updated successfully"))
         |> redirect(to: Routes.user_settings_path(conn, :edit))
 
       :error ->
         conn
-        |> put_flash(:error, gettext("E-mail change url is invalid. Try again below."))
+        |> put_flash(:error, gettext("E-mail update url is invalid. Try updating your e-mail again below."))
         |> redirect(to: Routes.user_settings_path(conn, :edit))
     end
   end

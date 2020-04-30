@@ -24,11 +24,16 @@ defmodule ByggAppWeb.FormHelpers do
         {"border-red-500 border-2", errors}
       ])
 
+    opts =
+      opts
+      |> Keyword.take([:name, :id])
+      |> Keyword.put(:class, input_classes)
+
     ~E"""
     <div class="mb-4">
       <label class="block">
         <span class="text-gray-700"><%= label %></span>
-        <%= type_f.(form, field, class: input_classes) %>
+        <%= type_f.(form, field, opts) %>
       </label>
       <%= errors %>
     </div>

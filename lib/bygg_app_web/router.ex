@@ -56,7 +56,7 @@ defmodule ByggAppWeb.Router do
   end
 
   scope "/", ByggAppWeb do
-    pipe_through [:browser]
+    pipe_through [:browser, :minimal_layout]
 
     get "/users/confirm", UserConfirmationController, :new
     post "/users/confirm", UserConfirmationController, :create

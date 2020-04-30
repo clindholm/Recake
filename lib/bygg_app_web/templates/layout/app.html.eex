@@ -30,7 +30,7 @@
         </nav>
       </section>
     </header>
-    <main role="main" class="container mx-auto px-2 -mt-48">
+    <main role="main" class="container mx-auto px-2 pb-4 -mt-48">
       <%= page_header(assigns[:page_header]) %>
 
       <%= @inner_content %>
