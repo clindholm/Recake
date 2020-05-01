@@ -22,7 +22,7 @@ defmodule ByggAppWeb.HtmlHelpers do
     alert_type = Atom.to_string(type)
     ~E"""
     <%= if Phoenix.Controller.get_flash(conn, type) do %>
-      <div class="alert alert-<%= alert_type %>  -mr-4 -ml-4 mb-4">
+      <div class="alert alert-<%= alert_type %> -mr-4 -ml-4 mb-4">
         <p><%= Phoenix.Controller.get_flash(conn, type) %></p>
       </div>
     <% end %>

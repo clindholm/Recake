@@ -127,7 +127,7 @@ defmodule ByggAppWeb.FormHelpers do
   defp error_tag(form, field) do
     errors =
       Enum.map(Keyword.get_values(form.errors, field), fn error ->
-        Phoenix.HTML.Tag.content_tag(:li, ByggAppWeb.ErrorHelpers.translate_error(error))
+        Phoenix.HTML.Tag.content_tag(:li, ByggAppWeb.ErrorHelpers.translate_error(error), class: "validation-error")
       end)
 
     if Enum.empty?(errors) do

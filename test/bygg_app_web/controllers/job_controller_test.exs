@@ -8,8 +8,7 @@ defmodule ByggAppWeb.JobControllerTest do
   alias ByggApp.Jobs.Job
 
   setup %{conn: conn} do
-    user =
-      user_fixture()
+    user = user_fixture()
 
     conn =
       conn
@@ -28,35 +27,29 @@ defmodule ByggAppWeb.JobControllerTest do
       assert redirected_to(conn) == "/users/login"
     end
 
-    test "renders success flash", %{conn: conn} do
-      conn =
-        conn
-        |> fetch_flash()
-        |> put_flash(:success, "Success flash")
-        |> get(Routes.job_path(conn, :index))
-
-      response = html_response(conn, 200)
-      assert response =~ "Success flash"
+    test "renders flash", %{conn: conn} do
+      assert_render_flash(conn, &get(&1, Routes.job_path(conn, :index)), :success)
     end
 
     test "renders empty state", %{conn: conn} do
-      conn = get(conn, Routes.job_path(conn, :index))
-      response = html_response(conn, 200)
-      assert_section_header response, gettext("Your jobs")
-      assert response =~ gettext("You have no active jobs")
-      assert response =~ "href=\"#{Routes.job_path(conn, :new)}\""
+      conn
+      |> get(Routes.job_path(conn, :index))
+      |> html_document()
+      |> assert_section_header(gettext("Your jobs"))
+      |> assert_selector_content("h2", gettext("You have no active jobs"))
+      |> assert_selector("a[href=\"#{Routes.job_path(conn, :new)}\"]")
     end
 
     test "renders active user jobs", %{conn: conn, user: user} do
       active_job = job_fixture(user, %{identifier: "Active Job"})
       closed_job = job_fixture(user, %{is_closed: true, identifier: "Closed Job"})
 
-      conn = get(conn, Routes.job_path(conn, :index))
-      response = html_response(conn, 200)
-      assert_section_header response, gettext("Your jobs")
-
-      assert response =~ active_job.identifier
-      refute response =~ closed_job.identifier
+      conn
+      |> get(Routes.job_path(conn, :index))
+      |> html_document()
+      |> assert_section_header(gettext("Your jobs"))
+      |> assert_selector_content(".project-id", active_job.identifier)
+      |> refute_selector_content(".project-id", closed_job.identifier)
     end
   end
 
@@ -68,15 +61,17 @@ defmodule ByggAppWeb.JobControllerTest do
     end
 
     test "renders job creation page", %{conn: conn} do
-      conn = get(conn, Routes.job_path(conn, :new))
-      response = html_response(conn, 200)
-      assert_section_header response, gettext("Create new job")
-      assert response =~ "<form action=\"#{Routes.job_path(conn, :create)}\""
-      assert response =~ "name=\"job[identifier]\""
-      assert response =~ "name=\"job[description]\""
-      assert response =~ "name=\"job[location]\""
-      assert response =~ "name=\"job[timespan]\""
-      assert response =~ "type=\"submit\""
+      conn
+      |> get(Routes.job_path(conn, :new))
+      |> html_document()
+      |> assert_section_header(gettext("Create new job"))
+      |> assert_form(Routes.job_path(conn, :create), [
+        "input[name=\"job[identifier]\"]",
+        "textarea[name=\"job[description]\"]",
+        "input[name=\"job[location]\"]",
+        "input[name=\"job[timespan]\"]",
+        "*[type=submit]"
+      ])
     end
   end
 
@@ -93,29 +88,28 @@ defmodule ByggAppWeb.JobControllerTest do
           "identifier" => "Identifier",
           "description" => "Description",
           "location" => "Location",
-          "timespan" => "Timespan",
+          "timespan" => "Timespan"
         }
       })
 
       jobs = Repo.all(Job)
       user_id = user.id
       assert Enum.count(jobs) == 1
+
       assert %{
-        description: "Description",
-        location: "Location",
-        timespan: "Timespan",
-        user_id: ^user_id
-      } = List.first(jobs)
+               description: "Description",
+               location: "Location",
+               timespan: "Timespan",
+               user_id: ^user_id
+             } = List.first(jobs)
     end
 
     test "renders errors for invalid data", %{conn: conn} do
-      conn =
-        post(conn, Routes.job_path(conn, :create), %{"job" => %{}})
-
-      response = html_response(conn, 200)
-      assert_section_header response, gettext("Create new job")
-      assert response =~ dgettext("errors", "can't be blank")
+      conn
+      |> post(Routes.job_path(conn, :create), %{"job" => %{}})
+      |> html_document()
+      |> assert_section_header(gettext("Create new job"))
+      |> assert_selector_content(".validation-error", dgettext("errors", "can't be blank"))
     end
   end
-
 end

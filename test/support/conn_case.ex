@@ -42,8 +42,82 @@ defmodule ByggAppWeb.ConnCase do
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 
-  def assert_section_header(response, label) do
-    assert response =~ "<h1 class=\"section-title\">#{label}</h1>"
+  def html_document(conn) do
+    conn
+    |> Phoenix.ConnTest.html_response(200)
+    |> Floki.parse_document!()
+  end
+
+  def assert_selector(document, selector) do
+    assert not Enum.empty?(Floki.find(document, selector)), "\"#{selector}\" not found"
+
+    document
+  end
+
+  def assert_selector_times(document, selector, n) do
+    els = Enum.count(Floki.find(document, selector))
+    assert Enum.count(Floki.find(document, selector)) == n, "Found \"#{selector}\" #{els} times"
+
+    document
+  end
+
+  def assert_selector_content(document, selector, content) do
+    els =
+      document
+      |> Floki.find(selector)
+
+    assert Enum.any?(els, fn {_,_,children} -> Floki.raw_html(children) =~ content end), "\"#{content}\" in \"#{selector}\" not found"
+
+    document
+  end
+
+  def refute_selector_content(document, selector, content) do
+    els =
+      document
+      |> Floki.find(selector)
+
+    refute Enum.any?(els, fn {_,_,[actual_content]} -> actual_content =~ content end), "\"#{content}\" in \"#{selector}\" found"
+
+    document
+  end
+
+  def assert_content(document, content) do
+    html = Floki.raw_html(document)
+
+    assert html =~ content, "\"#{content}\" not present in \"#{html}\""
+
+    document
+  end
+
+  def assert_section_header(document, label) do
+    document
+    |> assert_selector_content("h1.section-title", label)
+
+    document
+  end
+
+  def assert_render_flash(conn, route_f, type) do
+    conn =
+      conn
+      |> Phoenix.ConnTest.fetch_flash()
+      |> Phoenix.ConnTest.put_flash(type, "Flash")
+
+    conn
+    |> route_f.()
+    |> html_document()
+    |> assert_selector_content(".alert-#{ to_string(type) } > p", "Flash")
+  end
+
+  def assert_form(document, action, inputs) do
+    form = Floki.find(document, "form[action=\"#{action}\"]")
+
+    assert form != [], "Form not found"
+
+    for input <- inputs do
+      assert Floki.find(form, input) != [], "Input \"#{input}\" not found in form"
+    end
+
+    document
   end
 
   def register_and_login_user(%{conn: conn}) do

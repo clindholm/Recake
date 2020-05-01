@@ -27,33 +27,17 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       assert redirected_to(conn) == "/users/login"
     end
 
-    test "renders success flash", %{conn: conn} do
-      conn =
-        conn
-        |> fetch_flash()
-        |> put_flash(:success, "Success flash")
-        |> get(Routes.job_request_path(conn, :index))
-
-      response = html_response(conn, 200)
-      assert response =~ "Success flash"
-    end
-
-    test "renders info flash", %{conn: conn} do
-      conn =
-        conn
-        |> fetch_flash()
-        |> put_flash(:info, "Info flash")
-        |> get(Routes.job_request_path(conn, :index))
-
-      response = html_response(conn, 200)
-      assert response =~ "Info flash"
+    test "renders flash", %{conn: conn} do
+      assert_render_flash(conn, & get(&1, Routes.job_request_path(conn, :index)), :success)
+      assert_render_flash(conn, & get(&1, Routes.job_request_path(conn, :index)), :info)
     end
 
     test "renders empty state", %{conn: conn} do
-      conn = get(conn, Routes.job_request_path(conn, :index))
-      response = html_response(conn, 200)
-      assert_section_header response, gettext("Current requests")
-      assert response =~ gettext("You have no requests at this time")
+      conn
+      |> get(Routes.job_request_path(conn, :index))
+      |> html_document()
+      |> assert_section_header(gettext("Current requests"))
+      |> assert_selector_content("h2", gettext("You have no requests at this time"))
     end
 
     test "lists current pending requests of the user", %{conn: conn, user: user} do
@@ -69,13 +53,13 @@ defmodule ByggAppWeb.JobRequestControllerTest do
 
       assert [^pending_request1] = conn.assigns.job_requests
 
-      response = html_response(conn, 200)
-
-      assert response =~ pending_request1.job.user.company
-      assert response =~ Routes.job_request_path(conn, :resolve, pending_request1)
-      assert response =~ "name=\"accept\""
-      assert response =~ "name=\"reject\""
-      assert response =~ Routes.job_request_path(conn, :resolve, pending_request1)
+      conn
+      |> html_document()
+      |> assert_selector_content("h3", pending_request1.job.user.company)
+      |> assert_form(Routes.job_request_path(conn, :resolve, pending_request1), [
+        "button[name=\"accept\"]",
+        "button[name=\"reject\"]",
+      ])
     end
   end
 
@@ -105,9 +89,9 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       assert get_flash(conn, :success) == gettext("%{company} has been notifed of your interest", company: job_creator.company)
 
-      conn = get(conn, Routes.job_request_path(conn, :index))
-      response = html_response(conn, 200)
-      refute response =~ Routes.job_request_path(conn, :resolve, request.id)
+      conn
+      |> get(Routes.job_request_path(conn, :index))
+      |> assert_selector_times(".card-grid .card", 0)
     end
 
     test "resolves rejections", %{conn: conn, request: request, job_creator: job_creator} do
@@ -115,9 +99,9 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       assert get_flash(conn, :info) == gettext("%{company} has been notifed of your lack of interest", company: job_creator.company)
 
-      conn = get(conn, Routes.job_request_path(conn, :index))
-      response = html_response(conn, 200)
-      refute response =~ Routes.job_request_path(conn, :resolve, request.id)
+      conn
+      |> get(Routes.job_request_path(conn, :index))
+      |> assert_selector_times(".card-grid .card", 0)
     end
 
     test "does not resolve other user's requests", %{conn: conn, job: job} do

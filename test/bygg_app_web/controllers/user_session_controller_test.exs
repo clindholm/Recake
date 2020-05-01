@@ -9,49 +9,25 @@ defmodule ByggAppWeb.UserSessionControllerTest do
 
   describe "GET /users/login" do
     test "renders login page", %{conn: conn} do
-      conn = get(conn, Routes.user_session_path(conn, :new))
-      response = html_response(conn, 200)
-      assert response =~ "#{gettext "Login"}</h1>"
-      assert response =~ "<form action=\"#{Routes.user_session_path(conn, :create)}\""
-      assert response =~ "name=\"user[email]\""
-      assert response =~ "name=\"user[password]\""
-      assert response =~ "type=\"submit\""
+      conn
+      |> get(Routes.user_session_path(conn, :new))
+      |> html_document()
+      |> assert_selector_content("h1", gettext("Login"))
+      |> assert_form(Routes.user_session_path(conn, :create), [
+        "input[name=\"user[email]\"]",
+        "input[name=\"user[password]\"][type=password]",
+        "button[type=\"submit\"]",
+      ])
     end
 
-    test "renders info flash", %{conn: conn} do
+    test "renders flash", %{conn: conn} do
       conn =
         conn
         |> init_test_session(%{})
-        |> fetch_flash()
-        |> put_flash(:info, "Info flash")
-        |> get(Routes.user_session_path(conn, :new))
 
-      response = html_response(conn, 200)
-      assert response =~ "Info flash"
-    end
-
-    test "renders error flash", %{conn: conn} do
-      conn =
-        conn
-        |> init_test_session(%{})
-        |> fetch_flash()
-        |> put_flash(:error, "Error flash")
-        |> get(Routes.user_session_path(conn, :new))
-
-      response = html_response(conn, 200)
-      assert response =~ "Error flash"
-    end
-
-    test "renders success flash", %{conn: conn} do
-      conn =
-        conn
-        |> init_test_session(%{})
-        |> fetch_flash()
-        |> put_flash(:success, "Success flash")
-        |> get(Routes.user_session_path(conn, :new))
-
-      response = html_response(conn, 200)
-      assert response =~ "Success flash"
+      assert_render_flash(conn, & get(&1, Routes.user_session_path(conn, :new)), :info)
+      assert_render_flash(conn, & get(&1, Routes.user_session_path(conn, :new)), :error)
+      assert_render_flash(conn, & get(&1, Routes.user_session_path(conn, :new)), :success)
     end
 
     test "redirects if already logged in", %{conn: conn, user: user} do
@@ -72,7 +48,7 @@ defmodule ByggAppWeb.UserSessionControllerTest do
 
       # Now do a logged in request
       conn = get(conn, "/")
-      _response = html_response(conn, 200)
+      assert conn.status == 200
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do
@@ -90,13 +66,12 @@ defmodule ByggAppWeb.UserSessionControllerTest do
     end
 
     test "emits error message with invalid credentials", %{conn: conn, user: user} do
-      conn =
-        post(conn, Routes.user_session_path(conn, :create), %{
+      conn
+      |> post(Routes.user_session_path(conn, :create), %{
           "user" => %{"email" => user.email, "password" => "invalid_password"}
         })
-
-      response = html_response(conn, 200)
-      assert response =~ gettext("Invalid e-mail or password")
+      |> html_document()
+      |> assert_selector_content(".alert-error", gettext("Invalid e-mail or password"))
     end
   end
 

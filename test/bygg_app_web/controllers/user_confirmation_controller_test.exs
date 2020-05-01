@@ -11,9 +11,10 @@ defmodule ByggAppWeb.UserConfirmationControllerTest do
 
   describe "GET /users/confirm" do
     test "renders the confirmation page", %{conn: conn} do
-      conn = get(conn, Routes.user_confirmation_path(conn, :new))
-      response = html_response(conn, 200)
-      assert response =~ "<h1>Resend confirmation instructions</h1>"
+      conn
+      |> get(Routes.user_confirmation_path(conn, :new))
+      |> html_document()
+      |> assert_selector_content("h1", "Resend confirmation instructions")
     end
   end
 

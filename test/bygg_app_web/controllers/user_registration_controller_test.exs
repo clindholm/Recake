@@ -5,15 +5,17 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
 
   describe "GET /users/register" do
     test "renders registration page", %{conn: conn} do
-      conn = get(conn, Routes.user_registration_path(conn, :new))
-      response = html_response(conn, 200)
-      assert response =~ "#{gettext "Register"}</h1>"
-      assert response =~ "<form action=\"#{Routes.user_registration_path(conn, :create)}\""
-      assert response =~ "name=\"user[email]\""
-      assert response =~ "name=\"user[password]\""
-      assert response =~ "name=\"user[company]\""
-      assert response =~ "name=\"user[phone]\""
-      assert response =~ "type=\"submit\""
+      conn
+      |> get(Routes.user_registration_path(conn, :new))
+      |> html_document()
+      |> assert_selector_content("h1", gettext("Register"))
+      |> assert_form(Routes.user_registration_path(conn, :create), [
+        "input[name=\"user[email]\"]",
+        "input[name=\"user[password]\"][type=password]",
+        "input[name=\"user[company]\"",
+        "input[name=\"user[phone]\"",
+        "button[type=submit]"
+      ])
     end
 
     test "redirects if already logged in", %{conn: conn} do
@@ -42,19 +44,29 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
 
       # Now do a logged in request
       conn = get(conn, "/")
-      assert html_response(conn, 200)
+      assert conn.status == 200
     end
 
     test "render errors for invalid data", %{conn: conn} do
-      conn =
-        post(conn, Routes.user_registration_path(conn, :create), %{
-          "user" => %{"email" => "with spaces", "password" => "invalid"}
-        })
-
-      response = html_response(conn, 200)
-      assert response =~ "#{gettext "Register"}</h1>"
-      assert response =~ dgettext("errors", "must include @ sign and no spaces")
-      assert response =~ dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8)
+      conn
+      |> post(Routes.user_registration_path(conn, :create), %{
+        "user" => %{"email" => "with spaces", "password" => "invalid"}
+      })
+      |> html_document()
+      |> assert_selector_content("h1", gettext("Register"))
+      |> assert_selector_content(
+        ".validation-error",
+        dgettext("errors", "must include @ sign and no spaces")
+      )
+      |> assert_selector_content(
+        ".validation-error",
+        dngettext(
+          "errors",
+          "should be at least %{count} character(s)",
+          "should be at least %{count} character(s)",
+          8
+        )
+      )
     end
   end
 end

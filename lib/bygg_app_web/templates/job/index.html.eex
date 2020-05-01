@@ -13,7 +13,7 @@
     <%= for job <- @jobs do %>
     <div class="card space-y-4">
       <div class="flex justify-between">
-        <h3 class="text-lg">
+        <h3 class="text-lg project-id">
           <%= job.identifier %>
         </h3>
         <p><%= ngettext("%{count} sent request", "%{count} sent requests", Enum.count(job.requests)) %></p>

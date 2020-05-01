@@ -38,6 +38,7 @@ defmodule ByggApp.MixProject do
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},
       {:ecto_enum, "~> 1.4"},
+      {:floki, "~> 0.26.0", only: :test},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},

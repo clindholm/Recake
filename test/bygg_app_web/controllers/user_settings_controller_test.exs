@@ -13,50 +13,28 @@ defmodule ByggAppWeb.UserSettingsControllerTest do
       assert redirected_to(conn) == "/users/login"
     end
 
-    test "renders success flash", %{conn: conn} do
-      conn =
-        conn
-        |> fetch_flash()
-        |> put_flash(:success, "Success flash")
-        |> get(Routes.user_settings_path(conn, :edit))
-
-      response = html_response(conn, 200)
-      assert response =~ "Success flash"
-    end
-
-    test "renders error flash", %{conn: conn} do
-      conn =
-        conn
-        |> fetch_flash()
-        |> put_flash(:error, "Error flash")
-        |> get(Routes.user_settings_path(conn, :edit))
-
-      response = html_response(conn, 200)
-      assert response =~ "Error flash"
-    end
-
-    test "renders info flash", %{conn: conn} do
-      conn =
-        conn
-        |> fetch_flash()
-        |> put_flash(:info, "Info flash")
-        |> get(Routes.user_settings_path(conn, :edit))
-
-      response = html_response(conn, 200)
-      assert response =~ "Info flash"
+    test "renders flash", %{conn: conn} do
+      assert_render_flash(conn, &get(&1, Routes.user_settings_path(conn, :edit)), :success)
+      assert_render_flash(conn, &get(&1, Routes.user_settings_path(conn, :edit)), :error)
+      assert_render_flash(conn, &get(&1, Routes.user_settings_path(conn, :edit)), :info)
     end
 
     test "renders settings page", %{conn: conn} do
-      conn = get(conn, Routes.user_settings_path(conn, :edit))
-      response = html_response(conn, 200)
-      assert_section_header response, gettext("Settings")
-      assert response =~ "<form action=\"#{Routes.user_settings_path(conn, :update_password)}\""
-      assert response =~ "<form action=\"#{Routes.user_settings_path(conn, :update_email)}\""
-      assert response =~ "name=\"user[password]\""
-      assert response =~ "name=\"current_password\""
-      assert response =~ "name=\"user[password_confirmation]\""
-      assert response =~ "name=\"user[email]\""
-      assert response =~ "type=\"submit\""
+      conn
+      |> get(Routes.user_settings_path(conn, :edit))
+      |> html_document()
+      |> assert_section_header(gettext("Settings"))
+      |> assert_form(Routes.user_settings_path(conn, :update_password), [
+        "input[name=\"user[password]\"][type=password]",
+        "input[name=\"user[password_confirmation]\"][type=password]",
+        "input[name=\"current_password\"][type=password]",
+        "button[type=\"submit\"]"
+      ])
+      |> assert_form(Routes.user_settings_path(conn, :update_email), [
+        "input[name=\"user[email]\"]",
+        "input[name=\"current_password\"][type=password]",
+        "button[type=\"submit\"]"
+      ])
     end
   end
 
@@ -87,11 +65,12 @@ defmodule ByggAppWeb.UserSettingsControllerTest do
           }
         })
 
-      response = html_response(old_password_conn, 200)
-      assert_section_header response, gettext("Settings")
-      assert response =~ dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8)
-      assert response =~ dgettext("errors", "does not match password")
-      assert response =~ dgettext("errors", "is not valid")
+      old_password_conn
+      |> html_document()
+      |> assert_section_header(gettext("Settings"))
+      |> assert_selector_content(".validation-error", dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8))
+      |> assert_selector_content(".validation-error", dgettext("errors", "does not match password"))
+      |> assert_selector_content(".validation-error", dgettext("errors", "is not valid"))
 
       assert get_session(old_password_conn, :user_token) == get_session(conn, :user_token)
     end
@@ -112,16 +91,15 @@ defmodule ByggAppWeb.UserSettingsControllerTest do
     end
 
     test "does not update email on invalid data", %{conn: conn} do
-      conn =
-        put(conn, Routes.user_settings_path(conn, :update_email), %{
-          "current_password" => "invalid",
-          "user" => %{"email" => "with spaces"}
-        })
-
-      response = html_response(conn, 200)
-      assert_section_header response, gettext("Settings")
-      assert response =~ dgettext("errors", "must include @ sign and no spaces")
-      assert response =~ dgettext("errors", "is not valid")
+      conn
+      |> put(Routes.user_settings_path(conn, :update_email), %{
+        "current_password" => "invalid",
+        "user" => %{"email" => "with spaces"}
+      })
+      |> html_document()
+      |> assert_section_header(gettext("Settings"))
+      |> assert_selector_content(".validation-error", dgettext("errors", "must include @ sign and no spaces"))
+      |> assert_selector_content(".validation-error", dgettext("errors", "is not valid"))
     end
   end
 

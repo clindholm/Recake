@@ -11,24 +11,20 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
 
   describe "GET /users/reset_password" do
     test "renders the reset password page", %{conn: conn} do
-      conn = get(conn, Routes.user_reset_password_path(conn, :new))
-      response = html_response(conn, 200)
-      assert response =~ "#{gettext("Forgot your password?")}</h1>"
-      assert response =~ "<form action=\"#{Routes.user_reset_password_path(conn, :create)}\""
-      assert response =~ "name=\"user[email]\""
-      assert response =~ "type=\"submit\""
+      conn
+      |> get(Routes.user_reset_password_path(conn, :new))
+      |> html_document()
+      |> assert_selector_content("h1", gettext("Forgot your password?"))
+      |> assert_form(Routes.user_reset_password_path(conn, :create), [
+        "input[name=\"user[email]\"]",
+        "button[type=\"submit\"]"
+      ])
     end
 
     test "renders error flash", %{conn: conn} do
-      conn =
-        conn
-        |> init_test_session(%{})
-        |> fetch_flash()
-        |> put_flash(:error, "Error flash")
-        |> get(Routes.user_reset_password_path(conn, :new))
-
-      response = html_response(conn, 200)
-      assert response =~ "Error flash"
+      conn
+      |> init_test_session(%{})
+      |> assert_render_flash(&get(&1, Routes.user_reset_password_path(conn, :new)), :error)
     end
   end
 
@@ -41,7 +37,12 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
         })
 
       assert redirected_to(conn) == "/users/login"
-      assert get_flash(conn, :info) =~ gettext("You will receive instructions to reset your password to your e-mail shortly.")
+
+      assert get_flash(conn, :info) =~
+               gettext(
+                 "You will receive instructions to reset your password to your e-mail shortly."
+               )
+
       assert Repo.get_by!(Accounts.UserToken, user_id: user.id).context == "reset_password"
     end
 
@@ -52,7 +53,12 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
         })
 
       assert redirected_to(conn) == "/users/login"
-      assert get_flash(conn, :info) =~ gettext("You will receive instructions to reset your password to your e-mail shortly.")
+
+      assert get_flash(conn, :info) =~
+               gettext(
+                 "You will receive instructions to reset your password to your e-mail shortly."
+               )
+
       assert Repo.all(Accounts.UserToken) == []
     end
   end
@@ -68,18 +74,23 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
     end
 
     test "renders reset password", %{conn: conn, token: token} do
-      conn = get(conn, Routes.user_reset_password_path(conn, :edit, token))
-      response = html_response(conn, 200)
-      assert response =~ "#{gettext "Reset password"}</h1>"
-      assert response =~ "<form action=\"#{Routes.user_reset_password_path(conn, :update, token)}\""
-      assert response =~ "name=\"user[password]\""
-      assert response =~ "name=\"user[password_confirmation]\""
+      conn
+      |> get(Routes.user_reset_password_path(conn, :edit, token))
+      |> html_document()
+      |> assert_selector_content("h1", gettext("Reset password"))
+      |> assert_form(Routes.user_reset_password_path(conn, :update, token), [
+        "input[name=\"user[password]\"]",
+        "input[name=\"user[password_confirmation]\"]",
+        "button[type=\"submit\"]"
+      ])
     end
 
     test "does not render reset password with invalid token", %{conn: conn} do
       conn = get(conn, Routes.user_reset_password_path(conn, :edit, "oops"))
       assert redirected_to(conn) == "/users/reset_password"
-      assert get_flash(conn, :error) =~ gettext("Reset password link has expired. Send a new link below.")
+
+      assert get_flash(conn, :error) =~
+               gettext("Reset password link has expired. Send a new link below.")
     end
   end
 
@@ -104,29 +115,44 @@ defmodule ByggAppWeb.UserResetPasswordControllerTest do
 
       assert redirected_to(conn) == "/users/login"
       refute get_session(conn, :user_token)
-      assert get_flash(conn, :success) && get_flash(conn, :success)  =~ gettext("Password reset successfully")
+
+      assert get_flash(conn, :success) &&
+               get_flash(conn, :success) =~ gettext("Password reset successfully")
+
       assert Accounts.get_user_by_email_and_password(user.email, "new valid password")
     end
 
     test "does not reset password on invalid data", %{conn: conn, token: token} do
-      conn =
-        put(conn, Routes.user_reset_password_path(conn, :update, token), %{
-          "user" => %{
-            "password" => "invalid",
-            "password_confirmation" => "does not match"
-          }
-        })
-
-      response = html_response(conn, 200)
-      assert response =~ "#{gettext "Reset password"}</h1>"
-      assert response =~ dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8)
-      assert response =~ dgettext("errors", "does not match password")
+      conn
+      |> put(Routes.user_reset_password_path(conn, :update, token), %{
+        "user" => %{
+          "password" => "invalid",
+          "password_confirmation" => "does not match"
+        }
+      })
+      |> html_document()
+      |> assert_selector_content("h1", gettext("Reset password"))
+      |> assert_selector_content(
+        ".validation-error",
+        dngettext(
+          "errors",
+          "should be at least %{count} character(s)",
+          "should be at least %{count} character(s)",
+          8
+        )
+      )
+      |> assert_selector_content(
+        ".validation-error",
+        dgettext("errors", "does not match password")
+      )
     end
 
     test "does not reset password with invalid token", %{conn: conn} do
       conn = put(conn, Routes.user_reset_password_path(conn, :update, "oops"))
       assert redirected_to(conn) == "/users/reset_password"
-      assert get_flash(conn, :error) =~ gettext("Reset password link has expired. Send a new link below.")
+
+      assert get_flash(conn, :error) =~
+               gettext("Reset password link has expired. Send a new link below.")
     end
   end
 end
