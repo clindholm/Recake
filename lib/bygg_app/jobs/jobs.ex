@@ -59,6 +59,12 @@ defmodule ByggApp.Jobs do
     end
   end
 
+  def update_job(job, attrs) do
+    job
+    |> change_job(attrs)
+    |> Repo.update()
+  end
+
   def resolve_request(request, :accept) do
     request
     |> Ecto.Changeset.change(status: :accepted)

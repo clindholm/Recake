@@ -18,11 +18,16 @@ defmodule ByggAppWeb.LayoutView do
     """
   end
 
-  def page_header(%{title: title, action: %{label: label, url: url}}) do
+  def page_header(%{title: title, action: %{label: label, url: url} = action}) do
     ~E"""
     <div class="flex justify-between items-center">
       <h1 class="section-title"><%= title %></h1>
-      <a href="<%= url %>" class="bg-white rounded p-2 hover:no-underline hover:bg-blue-100 text-blue-900 font-bold lowercase"><%= label %></a>
+      <a href="<%= url %>" class="btn bg-white border-gray-500 hover:no-underline hover:bg-blue-100 text-blue-900 font-bold lowercase">
+        <%= if action[:icon] do %>
+        <i class="fas fa-<%= action.icon %> mr-1"></i>
+        <% end %>
+        <%= label %>
+      </a>
     </div>
     """
   end

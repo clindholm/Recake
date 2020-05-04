@@ -252,6 +252,43 @@ defmodule ByggApp.JobsTest do
     end
   end
 
+  describe "update_job/2" do
+    setup do
+      user = user_fixture()
+      job = job_fixture(user)
+
+      %{
+        job: job
+      }
+    end
+
+    test "updates the job", %{job: job} do
+      {:ok, job} = Jobs.update_job(job, %{
+        identifier: "Updated identifier",
+        description: "Updated description",
+      })
+
+      updated_job = Repo.get!(Job, job.id)
+
+      assert updated_job.identifier == "Updated identifier"
+      assert updated_job.description == "Updated description"
+    end
+
+    test "validates the job", %{job: job} do
+      {:error, changeset} = Jobs.update_job(job, %{
+        identifier: "",
+        description: "",
+      })
+
+      error = dgettext("errors", "can't be blank")
+
+      assert %{
+        identifier: [^error],
+        description: [^error]
+      } = errors_on(changeset)
+    end
+  end
+
   describe "resolve_request/2" do
     setup do
       user = user_fixture()

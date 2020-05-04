@@ -76,7 +76,7 @@ defmodule ByggAppWeb.ConnCase do
       document
       |> Floki.find(selector)
 
-    refute Enum.any?(els, fn {_,_,[actual_content]} -> actual_content =~ content end), "\"#{content}\" in \"#{selector}\" found"
+    refute Enum.any?(els, fn {_,_,children} -> Floki.raw_html(children) =~ content end), "\"#{content}\" in \"#{selector}\" found"
 
     document
   end

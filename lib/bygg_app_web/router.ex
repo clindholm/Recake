@@ -50,9 +50,7 @@ defmodule ByggAppWeb.Router do
     get "/", JobRequestController, :index
     post "/requests/:id/resolve", JobRequestController, :resolve
 
-    get "/jobs", JobController, :index
-    get "/jobs/new", JobController, :new
-    post "/jobs/new", JobController, :create
+    resources "/jobs", JobController, except: [:show, :delete]
   end
 
   scope "/", ByggAppWeb do

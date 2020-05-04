@@ -12,12 +12,13 @@
   <div class="mt-6 space-y-8">
     <%= for job <- @jobs do %>
     <div class="card space-y-4">
-      <div class="flex justify-between">
-        <h3 class="text-lg project-id">
-          <%= job.identifier %>
-        </h3>
-        <p><%= ngettext("%{count} sent request", "%{count} sent requests", Enum.count(job.requests)) %></p>
-      </div>
+      <h3 class="text-lg project-id flex justify-between">
+        <%= job.identifier %>
+        <%= link to: Routes.job_path(@conn, :edit, job), class: "text-base" do %>
+          <i class="fas fa-edit mr-1 text-blue-300"></i><%= gettext("Edit") %>
+        <% end %>
+      </h3>
+      <p><%= ngettext("%{count} sent request", "%{count} sent requests", Enum.count(job.requests)) %></p>
 
       <h4 class="uppercase text-gray-600"><%= gettext("Interested recipients") %></h4>
       <%= for request <- filter_requests(job.requests, :accepted) do %>

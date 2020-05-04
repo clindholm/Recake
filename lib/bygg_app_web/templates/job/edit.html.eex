@@ -1,0 +1,1 @@
+<%= render "_form.html", changeset: @changeset, action: Routes.job_path(@conn, :update, @changeset.data), submit_label: gettext("Update") %>

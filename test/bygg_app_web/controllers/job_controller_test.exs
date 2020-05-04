@@ -50,6 +50,7 @@ defmodule ByggAppWeb.JobControllerTest do
       |> assert_section_header(gettext("Your jobs"))
       |> assert_selector_content(".project-id", active_job.identifier)
       |> refute_selector_content(".project-id", closed_job.identifier)
+      |> assert_selector("a[href=\"#{Routes.job_path(conn, :edit, active_job.id)}\"]")
     end
   end
 
@@ -75,10 +76,10 @@ defmodule ByggAppWeb.JobControllerTest do
     end
   end
 
-  describe "POST /jobs/new" do
+  describe "POST /jobs" do
     test "redirects if user is not logged in" do
       conn = build_conn()
-      conn = post(conn, Routes.job_path(conn, :new), %{"job" => %{}})
+      conn = post(conn, Routes.job_path(conn, :create), %{"job" => %{}})
       assert redirected_to(conn) == "/users/login"
     end
 
@@ -110,6 +111,98 @@ defmodule ByggAppWeb.JobControllerTest do
       |> html_document()
       |> assert_section_header(gettext("Create new job"))
       |> assert_selector_content(".validation-error", dgettext("errors", "can't be blank"))
+    end
+  end
+
+  describe "GET /jobs/:id/edit" do
+    test "redirects if user is not logged in" do
+      conn = build_conn()
+      conn = get(conn, Routes.job_path(conn, :edit, 1))
+      assert redirected_to(conn) == "/users/login"
+    end
+
+    test "renders edit form", %{conn: conn, user: user} do
+      job = job_fixture(user)
+
+      conn
+      |> get(Routes.job_path(conn, :edit, job))
+      |> html_document()
+      |> assert_section_header(gettext("Edit job"))
+      |> assert_form(Routes.job_path(conn, :update, job), [
+        "input[name=\"job[identifier]\"]",
+        "textarea[name=\"job[description]\"]",
+        "input[name=\"job[location]\"]",
+        "input[name=\"job[timespan]\"]",
+        "*[type=submit]"
+      ])
+    end
+
+    test "redirects if job doesn't exist", %{conn: conn} do
+      conn = get(conn, Routes.job_path(conn, :edit, 1))
+      assert redirected_to(conn) == Routes.job_path(conn, :index)
+    end
+
+    test "redirects if job belongs to other user", %{conn: conn} do
+      other_user = user_fixture()
+      job = job_fixture(other_user)
+
+      conn = get(conn, Routes.job_path(conn, :edit, job))
+      assert redirected_to(conn) == Routes.job_path(conn, :index)
+    end
+  end
+
+  describe "PUT /jobs/:id" do
+    test "redirects if user is not logged in" do
+      conn = build_conn()
+      conn = put(conn, Routes.job_path(conn, :update, 1))
+      assert redirected_to(conn) == "/users/login"
+    end
+
+    test "updates job", %{conn: conn, user: user} do
+      job = job_fixture(user)
+
+      conn =
+        put(conn, Routes.job_path(conn, :update, job), %{
+          "job" => %{"identifier" => "Updated identifier", "description" => "Updated description"}
+        })
+
+      updated_job = Repo.get!(Job, job.id)
+
+      assert redirected_to(conn) == Routes.job_path(conn, :index)
+
+      assert get_flash(conn, :success) =~
+               gettext("'%{project_id}' was updated", project_id: updated_job.identifier)
+
+      assert updated_job.identifier == "Updated identifier"
+      assert updated_job.description == "Updated description"
+    end
+
+    test "renders errors on invalid data", %{conn: conn, user: user} do
+      job = job_fixture(user)
+
+      conn
+      |> put(Routes.job_path(conn, :update, job), %{
+          "job" => %{"identifier" => ""}
+        })
+      |> html_document()
+      |> assert_selector_content("h1", gettext("Edit job"))
+      |> assert_selector_content(
+        ".validation-error",
+        dgettext("errors", "can't be blank")
+      )
+    end
+
+    test "redirects if job doesn't exist", %{conn: conn} do
+      conn = put(conn, Routes.job_path(conn, :update, 1))
+      assert redirected_to(conn) == Routes.job_path(conn, :index)
+    end
+
+    test "redirects if job belongs to other user", %{conn: conn} do
+      other_user = user_fixture()
+      job = job_fixture(other_user)
+
+      conn = put(conn, Routes.job_path(conn, :update, job))
+      assert redirected_to(conn) == Routes.job_path(conn, :index)
     end
   end
 end
