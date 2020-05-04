@@ -17,6 +17,7 @@ defmodule ByggAppWeb.UserAuth do
     conn
     |> renew_session()
     |> put_session(:user_token, token)
+    |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")
     |> maybe_write_remember_me_cookie(token, params)
     |> redirect(to: user_return_to || signed_in_path(conn))
   end
@@ -38,6 +39,10 @@ defmodule ByggAppWeb.UserAuth do
   def logout_user(conn) do
     user_token = get_session(conn, :user_token)
     user_token && Accounts.delete_session_token(user_token)
+
+    if live_socket_id = get_session(conn, :live_socket_id) do
+      ByggAppWeb.Endpoint.broadcast(live_socket_id, "disconnect", %{})
+    end
 
     conn
     |> renew_session()
