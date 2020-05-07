@@ -11,9 +11,13 @@ defmodule ByggApp.AccountsFixtures do
         company: "Company Inc.",
         phone: "(233) 555-123 456"
       })
-      |> ByggApp.Accounts.register_user()
-
+      |> (& ByggApp.Accounts.change_user_registration(%ByggApp.Accounts.User{}, &1)).()
+      |> ByggApp.Repo.insert()
     user
+  end
+
+  def invitation_fixture() do
+    ByggApp.Accounts.create_invitation()
   end
 
   def extract_user_token(fun) do

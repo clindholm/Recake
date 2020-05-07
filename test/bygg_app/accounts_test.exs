@@ -5,7 +5,7 @@ defmodule ByggApp.AccountsTest do
   import ByggApp.AccountsFixtures
 
   alias ByggApp.Accounts
-  alias ByggApp.Accounts.{User, UserToken}
+  alias ByggApp.Accounts.{User, UserToken, Invitation}
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
@@ -50,10 +50,36 @@ defmodule ByggApp.AccountsTest do
   end
 
   describe "register_user/1" do
-    test "requires fields to be set" do
-      {:error, changeset} = Accounts.register_user(%{})
+    setup do
+      %{
+        token: invitation_fixture()
+      }
+    end
+
+    test "fails on invalid token" do
+      assert {:error, :invalid_token} = Accounts.register_user("Invalid", %{})
+    end
+
+    test "fails on used token", %{token: token} do
+      # Use token
+      Repo.delete_all(Invitation)
+
+      email = unique_user_email()
+
+      assert {:error, :invalid_token} =
+               Accounts.register_user(token, %{
+                 email: email,
+                 password: valid_user_password(),
+                 company: "C",
+                 phone: "123"
+               })
+    end
+
+    test "requires fields to be set", %{token: token} do
+      {:error, changeset} = Accounts.register_user(token, %{})
 
       error = dgettext("errors", "can't be blank")
+
       assert %{
                company: [^error],
                phone: [^error],
@@ -62,11 +88,19 @@ defmodule ByggApp.AccountsTest do
              } = errors_on(changeset)
     end
 
-    test "validates email and password when given" do
-      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "invalid"})
+    test "validates email and password when given", %{token: token} do
+      {:error, changeset} =
+        Accounts.register_user(token, %{email: "not valid", password: "invalid"})
 
       email_error = dgettext("errors", "must include @ sign and no spaces")
-      password_error = dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8)
+
+      password_error =
+        dngettext(
+          "errors",
+          "should be at least %{count} character(s)",
+          "should be at least %{count} character(s)",
+          8
+        )
 
       assert %{
                email: [^email_error],
@@ -74,38 +108,79 @@ defmodule ByggApp.AccountsTest do
              } = errors_on(changeset)
     end
 
-    test "validates maximum values for e-mail and password for security" do
+    test "validates maximum values for e-mail and password for security", %{token: token} do
       too_long = String.duplicate("db", 100)
-      {:error, changeset} = Accounts.register_user(%{email: too_long, password: too_long})
-      assert dngettext("errors", "should be at most %{count} character(s)", "should be at most %{count} character(s)", 160)
-        in errors_on(changeset).email
-      assert dngettext("errors", "should be at most %{count} character(s)", "should be at most %{count} character(s)", 80)
-        in errors_on(changeset).password
+      {:error, changeset} = Accounts.register_user(token, %{email: too_long, password: too_long})
+
+      assert dngettext(
+               "errors",
+               "should be at most %{count} character(s)",
+               "should be at most %{count} character(s)",
+               160
+             ) in errors_on(changeset).email
+
+      assert dngettext(
+               "errors",
+               "should be at most %{count} character(s)",
+               "should be at most %{count} character(s)",
+               80
+             ) in errors_on(changeset).password
     end
 
-    test "validates e-mail uniqueness" do
+    test "validates e-mail uniqueness", %{token: token} do
       %{email: email} = user_fixture()
-      {:error, changeset} = Accounts.register_user(%{email: email})
+      {:error, changeset} = Accounts.register_user(token, %{email: email})
       assert dgettext("errors", "has already been taken") in errors_on(changeset).email
 
       # Now try with the upper cased e-mail too, to check that email case is ignored.
-      {:error, changeset} = Accounts.register_user(%{email: String.upcase(email)})
+      token = invitation_fixture()
+      {:error, changeset} = Accounts.register_user(token, %{email: String.upcase(email)})
       assert dgettext("errors", "has already been taken") in errors_on(changeset).email
     end
 
-    test "downcases email" do
+    test "downcases email", %{token: token} do
       email = "UPCASE@EXAMPLE.COM"
-      {:ok, user} = Accounts.register_user(%{email: email, password: valid_user_password(), company: "C", phone: "123"})
+
+      {:ok, user} =
+        Accounts.register_user(token, %{
+          email: email,
+          password: valid_user_password(),
+          company: "C",
+          phone: "123"
+        })
+
       assert user.email == "upcase@example.com"
     end
 
-    test "registers users with a hashed password" do
+    test "registers users with a hashed password", %{token: token} do
       email = unique_user_email()
-      {:ok, user} = Accounts.register_user(%{email: email, password: valid_user_password(), company: "C", phone: "123"})
+
+      {:ok, user} =
+        Accounts.register_user(token, %{
+          email: email,
+          password: valid_user_password(),
+          company: "C",
+          phone: "123"
+        })
+
       assert user.email == email
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
+    end
+
+    test "deletes invitation", %{token: token} do
+      email = unique_user_email()
+
+      {:ok, _user} =
+        Accounts.register_user(token, %{
+          email: email,
+          password: valid_user_password(),
+          company: "C",
+          phone: "123"
+        })
+
+      refute Accounts.verify_invitation(token)
     end
   end
 
@@ -149,8 +224,12 @@ defmodule ByggApp.AccountsTest do
       {:error, changeset} =
         Accounts.apply_user_email(user, valid_user_password(), %{email: too_long})
 
-      assert dngettext("errors", "should be at most %{count} character(s)", "should be at most %{count} character(s)", 160)
-        in errors_on(changeset).email
+      assert dngettext(
+               "errors",
+               "should be at most %{count} character(s)",
+               "should be at most %{count} character(s)",
+               160
+             ) in errors_on(changeset).email
     end
 
     test "validates e-mail uniqueness", %{user: user} do
@@ -259,7 +338,14 @@ defmodule ByggApp.AccountsTest do
           password_confirmation: "another"
         })
 
-      password_error = dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8)
+      password_error =
+        dngettext(
+          "errors",
+          "should be at least %{count} character(s)",
+          "should be at least %{count} character(s)",
+          8
+        )
+
       password_confirmation_error = dgettext("errors", "does not match password")
 
       assert %{
@@ -274,7 +360,12 @@ defmodule ByggApp.AccountsTest do
       {:error, changeset} =
         Accounts.update_user_password(user, valid_user_password(), %{password: too_long})
 
-      assert dngettext("errors", "should be at most %{count} character(s)", "should be at most %{count} character(s)", 80) in errors_on(changeset).password
+      assert dngettext(
+               "errors",
+               "should be at most %{count} character(s)",
+               "should be at most %{count} character(s)",
+               80
+             ) in errors_on(changeset).password
     end
 
     test "validates current password", %{user: user} do
@@ -472,7 +563,14 @@ defmodule ByggApp.AccountsTest do
           password_confirmation: "another"
         })
 
-      password_error = dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8)
+      password_error =
+        dngettext(
+          "errors",
+          "should be at least %{count} character(s)",
+          "should be at least %{count} character(s)",
+          8
+        )
+
       password_confirmation_error = dgettext("errors", "does not match password")
 
       assert %{
@@ -485,8 +583,12 @@ defmodule ByggApp.AccountsTest do
       too_long = String.duplicate("db", 100)
       {:error, changeset} = Accounts.reset_user_password(user, %{password: too_long})
 
-      assert dngettext("errors", "should be at most %{count} character(s)", "should be at most %{count} character(s)", 80)
-        in errors_on(changeset).password
+      assert dngettext(
+               "errors",
+               "should be at most %{count} character(s)",
+               "should be at most %{count} character(s)",
+               80
+             ) in errors_on(changeset).password
     end
 
     test "updates the password", %{user: user} do
@@ -504,6 +606,31 @@ defmodule ByggApp.AccountsTest do
   describe "inspect/2" do
     test "does not include password" do
       refute inspect(%User{password: "password"}) =~ "password: \"password\""
+    end
+  end
+
+  describe "create_invitation/0" do
+    test "returns encoded token" do
+      token = Accounts.create_invitation()
+      token = Base.url_decode64!(token, padding: false)
+
+      assert Repo.one(from i in Invitation, where: i.token == ^token)
+    end
+  end
+
+  describe "verify_invitation/0" do
+    test "verifies existing token" do
+      token = Accounts.create_invitation()
+
+      assert Accounts.verify_invitation(token)
+    end
+
+    test "missing token is not verified" do
+      token =
+        :crypto.strong_rand_bytes(32)
+        |> Base.url_encode64(padding: false)
+
+      refute Accounts.verify_invitation(token)
     end
   end
 end

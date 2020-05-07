@@ -1,6 +1,6 @@
 <h1 class="text-blue-700 text-xl text-center mb-6"><%= gettext "Register" %></h1>
 
-<%= form_for @changeset, Routes.user_registration_path(@conn, :create), fn f -> %>
+<%= form_for @changeset, Routes.user_registration_path(@conn, :create, token: @token), fn f -> %>
   <%= Form.text_input f, :email, label: gettext("Email") %>
   <%= Form.password_input f, :password, label: gettext("Password") %>
   <%= Form.text_input f, :company, label: gettext("Company name") %>

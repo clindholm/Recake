@@ -1,7 +1,8 @@
 defmodule ByggApp.Accounts do
-  alias ByggApp.Repo
+  import Ecto.Query, only: [from: 2]
 
-  alias ByggApp.Accounts.{User, UserToken, UserNotifier}
+  alias ByggApp.Repo
+  alias ByggApp.Accounts.{User, UserToken, UserNotifier, Invitation}
 
   def get_user_by_email(email) when is_binary(email) do
     Repo.get_by(User, email: email)
@@ -15,10 +16,56 @@ defmodule ByggApp.Accounts do
 
   def get_user!(id), do: Repo.get!(User, id)
 
-  def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
+  def register_user(invitation_token, attrs) do
+    # changeset = User.registration_changeset(%User{}, attrs)
+
+    # Ecto.Multi.new()
+    # |> Ecto.Multi.run(:invitation, fn repo, _ ->
+    #   case Base.url_decode64(invitation_token, padding: false) do
+    #     {:ok, token} ->
+    #       from(i in Invitation,
+    #         where: i.token == ^token
+    #       )
+    #       |> repo.delete_all()
+    #       |> case do
+    #         {1, _} -> {:ok, :ok}
+    #         _ -> {:error, :invalid_token}
+    #       end
+
+    #     :error ->
+    #       {:error, :invalid_token}
+    #   end
+    # end)
+    # |> Ecto.Multi.insert(:user, changeset)
+    # |> Repo.transaction()
+    # |> case do
+    #   {:ok, %{user: user}} -> {:ok, user}
+    #   {:error, :invitation, _, _} -> {:error, :invalid_token}
+    #   {:error, :user, changeset, _} -> {:error, changeset}
+    # end
+
+    Repo.transaction(fn repo ->
+      case Base.url_decode64(invitation_token, padding: false) do
+        {:ok, token} ->
+          {n, _} =
+            from(i in Invitation,
+              where: i.token == ^token
+            )
+            |> repo.delete_all()
+
+          if n != 1, do: repo.rollback(:invalid_token)
+
+        :error ->
+          repo.rollback(:invalid_token)
+      end
+      %User{}
+      |> User.registration_changeset(attrs)
+      |> repo.insert()
+      |> case do
+        {:ok, user} -> user
+        {:error, changeset} -> repo.rollback(changeset)
+      end
+    end)
   end
 
   def change_user_registration(%User{} = user, attrs \\ %{}) do
@@ -152,6 +199,25 @@ defmodule ByggApp.Accounts do
     |> case do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
+    end
+  end
+
+  def create_invitation() do
+    {token, invitation} = Invitation.invitation_token()
+
+    Repo.insert!(invitation)
+
+    token
+  end
+
+  def verify_invitation(token) do
+    case Base.url_decode64(token, padding: false) do
+      {:ok, token} ->
+        q = from(i in Invitation, where: i.token == ^token)
+        Repo.exists?(q)
+
+      :error ->
+        false
     end
   end
 end

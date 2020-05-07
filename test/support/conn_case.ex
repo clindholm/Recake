@@ -71,6 +71,12 @@ defmodule ByggAppWeb.ConnCase do
     document
   end
 
+  def refute_selector(document, selector) do
+    assert Enum.empty?(Floki.find(document, selector)), "\"#{selector}\" was found"
+
+    document
+  end
+
   def refute_selector_content(document, selector, content) do
     els =
       document

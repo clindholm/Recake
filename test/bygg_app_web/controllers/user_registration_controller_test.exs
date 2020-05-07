@@ -4,18 +4,31 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
   import ByggApp.AccountsFixtures
 
   describe "GET /users/register" do
-    test "renders registration page", %{conn: conn} do
+    test "renders registration form with valid invitation token", %{conn: conn} do
+      token = invitation_fixture()
+
       conn
-      |> get(Routes.user_registration_path(conn, :new))
+      |> get(Routes.user_registration_path(conn, :new, token: token))
       |> html_document()
       |> assert_selector_content("h1", gettext("Register"))
-      |> assert_form(Routes.user_registration_path(conn, :create), [
+      |> assert_form(Routes.user_registration_path(conn, :create, token: token), [
         "input[name=\"user[email]\"]",
         "input[name=\"user[password]\"][type=password]",
         "input[name=\"user[company]\"",
         "input[name=\"user[phone]\"",
         "button[type=submit]"
       ])
+    end
+
+    test "does not render form with no token", %{conn: conn} do
+      conn
+      |> get(Routes.user_registration_path(conn, :new))
+      |> html_document()
+      |> assert_selector_content(
+        ".info",
+        gettext("You need an invitation to register a new account")
+      )
+      |> refute_selector("form")
     end
 
     test "redirects if already logged in", %{conn: conn} do
@@ -25,12 +38,19 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
   end
 
   describe "POST /users/register" do
+    setup %{conn: conn} do
+      %{
+        token: invitation_fixture(),
+        conn: conn
+      }
+    end
+
     @tag :capture_log
-    test "creates account and logs the user in", %{conn: conn} do
+    test "creates account and logs the user in", %{conn: conn, token: token} do
       email = unique_user_email()
 
       conn =
-        post(conn, Routes.user_registration_path(conn, :create), %{
+        post(conn, Routes.user_registration_path(conn, :create, token: token), %{
           "user" => %{
             "email" => email,
             "password" => valid_user_password(),
@@ -47,9 +67,9 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
       assert conn.status == 200
     end
 
-    test "render errors for invalid data", %{conn: conn} do
+    test "render errors for invalid data", %{conn: conn, token: token} do
       conn
-      |> post(Routes.user_registration_path(conn, :create), %{
+      |> post(Routes.user_registration_path(conn, :create, token: token), %{
         "user" => %{"email" => "with spaces", "password" => "invalid"}
       })
       |> html_document()
@@ -67,6 +87,20 @@ defmodule ByggAppWeb.UserRegistrationControllerTest do
           8
         )
       )
+    end
+
+    test "crashes on missing user params", %{conn: conn, token: token} do
+      assert_raise Phoenix.ActionClauseError, fn ->
+        post(conn, Routes.user_registration_path(conn, :create, token: token), %{})
+      end
+    end
+
+    test "crashes on missing token", %{conn: conn} do
+      assert_raise Phoenix.ActionClauseError, fn ->
+        post(conn, Routes.user_registration_path(conn, :create), %{
+          "user" => %{"email" => "email@test.com", "password" => "password"}
+        })
+      end
     end
   end
 end

@@ -5,13 +5,19 @@ defmodule ByggAppWeb.UserRegistrationController do
   alias ByggApp.Accounts.User
   alias ByggAppWeb.UserAuth
 
-  def new(conn, _params) do
-    changeset = Accounts.change_user_registration(%User{})
-    render(conn, "new.html", changeset: changeset)
+  def new(conn, params) do
+    token = params["token"]
+
+    if token && Accounts.verify_invitation(token) do
+      changeset = Accounts.change_user_registration(%User{})
+      render(conn, "new.html", changeset: changeset, token: token)
+    else
+      render(conn, "invalid_token.html")
+    end
   end
 
-  def create(conn, %{"user" => user_params}) do
-    case Accounts.register_user(user_params) do
+  def create(conn, %{"user" => user_params, "token" => invitation_token}) do
+    case Accounts.register_user(invitation_token, user_params) do
       {:ok, user} ->
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
@@ -24,7 +30,7 @@ defmodule ByggAppWeb.UserRegistrationController do
         |> UserAuth.login_user(user)
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, token: invitation_token)
     end
   end
 end

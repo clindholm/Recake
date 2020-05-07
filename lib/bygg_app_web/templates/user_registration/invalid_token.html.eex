@@ -1,0 +1,3 @@
+<div class="info">
+  <p><%= gettext("You need an invitation to register a new account") %></p>
+</div>
