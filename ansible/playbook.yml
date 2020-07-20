@@ -1,9 +1,12 @@
 ---
 - hosts: all
   become: true
-  vars_files:
-    - vars/default.yml
-    - vars/secrets.yml
+  # vars_files:
+  #   - vars/default.yml
+    # - vars/secrets.yml
+  vars:
+    main_user: "recake"
+    main_user_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
   
   tasks:
     - name: Install prerequisites
@@ -28,7 +31,7 @@
 
     - name: Create user with sudo privileges
       user:
-        name: "{{ create_user }}"
+        name: "{{ main_user }}"
         state: present
         groups: wheel
         append: true
@@ -37,9 +40,9 @@
 
     - name: Set authorized key for remote user
       authorized_key:
-        user: "{{ create_user }}"
+        user: "{{ main_user }}"
         state: present
-        key: "{{ copy_local_key }}"
+        key: "{{ main_user_key }}"
 
     - name: Disable password authentication for root
       lineinfile:
@@ -55,7 +58,7 @@
 
     - name: Install required packages
       apt: 
-        name: ['ufw', 'unattended-upgrades', 'python3-psycopg2', 'nginx']
+        name: ['ufw', 'unattended-upgrades', 'python3-psycopg2']
         state: latest
 
 # Setup unattended-upgrades
@@ -88,40 +91,37 @@
         regexp: '^APT::Periodic::APT::Periodic::AutocleanInterval'
         line: 'APT::Periodic::APT::Periodic::AutocleanInterval "7";'
 
-# NGINX
-    - name: Start NGINX
-      service:
-        name: nginx
-        state: started
 
-    - name: Setup NGINX site down page
+# Caddy
+
+    - name: Add Caddy sources
+      lineinfile: 
+        path: /etc/apt/sources.list.d/caddy-fury.list 
+        state: present
+        create: yes
+        regexp: '^deb [trusted=yes] https://apt.fury.io/caddy/'
+        line: 'deb [trusted=yes] https://apt.fury.io/caddy/ /'
+
+    - name: Update apt
+      apt: update_cache=yes
+      
+    - name: Install Caddy
+      apt: name=caddy state=latest
+
+    - name: Setup Caddyfile
+      template:
+        src: templates/Caddyfile.j2
+        dest: /etc/caddy/Caddyfile
+
+    - name: Setup shared/temporary index.html
       copy:
-        src: templates/site-down.html
-        dest: /usr/share/nginx/html/site-down.html
+        src: templates/index.html
+        dest: /usr/share/caddy/index.html
 
-    - name: Delete NGINX default site
-      block:
-        - file:
-            path: /etc/nginx/sites-enabled/default
-            state: absent
-        - file:
-            path: /etc/nginx/sites-available/default
-            state: absent
-
-    - name: Setup NGINX site
-      block:
-        - template:
-            src: templates/nginx_config.j2
-            dest: /etc/nginx/sites-available/{{ domain }}
-        - file:
-            src: /etc/nginx/sites-available/{{ domain }}
-            dest: /etc/nginx/sites-enabled/{{ domain }}
-            state: link
-          
-    - name: Restart NGINX
-      service:
-        name: nginx
-        state: restarted
+    - name: reload Caddy
+      systemd:
+        name: caddy
+        state: reloaded
 
 # UFW Setup
 
@@ -130,10 +130,15 @@
         rule: allow
         name: OpenSSH
 
-    - name: UFW - Allow HTTP/S
+    - name: UFW - Allow HTTP
       ufw:
         rule: allow
-        name: Nginx Full
+        port: '80'
+
+    - name: UFW - Allow HTTPS
+      ufw:
+        rule: allow
+        port: '443'
 
     - name: UFW - Deny all other incoming traffic by default
       ufw:
@@ -142,58 +147,58 @@
         direction: incoming
 
 # Postgres
-    - name: Add Postgres sources
-      lineinfile: 
-        path: /etc/apt/sources.list.d/pgdg.list 
-        state: present
-        create: yes
-        regexp: '^deb http://apt.postgresql.org'
-        line: 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main'
+    # - name: Add Postgres sources
+    #   lineinfile: 
+    #     path: /etc/apt/sources.list.d/pgdg.list 
+    #     state: present
+    #     create: yes
+    #     regexp: '^deb http://apt.postgresql.org'
+    #     line: 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main'
 
-    - name: Add Postgres apt key
-      apt_key:
-        url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
-        state: present
+    # - name: Add Postgres apt key
+    #   apt_key:
+    #     url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+    #     state: present
 
-    - name: Update apt
-      apt: update_cache=yes
+    # - name: Update apt
+    #   apt: update_cache=yes
       
-    - name: Install Postgres
-      apt: name=postgresql-12 state=latest
+    # - name: Install Postgres
+    #   apt: name=postgresql-12 state=latest
 
-    - name: Ensure Postgres is running
-      service: name=postgresql state=started enabled=yes
+    # - name: Ensure Postgres is running
+    #   service: name=postgresql state=started enabled=yes
 
-    - name: Create database
-      postgresql_db:
-        name: "{{ db_name }}"
-      become_user: postgres
+    # - name: Create database
+    #   postgresql_db:
+    #     name: "{{ db_name }}"
+    #   become_user: postgres
 
-    - name: Create db user
-      postgresql_user:
-        db: "{{ db_name }}"
-        name: "{{ db_user }}"
-        password: "{{ db_password }}"
-        priv: ALL
-        role_attr_flags: NOCREATEDB
-        state: present
-      become_user: postgres
+    # - name: Create db user
+    #   postgresql_user:
+    #     db: "{{ db_name }}"
+    #     name: "{{ db_user }}"
+    #     password: "{{ db_password }}"
+    #     priv: ALL
+    #     role_attr_flags: NOCREATEDB
+    #     state: present
+    #   become_user: postgres
 
 # Byggapp service
 
-    - name: Setup systemd file
-      template:
-        src: templates/bygg_app.service.j2
-        dest: /etc/systemd/system/bygg_app.service
+    # - name: Setup systemd file
+    #   template:
+    #     src: templates/bygg_app.service.j2
+    #     dest: /etc/systemd/system/bygg_app.service
 
-    - name: Reload Systemd
-      systemd:
-        daemon_reload: yes
+    # - name: Reload Systemd
+    #   systemd:
+    #     daemon_reload: yes
 
-    - name: Enable ByggApp service
-      systemd:
-        name: bygg_app
-        state: started
-        enabled: yes
+    # - name: Enable ByggApp service
+    #   systemd:
+    #     name: bygg_app
+    #     state: started
+    #     enabled: yes
 
     

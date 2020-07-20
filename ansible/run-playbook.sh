@@ -1,2 +1,2 @@
-#!/bin/bash
-ansible-playbook playbook.yml -i staging-hosts --vault-password-file ~/.vault_password
+#!/usr/bin/bash
+ansible-playbook playbook.yml -i hosts --vault-password-file ~/.vault_password
