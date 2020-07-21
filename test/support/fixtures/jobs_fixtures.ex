@@ -16,11 +16,11 @@ defmodule ByggApp.JobsFixtures do
     |> Repo.insert!()
   end
 
-  def job_request_fixture(%User{} = user, %Job{} = job, status \\ :pending) do
+  def job_request_fixture(%User{} = user, %Job{} = job, state \\ "pending") do
     %Request{
       job_id: job.id,
       recipient_id: user.id,
-      status: status
+      state: state
     }
     |> Repo.insert!()
   end

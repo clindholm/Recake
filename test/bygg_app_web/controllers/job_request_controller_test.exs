@@ -45,8 +45,8 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       job2 = job_fixture(user)
       job3 = job_fixture(user)
       pending_request1 = job_request_fixture(user, job1)
-      _pending_request2 = job_request_fixture(user, job2, :accepted)
-      _pending_request3 = job_request_fixture(user, job3, :rejected)
+      _pending_request2 = job_request_fixture(user, job2, "accepted")
+      _pending_request3 = job_request_fixture(user, job3, "rejected")
       pending_request1 = Repo.preload(pending_request1, [job: [:user]])
 
       conn = get(conn, Routes.job_request_path(conn, :index))
@@ -112,19 +112,19 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       refute get_flash(conn, :success)
 
-      assert Repo.get!(ByggApp.Jobs.Request, request.id).status == :pending
+      assert Repo.get!(ByggApp.Jobs.Request, request.id).state == "pending"
 
       conn = post(conn, Routes.job_request_path(conn, :resolve, request.id), %{"reject" => ""})
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, request.id).status == :pending
+      assert Repo.get!(ByggApp.Jobs.Request, request.id).state == "pending"
     end
 
     test "does nothing to already accepted requests", %{conn: conn, request: request} do
       accepted_request =
         request
-        |> Ecto.Changeset.change(status: :accepted)
+        |> Ecto.Changeset.change(state: "accepted")
         |> Repo.update!()
 
       conn = post(conn, Routes.job_request_path(conn, :resolve, accepted_request.id), %{"accept" => ""})
@@ -132,20 +132,20 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, accepted_request.id).status == :accepted
+      assert Repo.get!(ByggApp.Jobs.Request, accepted_request.id).state == "accepted"
 
       conn = post(conn, Routes.job_request_path(conn, :resolve, accepted_request.id), %{"reject" => ""})
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, accepted_request.id).status == :accepted
+      assert Repo.get!(ByggApp.Jobs.Request, accepted_request.id).state == "accepted"
     end
 
     test "does nothing to already rejected requests", %{conn: conn, request: request} do
       rejected_request =
         request
-        |> Ecto.Changeset.change(status: :rejected)
+        |> Ecto.Changeset.change(state: "rejected")
         |> Repo.update!()
 
       conn = post(conn, Routes.job_request_path(conn, :resolve, rejected_request.id), %{"accept" => ""})
@@ -153,14 +153,14 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, rejected_request.id).status == :rejected
+      assert Repo.get!(ByggApp.Jobs.Request, rejected_request.id).state == "rejected"
 
       conn = post(conn, Routes.job_request_path(conn, :resolve, rejected_request.id), %{"reject" => ""})
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, rejected_request.id).status == :rejected
+      assert Repo.get!(ByggApp.Jobs.Request, rejected_request.id).state == "rejected"
     end
 
     test "does nothing on invalid resolution", %{conn: conn, request: request} do
@@ -169,7 +169,7 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, request.id).status == :pending
+      assert Repo.get!(ByggApp.Jobs.Request, request.id).state == "pending"
     end
   end
 end

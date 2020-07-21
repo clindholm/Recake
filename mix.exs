@@ -33,11 +33,10 @@ defmodule ByggApp.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bcrypt_elixir, "~> 2.2"},
+      {:pbkdf2_elixir, "~> 1.0"},
       {:phoenix, "~> 1.5.1"},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},
-      {:ecto_enum, "~> 1.4"},
       {:floki, "~> 0.26.0", only: :test},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},

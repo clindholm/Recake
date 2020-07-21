@@ -2,7 +2,7 @@ defmodule ByggApp.Jobs.Request do
   use Ecto.Schema
 
   schema "job_requests" do
-    field :status, JobRequestStatusEnum, default: :pending
+    field :state, :string, default: "pending"
     belongs_to :job, ByggApp.Jobs.Job
     belongs_to :recipient, ByggApp.Accounts.User
 

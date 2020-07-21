@@ -109,8 +109,8 @@ defmodule ByggApp.JobsTest do
       user = user_fixture()
       job = job_fixture(user)
       job2 = job_fixture(user)
-      request1 = job_request_fixture(user, job, :pending)
-      _request2 = job_request_fixture(user, job2, :accepted)
+      request1 = job_request_fixture(user, job, "pending")
+      _request2 = job_request_fixture(user, job2, "accepted")
 
       request_ids =
         Jobs.list_user_job_requests(user)
@@ -123,8 +123,8 @@ defmodule ByggApp.JobsTest do
       user = user_fixture()
       user2 = user_fixture()
       job = job_fixture(user)
-      request1 = job_request_fixture(user, job, :pending)
-      _request2 = job_request_fixture(user2, job, :pending)
+      request1 = job_request_fixture(user, job, "pending")
+      _request2 = job_request_fixture(user2, job, "pending")
 
       request_ids =
         Jobs.list_user_job_requests(user)
@@ -303,14 +303,14 @@ defmodule ByggApp.JobsTest do
     test "accepts request", %{request: request} do
       {:ok, updated_request} = Jobs.resolve_request(request, :accept)
 
-      assert updated_request.status == :accepted
+      assert updated_request.state == "accepted"
       assert ^updated_request = Repo.get!(Request, request.id)
     end
 
     test "rejects request", %{request: request} do
       {:ok, updated_request} = Jobs.resolve_request(request, :reject)
 
-      assert updated_request.status == :rejected
+      assert updated_request.state == "rejected"
       assert ^updated_request = Repo.get!(Request, request.id)
     end
 

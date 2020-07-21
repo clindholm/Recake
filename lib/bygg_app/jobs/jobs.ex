@@ -25,7 +25,7 @@ defmodule ByggApp.Jobs do
 
   def list_user_job_requests(user) do
     from(r in Request,
-      where: r.recipient_id == ^user.id and r.status == ^:pending,
+      where: r.recipient_id == ^user.id and r.state == ^"pending",
       preload: [job: :user]
     )
     |> Repo.all()
@@ -67,15 +67,15 @@ defmodule ByggApp.Jobs do
 
   def resolve_request(request, :accept) do
     request
-    |> Ecto.Changeset.change(status: :accepted)
+    |> Ecto.Changeset.change(state: "accepted")
     |> Repo.update()
   end
 
   def resolve_request(request, :reject) do
     request
-    |> Ecto.Changeset.change(status: :rejected)
+    |> Ecto.Changeset.change(state: "rejected")
     |> Repo.update()
   end
 
-  def resolve_request(_request, _status), do: {:error, :invalid_resolution}
+  def resolve_request(_request, _state), do: {:error, :invalid_resolution}
 end

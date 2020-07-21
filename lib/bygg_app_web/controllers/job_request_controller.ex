@@ -43,7 +43,7 @@ defmodule ByggAppWeb.JobRequestController do
   defp resolve(conn, request_id, action, flash_f) do
     request = Jobs.get_job_request(request_id)
 
-    if request.recipient_id == conn.assigns.current_user.id && request.status == :pending do
+    if request.recipient_id == conn.assigns.current_user.id && request.state == "pending" do
       Jobs.resolve_request(request, action)
 
       conn
