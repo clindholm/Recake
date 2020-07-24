@@ -6,6 +6,8 @@
   vars:
     main_user: "recake"
     main_user_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
+    deploy_user: "recake_deploy"
+    deploy_user_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/recake_github.pub') }}"
     staging_db_name: "recake_db_staging"
     staging_db_username: "recake_user_staging"
     production_db_name: "recake_db_production"
@@ -54,6 +56,14 @@
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin prohibit-password'
 
+    - name: Create deploy user
+      user:
+        name: "{{ deploy_user }}"
+        state: present
+        append: true
+        create_home: true
+        shell: /bin/bash
+
 # Install packages
 
     - name: Update apt
@@ -61,8 +71,11 @@
 
     - name: Install required packages
       apt: 
-        name: ['ufw', 'unattended-upgrades', 'python3-psycopg2']
+        name: ['ufw', 'unattended-upgrades', 'python3-pip', 'libpq-dev', 'acl']
         state: latest
+
+    - name: pip install psycopg
+      shell: pip3 install psycopg2
 
 # Setup unattended-upgrades
 
@@ -150,24 +163,24 @@
         direction: incoming
 
 # Postgres
-    - name: Add Postgres sources
-      lineinfile: 
-        path: /etc/apt/sources.list.d/pgdg.list 
-        state: present
-        create: yes
-        regexp: '^deb http://apt.postgresql.org'
-        line: 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main'
+    # - name: Add Postgres sources
+    #   lineinfile: 
+    #     path: /etc/apt/sources.list.d/pgdg.list 
+    #     state: present
+    #     create: yes
+    #     regexp: '^deb http://apt.postgresql.org'
+    #     line: 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main'
 
-    - name: Add Postgres apt key
-      apt_key:
-        url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
-        state: present
+    # - name: Add Postgres apt key
+    #   apt_key:
+    #     url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+    #     state: present
 
     - name: Update apt
       apt: update_cache=yes
       
     - name: Install Postgres
-      apt: name=postgresql-12 state=latest
+      apt: name=postgresql state=latest
 
     - name: Ensure Postgres is running
       service: name=postgresql state=started enabled=yes
