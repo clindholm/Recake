@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        elixir: [1.10.2]
+        elixir: [1.10.3]
         otp: [22.2]
     
     services:
@@ -74,7 +74,7 @@ jobs:
     - name: Deploy files
       uses: appleboy/scp-action@master
       with:
-        host: https://staging.recake.se
+        host: staging.recake.se
         username: recake_deploy
         key: ${{ secrets.STAGING_KEY }}
         passphrase: ${{ secrets.STAGING_PASSPHRASE }}
