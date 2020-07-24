@@ -1,17 +1,17 @@
 [Unit]
-Description=Runner for ByggApp
+Description=Runner for Recake - {{ server }}
 After=network.target
 
 [Service]
-User={{ create_user }}
+User={{ user }}
 Group=wheel
-WorkingDirectory=/home/{{ create_user }}/bygg_app
+WorkingDirectory=/home/{{ user }}/{{ directory }}
 Environment=LANG=en_US.UTF-8
 Environment=HOST_URL="{{ domain }}"
 Environment=SECRET_KEY_BASE="{{ secret_key_base }}"
 Environment=DATABASE_URL="postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ db_name }}"
-ExecStart=/home/{{ create_user }}/bygg_app/bin/bygg_app start
-SyslogIdentifier=bygg_app
+ExecStart=/home/{{ user }}/recake/bin/recake start
+SyslogIdentifier=recake
 RemainAfterExit=no
 Restart=on-failure
 RestartSec=5

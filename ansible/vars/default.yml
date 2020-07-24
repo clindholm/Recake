@@ -1,8 +1,0 @@
----
-create_user: bygg_app_deploy
-copy_local_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
-sys_packages: [ 'ufw', 'unattended-upgrades', 'python3-psycopg2' ]
-
-domain: byggapp.calle.tech
-db_name: byggapp
-db_user: byggapp-user
