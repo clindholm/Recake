@@ -64,6 +64,12 @@
         create_home: true
         shell: /bin/bash
 
+    - name: Set authorized key for deploy user
+      authorized_key:
+        user: "{{ deploy_user }}"
+        state: present
+        key: "{{ deploy_user_key }}"
+
 # Install packages
 
     - name: Update apt
