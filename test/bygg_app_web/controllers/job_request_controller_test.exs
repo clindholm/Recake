@@ -1,10 +1,10 @@
-defmodule ByggAppWeb.JobRequestControllerTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.JobRequestControllerTest do
+  use RecakeWeb.ConnCase, async: true
 
-  import ByggApp.AccountsFixtures
-  import ByggApp.JobsFixtures
+  import Recake.AccountsFixtures
+  import Recake.JobsFixtures
 
-  alias ByggApp.Repo
+  alias Recake.Repo
 
   setup %{conn: conn} do
     user =
@@ -112,13 +112,13 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       refute get_flash(conn, :success)
 
-      assert Repo.get!(ByggApp.Jobs.Request, request.id).state == "pending"
+      assert Repo.get!(Recake.Jobs.Request, request.id).state == "pending"
 
       conn = post(conn, Routes.job_request_path(conn, :resolve, request.id), %{"reject" => ""})
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, request.id).state == "pending"
+      assert Repo.get!(Recake.Jobs.Request, request.id).state == "pending"
     end
 
     test "does nothing to already accepted requests", %{conn: conn, request: request} do
@@ -132,14 +132,14 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, accepted_request.id).state == "accepted"
+      assert Repo.get!(Recake.Jobs.Request, accepted_request.id).state == "accepted"
 
       conn = post(conn, Routes.job_request_path(conn, :resolve, accepted_request.id), %{"reject" => ""})
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, accepted_request.id).state == "accepted"
+      assert Repo.get!(Recake.Jobs.Request, accepted_request.id).state == "accepted"
     end
 
     test "does nothing to already rejected requests", %{conn: conn, request: request} do
@@ -153,14 +153,14 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, rejected_request.id).state == "rejected"
+      assert Repo.get!(Recake.Jobs.Request, rejected_request.id).state == "rejected"
 
       conn = post(conn, Routes.job_request_path(conn, :resolve, rejected_request.id), %{"reject" => ""})
       assert redirected_to(conn) == Routes.job_request_path(conn, :index)
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, rejected_request.id).state == "rejected"
+      assert Repo.get!(Recake.Jobs.Request, rejected_request.id).state == "rejected"
     end
 
     test "does nothing on invalid resolution", %{conn: conn, request: request} do
@@ -169,7 +169,7 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       refute get_flash(conn, :success)
       refute get_flash(conn, :info)
 
-      assert Repo.get!(ByggApp.Jobs.Request, request.id).state == "pending"
+      assert Repo.get!(Recake.Jobs.Request, request.id).state == "pending"
     end
   end
 end

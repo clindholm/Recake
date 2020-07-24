@@ -12,231 +12,231 @@ msgstr ""
 "Plural-Forms: nplurals=2\n"
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_settings_controller.ex:42
+#: lib/recake_web/controllers/user_settings_controller.ex:42
 msgid "A link to confirm your e-mail change has been sent to the new address."
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_confirmation_controller.ex:30
+#: lib/recake_web/controllers/user_confirmation_controller.ex:30
 msgid "Account confirmed successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_registration/new.html.eex:6
+#: lib/recake_web/templates/user_registration/new.html.eex:6
 msgid "Company name"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_reset_password/edit.html.eex:5
+#: lib/recake_web/templates/user_reset_password/edit.html.eex:5
 msgid "Confirm new password"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_confirmation_controller.ex:35
+#: lib/recake_web/controllers/user_confirmation_controller.ex:35
 msgid "Confirmation token is invalid or it has expired"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:8
+#: lib/recake_web/templates/job/new.html.eex:8
 msgid "Create"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_reset_password/edit.html.eex:12
-#: lib/bygg_app_web/templates/user_reset_password/new.html.eex:13 lib/bygg_app_web/templates/user_session/new.html.eex:21
+#: lib/recake_web/templates/user_reset_password/edit.html.eex:12
+#: lib/recake_web/templates/user_reset_password/new.html.eex:13 lib/recake_web/templates/user_session/new.html.eex:21
 msgid "Create account"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/job_controller.ex:8
-#: lib/bygg_app_web/templates/job/index.html.eex:8
+#: lib/recake_web/controllers/job_controller.ex:8
+#: lib/recake_web/templates/job/index.html.eex:8
 msgid "Create new job"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/job_request_controller.ex:6
+#: lib/recake_web/controllers/job_request_controller.ex:6
 msgid "Current requests"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_settings_controller.ex:60
+#: lib/recake_web/controllers/user_settings_controller.ex:60
 msgid "E-mail change url is invalid. Try again below."
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_settings_controller.ex:55
+#: lib/recake_web/controllers/user_settings_controller.ex:55
 msgid "E-mail changed successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_registration/new.html.eex:13
-#: lib/bygg_app_web/templates/user_session/new.html.eex:20
+#: lib/recake_web/templates/user_registration/new.html.eex:13
+#: lib/recake_web/templates/user_session/new.html.eex:20
 msgid "Forgot password?"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_reset_password/new.html.eex:1
+#: lib/recake_web/templates/user_reset_password/new.html.eex:1
 msgid "Forgot your password?"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_confirmation_controller.ex:21
+#: lib/recake_web/controllers/user_confirmation_controller.ex:21
 msgid "If your e-mail is in our system and it has not been confirmed yet, you will receive an e-mail with instructions shortly."
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_session_controller.ex:17
+#: lib/recake_web/controllers/user_session_controller.ex:17
 msgid "Invalid e-mail or password"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/job_controller.ex:24
+#: lib/recake_web/controllers/job_controller.ex:24
 msgid "Job created"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/layout/app.html.eex:17
+#: lib/recake_web/templates/layout/app.html.eex:17
 msgid "Jobs"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_session_controller.ex:23
+#: lib/recake_web/controllers/user_session_controller.ex:23
 msgid "Logged out successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_registration/new.html.eex:12
-#: lib/bygg_app_web/templates/user_reset_password/edit.html.eex:11 lib/bygg_app_web/templates/user_reset_password/new.html.eex:12
-#: lib/bygg_app_web/templates/user_session/new.html.eex:1 lib/bygg_app_web/templates/user_session/new.html.eex:16
+#: lib/recake_web/templates/user_registration/new.html.eex:12
+#: lib/recake_web/templates/user_reset_password/edit.html.eex:11 lib/recake_web/templates/user_reset_password/new.html.eex:12
+#: lib/recake_web/templates/user_session/new.html.eex:1 lib/recake_web/templates/user_session/new.html.eex:16
 msgid "Login"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/layout/app.html.eex:18
+#: lib/recake_web/templates/layout/app.html.eex:18
 msgid "Logout"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_reset_password/edit.html.eex:4
+#: lib/recake_web/templates/user_reset_password/edit.html.eex:4
 msgid "New password"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_reset_password/edit.html.eex:12
-#: lib/bygg_app_web/templates/user_session/new.html.eex:21
+#: lib/recake_web/templates/user_reset_password/edit.html.eex:12
+#: lib/recake_web/templates/user_session/new.html.eex:21
 msgid "Not a member?"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_reset_password_controller.ex:36
+#: lib/recake_web/controllers/user_reset_password_controller.ex:36
 msgid "Password reset successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_settings_controller.ex:19
+#: lib/recake_web/controllers/user_settings_controller.ex:19
 msgid "Password updated successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_registration/new.html.eex:7
+#: lib/recake_web/templates/user_registration/new.html.eex:7
 msgid "Phone number"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_registration/new.html.eex:1
-#: lib/bygg_app_web/templates/user_registration/new.html.eex:8
+#: lib/recake_web/templates/user_registration/new.html.eex:1
+#: lib/recake_web/templates/user_registration/new.html.eex:8
 msgid "Register"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/layout/app.html.eex:16
+#: lib/recake_web/templates/layout/app.html.eex:16
 msgid "Requests"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_reset_password/edit.html.eex:1
-#: lib/bygg_app_web/templates/user_reset_password/edit.html.eex:6
+#: lib/recake_web/templates/user_reset_password/edit.html.eex:1
+#: lib/recake_web/templates/user_reset_password/edit.html.eex:6
 msgid "Reset password"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_reset_password_controller.ex:51
+#: lib/recake_web/controllers/user_reset_password_controller.ex:51
 msgid "Reset password link has expired. Send a new link below."
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_reset_password/new.html.eex:7
+#: lib/recake_web/templates/user_reset_password/new.html.eex:7
 msgid "Send"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_registration_controller.ex:23
+#: lib/recake_web/controllers/user_registration_controller.ex:23
 msgid "User created successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/index.html.eex:7
+#: lib/recake_web/templates/job/index.html.eex:7
 msgid "You have no active jobs"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job_request/index.html.eex:7
+#: lib/recake_web/templates/job_request/index.html.eex:7
 msgid "You have no requests at this time"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_auth.ex:83
+#: lib/recake_web/controllers/user_auth.ex:83
 msgid "You must login to access this page."
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/user_reset_password_controller.ex:23
+#: lib/recake_web/controllers/user_reset_password_controller.ex:23
 msgid "You will receive instructions to reset your password to your e-mail shortly."
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/controllers/job_controller.ex:7
+#: lib/recake_web/controllers/job_controller.ex:7
 msgid "Your jobs"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/index.html.eex:8
+#: lib/recake_web/templates/job/index.html.eex:8
 msgid "if you're looking for workers."
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:4
+#: lib/recake_web/templates/job/new.html.eex:4
 msgid "Description"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_registration/new.html.eex:4
-#: lib/bygg_app_web/templates/user_reset_password/new.html.eex:6 lib/bygg_app_web/templates/user_session/new.html.eex:13
+#: lib/recake_web/templates/user_registration/new.html.eex:4
+#: lib/recake_web/templates/user_reset_password/new.html.eex:6 lib/recake_web/templates/user_session/new.html.eex:13
 msgid "Email"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:5
+#: lib/recake_web/templates/job/new.html.eex:5
 msgid "Location"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_registration/new.html.eex:5
-#: lib/bygg_app_web/templates/user_session/new.html.eex:14
+#: lib/recake_web/templates/user_registration/new.html.eex:5
+#: lib/recake_web/templates/user_session/new.html.eex:14
 msgid "Password"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/user_session/new.html.eex:15
+#: lib/recake_web/templates/user_session/new.html.eex:15
 msgid "Remember me"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:6
+#: lib/recake_web/templates/job/new.html.eex:6
 msgid "Timespan"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app_web/templates/job/new.html.eex:3
+#: lib/recake_web/templates/job/new.html.eex:3
 msgid "Identifier"
 msgstr ""

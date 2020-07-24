@@ -1,11 +1,11 @@
-defmodule ByggApp.AccountsTest do
-  use ByggApp.DataCase, async: true
+defmodule Recake.AccountsTest do
+  use Recake.DataCase, async: true
 
-  import ByggAppWeb.Gettext
-  import ByggApp.AccountsFixtures
+  import RecakeWeb.Gettext
+  import Recake.AccountsFixtures
 
-  alias ByggApp.Accounts
-  alias ByggApp.Accounts.{User, UserToken, Invitation}
+  alias Recake.Accounts
+  alias Recake.Accounts.{User, UserToken, Invitation}
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do

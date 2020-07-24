@@ -1,7 +1,7 @@
-defmodule ByggAppWeb.UserRegistrationControllerTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.UserRegistrationControllerTest do
+  use RecakeWeb.ConnCase, async: true
 
-  import ByggApp.AccountsFixtures
+  import Recake.AccountsFixtures
 
   describe "GET /users/register" do
     test "renders registration form with valid invitation token", %{conn: conn} do

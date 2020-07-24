@@ -1,4 +1,4 @@
-defmodule ByggApp.Repo.Migrations.CreateUserAuthTables do
+defmodule Recake.Repo.Migrations.CreateUserAuthTables do
   use Ecto.Migration
 
   def change do

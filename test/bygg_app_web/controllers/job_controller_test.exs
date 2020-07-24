@@ -1,11 +1,11 @@
-defmodule ByggAppWeb.JobControllerTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.JobControllerTest do
+  use RecakeWeb.ConnCase, async: true
 
-  import ByggApp.AccountsFixtures
-  import ByggApp.JobsFixtures
+  import Recake.AccountsFixtures
+  import Recake.JobsFixtures
 
-  alias ByggApp.Repo
-  alias ByggApp.Jobs.Job
+  alias Recake.Repo
+  alias Recake.Jobs.Job
 
   setup %{conn: conn} do
     user = user_fixture()

@@ -1,14 +1,14 @@
-defmodule ByggAppWeb.ErrorViewTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.ErrorViewTest do
+  use RecakeWeb.ConnCase, async: true
 
   # Bring render/3 and render_to_string/3 for testing custom views
   import Phoenix.View
 
   test "renders 404.html" do
-    assert render_to_string(ByggAppWeb.ErrorView, "404.html", []) == "Not Found"
+    assert render_to_string(RecakeWeb.ErrorView, "404.html", []) == "Not Found"
   end
 
   test "renders 500.html" do
-    assert render_to_string(ByggAppWeb.ErrorView, "500.html", []) == "Internal Server Error"
+    assert render_to_string(RecakeWeb.ErrorView, "500.html", []) == "Internal Server Error"
   end
 end

@@ -1,4 +1,4 @@
-defmodule ByggApp.Repo.Migrations.CreateUserInvitation do
+defmodule Recake.Repo.Migrations.CreateUserInvitation do
   use Ecto.Migration
 
   def change do

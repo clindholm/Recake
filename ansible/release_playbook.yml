@@ -8,12 +8,12 @@
   tasks:
     - name: stop service
       systemd:
-        name: bygg_app
+        name: recake
         state: stopped
 
     - name: ensure directory
       file:
-        path: /home/{{ create_user }}/bygg_app
+        path: /home/{{ create_user }}/recake
         state: directory
         owner: "{{ create_user }}"
         group: wheel
@@ -22,12 +22,12 @@
 
     - name: copy release
       unarchive:
-        src: ../tmp/bygg_app.tar.gz
-        dest: /home/{{ create_user }}/bygg_app
+        src: ../tmp/recake.tar.gz
+        dest: /home/{{ create_user }}/recake
 
     - name: set ownership
       file:
-        path: /home/{{ create_user }}/bygg_app
+        path: /home/{{ create_user }}/recake
         state: directory
         owner: "{{ create_user }}"
         group: wheel
@@ -35,7 +35,7 @@
         recurse: yes
 
     - name: run migrations
-      command: /home/{{ create_user }}/bygg_app/bin/bygg_app eval "ByggApp.ReleaseTasks.migrate()"
+      command: /home/{{ create_user }}/recake/bin/recake eval "Recake.ReleaseTasks.migrate()"
       become_user: "{{ create_user }}"
       environment:
         LANG: en_US.UTF-8
@@ -45,5 +45,5 @@
 
     - name: start service
       systemd:
-        name: bygg_app
+        name: recake
         state: started

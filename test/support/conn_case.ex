@@ -1,4 +1,4 @@
-defmodule ByggAppWeb.ConnCase do
+defmodule RecakeWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule ByggAppWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use ByggAppWeb.ConnCase, async: true`, although
+  by setting `use RecakeWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -22,21 +22,21 @@ defmodule ByggAppWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import ByggAppWeb.Gettext
-      import ByggAppWeb.ConnCase
+      import RecakeWeb.Gettext
+      import RecakeWeb.ConnCase
 
-      alias ByggAppWeb.Router.Helpers, as: Routes
+      alias RecakeWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint ByggAppWeb.Endpoint
+      @endpoint RecakeWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ByggApp.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Recake.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(ByggApp.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Recake.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}
@@ -127,12 +127,12 @@ defmodule ByggAppWeb.ConnCase do
   end
 
   def register_and_login_user(%{conn: conn}) do
-    user = ByggApp.AccountsFixtures.user_fixture()
+    user = Recake.AccountsFixtures.user_fixture()
     %{conn: login_user(conn, user), user: user}
   end
 
   def login_user(conn, user) do
-    token = ByggApp.Accounts.generate_session_token(user)
+    token = Recake.Accounts.generate_session_token(user)
 
     conn
     |> Phoenix.ConnTest.init_test_session(%{})

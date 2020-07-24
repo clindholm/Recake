@@ -1,10 +1,10 @@
 use Mix.Config
 
 # Configure your database
-config :bygg_app, ByggApp.Repo,
+config :recake, Recake.Repo,
   username: "postgres",
   password: "postgres",
-  database: "bygg_app_dev",
+  database: "recake_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -15,7 +15,7 @@ config :bygg_app, ByggApp.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :bygg_app, ByggAppWeb.Endpoint,
+config :recake, RecakeWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -55,13 +55,13 @@ config :bygg_app, ByggAppWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :bygg_app, ByggAppWeb.Endpoint,
+config :recake, RecakeWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/bygg_app_web/(live|views)/.*(ex)$",
-      ~r"lib/bygg_app_web/templates/.*(eex)$"
+      ~r"lib/recake_web/(live|views)/.*(ex)$",
+      ~r"lib/recake_web/templates/.*(eex)$"
     ]
   ]
 

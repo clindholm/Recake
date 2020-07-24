@@ -87,21 +87,21 @@ msgid "must be equal to %{number}"
 msgstr ""
 
 #, elixir-format
-#: lib/bygg_app/accounts/user.ex:64
+#: lib/recake/accounts/user.ex:64
 msgid "did not change"
 msgstr "är inte förändrad"
 
 #, elixir-format
-#: lib/bygg_app/accounts/user.ex:71
+#: lib/recake/accounts/user.ex:71
 msgid "does not match password"
 msgstr "matchar inte lösenordet"
 
 #, elixir-format
-#: lib/bygg_app/accounts/user.ex:32
+#: lib/recake/accounts/user.ex:32
 msgid "must include @ sign and no spaces"
 msgstr "måste inkludera @ och inga mellanslag"
 
 #, elixir-format, fuzzy
-#: lib/bygg_app/accounts/user.ex:94
+#: lib/recake/accounts/user.ex:94
 msgid "is not valid"
 msgstr "är felaktigt"

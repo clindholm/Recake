@@ -1,4 +1,4 @@
-defmodule ByggApp.AccountsFixtures do
+defmodule Recake.AccountsFixtures do
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
   def valid_user_password, do: "hello world!"
 
@@ -11,13 +11,13 @@ defmodule ByggApp.AccountsFixtures do
         company: "Company Inc.",
         phone: "(233) 555-123 456"
       })
-      |> (& ByggApp.Accounts.change_user_registration(%ByggApp.Accounts.User{}, &1)).()
-      |> ByggApp.Repo.insert()
+      |> (& Recake.Accounts.change_user_registration(%Recake.Accounts.User{}, &1)).()
+      |> Recake.Repo.insert()
     user
   end
 
   def invitation_fixture() do
-    ByggApp.Accounts.create_invitation()
+    Recake.Accounts.create_invitation()
   end
 
   def extract_user_token(fun) do

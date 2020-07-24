@@ -1,14 +1,14 @@
-defmodule ByggApp.JobsTest do
-  use ByggApp.DataCase, async: true
+defmodule Recake.JobsTest do
+  use Recake.DataCase, async: true
 
-  alias ByggApp.Jobs
-  alias ByggApp.Jobs.{Job, Request}
+  alias Recake.Jobs
+  alias Recake.Jobs.{Job, Request}
 
-  alias ByggApp.Accounts.User
+  alias Recake.Accounts.User
 
-  import ByggApp.AccountsFixtures
-  import ByggApp.JobsFixtures
-  import ByggAppWeb.Gettext
+  import Recake.AccountsFixtures
+  import Recake.JobsFixtures
+  import RecakeWeb.Gettext
 
   describe "get_job/1" do
     test "returns nil for non-existant job" do
@@ -219,7 +219,7 @@ defmodule ByggApp.JobsTest do
         })
 
       assert job == Jobs.get_job(job.id)
-      job = ByggApp.Repo.preload(job, :user)
+      job = Recake.Repo.preload(job, :user)
       assert job.user == user
     end
 
@@ -235,10 +235,10 @@ defmodule ByggApp.JobsTest do
           timespan: "Timespan"
         })
 
-      job = ByggApp.Repo.preload(job, :requests)
-      job_creator = ByggApp.Repo.preload(job_creator, :job_requests)
-      recipient1 = ByggApp.Repo.preload(recipient1, :job_requests)
-      recipient2 = ByggApp.Repo.preload(recipient2, :job_requests)
+      job = Recake.Repo.preload(job, :requests)
+      job_creator = Recake.Repo.preload(job_creator, :job_requests)
+      recipient1 = Recake.Repo.preload(recipient1, :job_requests)
+      recipient2 = Recake.Repo.preload(recipient2, :job_requests)
 
       [request1 | []] = recipient1.job_requests
       [request2 | []] = recipient2.job_requests

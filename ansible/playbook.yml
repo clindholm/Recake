@@ -191,16 +191,16 @@
 
     # - name: Setup systemd file
     #   template:
-    #     src: templates/bygg_app.service.j2
-    #     dest: /etc/systemd/system/bygg_app.service
+    #     src: templates/recake.service.j2
+    #     dest: /etc/systemd/system/recake.service
 
     # - name: Reload Systemd
     #   systemd:
     #     daemon_reload: yes
 
-    # - name: Enable ByggApp service
+    # - name: Enable Recake service
     #   systemd:
-    #     name: bygg_app
+    #     name: recake
     #     state: started
     #     enabled: yes
 

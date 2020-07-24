@@ -1,14 +1,14 @@
-defmodule ByggAppWeb.UserAuthTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.UserAuthTest do
+  use RecakeWeb.ConnCase, async: true
 
-  alias ByggApp.Accounts
-  alias ByggAppWeb.UserAuth
-  import ByggApp.AccountsFixtures
+  alias Recake.Accounts
+  alias RecakeWeb.UserAuth
+  import Recake.AccountsFixtures
 
   setup %{conn: conn} do
     conn =
       conn
-      |> Map.replace!(:secret_key_base, ByggAppWeb.Endpoint.config(:secret_key_base))
+      |> Map.replace!(:secret_key_base, RecakeWeb.Endpoint.config(:secret_key_base))
       |> init_test_session(%{})
 
     %{user: user_fixture(), conn: conn}
@@ -63,7 +63,7 @@ defmodule ByggAppWeb.UserAuthTest do
 
     test "broadcasts to the given live_socket_id", %{conn: conn} do
       live_socket_id = "users_sessions:abcdef-token"
-      ByggAppWeb.Endpoint.subscribe(live_socket_id)
+      RecakeWeb.Endpoint.subscribe(live_socket_id)
 
       conn
       |> put_session(:live_socket_id, live_socket_id)

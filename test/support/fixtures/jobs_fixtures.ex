@@ -1,7 +1,7 @@
-defmodule ByggApp.JobsFixtures do
-  alias ByggApp.Repo
-  alias ByggApp.Jobs.{Job, Request}
-  alias ByggApp.Accounts.User
+defmodule Recake.JobsFixtures do
+  alias Recake.Repo
+  alias Recake.Jobs.{Job, Request}
+  alias Recake.Accounts.User
 
   def job_fixture(%User{} = user, attrs \\ %{}) do
     %Job{

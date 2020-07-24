@@ -1,4 +1,4 @@
-# ByggApp
+# Recake
 
 To start your Phoenix server:
 

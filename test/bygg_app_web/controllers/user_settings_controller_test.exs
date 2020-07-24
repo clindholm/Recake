@@ -1,8 +1,8 @@
-defmodule ByggAppWeb.UserSettingsControllerTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.UserSettingsControllerTest do
+  use RecakeWeb.ConnCase, async: true
 
-  alias ByggApp.Accounts
-  import ByggApp.AccountsFixtures
+  alias Recake.Accounts
+  import Recake.AccountsFixtures
 
   setup :register_and_login_user
 

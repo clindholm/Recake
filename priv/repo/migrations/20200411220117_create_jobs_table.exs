@@ -1,4 +1,4 @@
-defmodule ByggApp.Repo.Migrations.CreateJobsTable do
+defmodule Recake.Repo.Migrations.CreateJobsTable do
   use Ecto.Migration
 
   def change do

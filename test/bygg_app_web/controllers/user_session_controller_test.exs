@@ -1,7 +1,7 @@
-defmodule ByggAppWeb.UserSessionControllerTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.UserSessionControllerTest do
+  use RecakeWeb.ConnCase, async: true
 
-  import ByggApp.AccountsFixtures
+  import Recake.AccountsFixtures
 
   setup do
     %{user: user_fixture()}

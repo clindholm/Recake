@@ -1,9 +1,9 @@
-defmodule ByggAppWeb.UserResetPasswordControllerTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.UserResetPasswordControllerTest do
+  use RecakeWeb.ConnCase, async: true
 
-  alias ByggApp.Accounts
-  alias ByggApp.Repo
-  import ByggApp.AccountsFixtures
+  alias Recake.Accounts
+  alias Recake.Repo
+  import Recake.AccountsFixtures
 
   setup do
     %{user: user_fixture()}

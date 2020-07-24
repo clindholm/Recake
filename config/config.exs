@@ -7,18 +7,18 @@
 # General application configuration
 use Mix.Config
 
-config :bygg_app,
-  ecto_repos: [ByggApp.Repo]
+config :recake,
+  ecto_repos: [Recake.Repo]
 
 # Configures the endpoint
-config :bygg_app, ByggAppWeb.Endpoint,
+config :recake, RecakeWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "U+hNteAXXgrBffv7zk/C8WJVodkLeOEwn1VTc0iK2uaF0tchDb9My+DD6MF/Ng40",
-  render_errors: [view: ByggAppWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: ByggApp.PubSub,
+  render_errors: [view: RecakeWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: Recake.PubSub,
   live_view: [signing_salt: "2EhAYCIL"]
 
-config :bygg_app, ByggAppWeb.Gettext, default_locale: "sv", locales: ~w(sv en)
+config :recake, RecakeWeb.Gettext, default_locale: "sv", locales: ~w(sv en)
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -1,4 +1,4 @@
-defmodule ByggApp.Repo.Migrations.AddAdditionalUserFields do
+defmodule Recake.Repo.Migrations.AddAdditionalUserFields do
   use Ecto.Migration
 
   def change do

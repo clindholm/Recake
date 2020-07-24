@@ -1,3 +1,3 @@
-defmodule ByggAppWeb.PageViewTest do
-  use ByggAppWeb.ConnCase, async: true
+defmodule RecakeWeb.PageViewTest do
+  use RecakeWeb.ConnCase, async: true
 end

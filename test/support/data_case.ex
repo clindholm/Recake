@@ -1,4 +1,4 @@
-defmodule ByggApp.DataCase do
+defmodule Recake.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule ByggApp.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use ByggApp.DataCase, async: true`, although
+  by setting `use Recake.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,20 +18,20 @@ defmodule ByggApp.DataCase do
 
   using do
     quote do
-      alias ByggApp.Repo
+      alias Recake.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import ByggApp.DataCase
+      import Recake.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ByggApp.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Recake.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(ByggApp.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Recake.Repo, {:shared, self()})
     end
 
     :ok
@@ -48,9 +48,9 @@ defmodule ByggApp.DataCase do
   def errors_on(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
       if count = opts[:count] do
-        Gettext.dngettext(ByggAppWeb.Gettext, "errors", msg, msg, count, opts)
+        Gettext.dngettext(RecakeWeb.Gettext, "errors", msg, msg, count, opts)
       else
-        Gettext.dgettext(ByggAppWeb.Gettext, "errors", msg, opts)
+        Gettext.dgettext(RecakeWeb.Gettext, "errors", msg, opts)
       end
     end)
   end

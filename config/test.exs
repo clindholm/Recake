@@ -1,16 +1,16 @@
 use Mix.Config
 
 # Configure your database
-config :bygg_app, ByggApp.Repo,
+config :recake, Recake.Repo,
   username: "postgres",
   password: "postgres",
-  database: "bygg_app_test",
+  database: "recake_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :bygg_app, ByggAppWeb.Endpoint,
+config :recake, RecakeWeb.Endpoint,
   http: [port: 4002],
   server: false
 
