@@ -180,7 +180,7 @@
       apt: update_cache=yes
       
     - name: Install Postgres
-      apt: name=postgresql state=latest
+      apt: name=postgresql-12 state=latest
 
     - name: Ensure Postgres is running
       service: name=postgresql state=started enabled=yes

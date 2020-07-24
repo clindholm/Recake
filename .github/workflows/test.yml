@@ -70,3 +70,13 @@ jobs:
     
     - name: Run Tests
       run: mix test
+
+    - name: Deploy files
+      uses: appleboy/scp-action@master
+      with:
+        host: https://staging.recake.se
+        username: recake_deploy
+        key: ${{ secrets.STAGING_KEY }}
+        passphrase: ${{ secrets.STAGING_PASSPHRASE }}
+        source: 'README.md'
+        target: '~/recake/staging/'
