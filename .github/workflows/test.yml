@@ -71,6 +71,12 @@ jobs:
     - name: Run Tests
       run: mix test
 
+    - name: Build release
+      run: |
+        NODE_ENV=production npm run deploy --prefix assets
+        MIX_ENV=prod mix phx.digest
+        MIX_ENV=prod mix release
+
     - name: Deploy files
       uses: appleboy/scp-action@master
       with:
