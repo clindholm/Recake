@@ -88,7 +88,7 @@ jobs:
         target: '~/staging/'
         strip_components: 5
 
-    - name: Deploy files
+    - name: Run db migrations
       uses: appleboy/ssh-action@master
       with:
         host: staging.recake.se
