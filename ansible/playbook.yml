@@ -73,10 +73,14 @@
         key: "{{ deploy_user_key }}"
 
 # Install packages
+    - name: Add older APT repo
+      apt_repository:
+        repo: deb http://security.ubuntu.com/ubuntu xenial-security main
+        state: present
 
     - name: Install required packages
       apt: 
-        name: ['ufw', 'unattended-upgrades', 'python3-pip', 'libpq-dev', 'acl', 'libtinfo5', 'openssl', 'libssl-dev', 'erlang-crypto']
+        name: ['ufw', 'unattended-upgrades', 'libpq-dev', 'python3-pip', 'acl', 'libicu55']
         state: latest
         update_cache: yes
 
@@ -170,18 +174,18 @@
         direction: incoming
 
 # Postgres
-    # - name: Add Postgres sources
-    #   lineinfile: 
-    #     path: /etc/apt/sources.list.d/pgdg.list 
-    #     state: present
-    #     create: yes
-    #     regexp: '^deb http://apt.postgresql.org'
-    #     line: 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main'
+    - name: Add Postgres sources
+      lineinfile: 
+        path: /etc/apt/sources.list.d/pgdg.list 
+        state: present
+        create: yes
+        regexp: '^deb http://apt.postgresql.org'
+        line: 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main'
 
-    # - name: Add Postgres apt key
-    #   apt_key:
-    #     url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
-    #     state: present
+    - name: Add Postgres apt key
+      apt_key:
+        url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+        state: present
      
     - name: Install Postgres
       apt: name=postgresql-12 state=latest update_cache=yes
