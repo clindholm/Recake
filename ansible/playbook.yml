@@ -4,6 +4,8 @@
   vars_files:
     - vars/secrets.yml
   vars:
+    config_system_locale: en_US.UTF-8
+    config_system_language: en_US.UTF-8
     main_user: "recake"
     main_user_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
     deploy_user: "recake_deploy"
@@ -72,6 +74,22 @@
         state: present
         key: "{{ deploy_user_key }}"
 
+    - name: Allow deploy_user to start staging service
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl start recake_staging'
+        line: '{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl start recake_staging'
+        validate: '/usr/sbin/visudo -cf %s'
+
+    - name: Allow deploy_user to stop staging service
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl stop recake_staging'
+        line: '{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl stop recake_staging'
+        validate: '/usr/sbin/visudo -cf %s'
+
 # Install packages
     - name: Add older APT repo
       apt_repository:
@@ -88,6 +106,34 @@
       pip: 
         name: psycopg2
         executable: pip3
+
+# Setup locales
+    - name: Ensure localisation files for '{{ config_system_locale }}' are available
+      locale_gen:
+        name: "{{ config_system_locale }}"
+        state: present
+
+    - name: Ensure localisation files for '{{ config_system_language }}' are available
+      locale_gen:
+        name: "{{ config_system_language }}"
+        state: present
+
+    - name: Get current locale and language configuration
+      command: localectl status
+      register: locale_status
+      changed_when: false
+
+    - name: Parse 'LANG' from current locale and language configuration
+      set_fact:
+        locale_lang: "{{ locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+
+    - name: Parse 'LANGUAGE' from current locale and language configuration
+      set_fact:
+        locale_language: "{{ locale_status.stdout | regex_search('LANGUAGE=([^\n]+)', '\\1') | default([locale_lang], true) | first }}"
+
+    - name: Configure locale to '{{ config_system_locale }}' and language to '{{ config_system_language }}'
+      command: localectl set-locale LANG={{ config_system_locale }} LANGUAGE={{ config_system_language }}
+      changed_when: locale_lang != config_system_locale or locale_language != config_system_language
 
 # Setup unattended-upgrades
 
@@ -223,6 +269,7 @@
         group: "{{ deploy_user }}"
         mode: u=rwx,g=r,o=r
       vars:
+        service: recake_staging
         path: "/home/{{ deploy_user }}/staging"
         host: staging.recake.se
         secret_key_base: "{{ staging_secret_key_base }}"
@@ -235,7 +282,7 @@
         src: templates/systemd.service.j2
         dest: /etc/systemd/system/recake_staging.service
       vars:
-        user: "{{ main_user }}"
+        user: "{{ deploy_user }}"
         server_type: "Staging"
         working_directory: /home/{{ deploy_user }}/staging
         domain: staging.recake.se

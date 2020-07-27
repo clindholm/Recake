@@ -12,7 +12,7 @@ env:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     strategy:
       matrix:
@@ -87,3 +87,12 @@ jobs:
         source: './_build/prod/rel/recake/'
         target: '~/staging/'
         strip_components: 5
+
+    - name: Deploy files
+      uses: appleboy/ssh-action@master
+      with:
+        host: staging.recake.se
+        username: recake_deploy
+        key: ${{ secrets.STAGING_KEY }}
+        passphrase: ${{ secrets.STAGING_PASSPHRASE }}
+        script: bash ~/migrate_staging.sh

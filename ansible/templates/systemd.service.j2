@@ -4,14 +4,14 @@ After=network.target
 
 [Service]
 User={{ user }}
-Group=wheel
+Group={{ user }}
 WorkingDirectory={{ working_directory }}
 Environment=LANG=en_US.UTF-8
 Environment=HOST_URL="{{ domain }}"
 Environment=PORT="{{ port }}"
 Environment=SECRET_KEY_BASE="{{ secret_key_base }}"
 Environment=DATABASE_URL="{{ db_url }}"
-ExecStart= {{ working_directory }}/bin/recake start
+ExecStart={{ working_directory }}/bin/recake start
 SyslogIdentifier={{ syslog_id }}
 RemainAfterExit=no
 Restart=on-failure
