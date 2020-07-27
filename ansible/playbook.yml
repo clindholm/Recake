@@ -72,13 +72,11 @@
 
 # Install packages
 
-    - name: Update apt
-      apt: update_cache=yes
-
     - name: Install required packages
       apt: 
         name: ['ufw', 'unattended-upgrades', 'python3-pip', 'libpq-dev', 'acl']
         state: latest
+        update_cache: yes
 
     - name: pip install psycopg
       shell: pip3 install psycopg2
@@ -124,16 +122,14 @@
         regexp: '^deb [trusted=yes] https://apt.fury.io/caddy/'
         line: 'deb [trusted=yes] https://apt.fury.io/caddy/ /'
 
-    - name: Update apt
-      apt: update_cache=yes
-      
     - name: Install Caddy
-      apt: name=caddy state=latest
+      apt: name=caddy state=latest update_cache=yes
 
     - name: Setup Caddyfile
       template:
         src: templates/Caddyfile.j2
         dest: /etc/caddy/Caddyfile
+      register: caddyfile
 
     - name: Setup shared/temporary index.html
       copy:
@@ -144,6 +140,7 @@
       systemd:
         name: caddy
         state: reloaded
+      when: caddyfile.changed
 
 # UFW Setup
 
@@ -181,12 +178,9 @@
     #   apt_key:
     #     url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
     #     state: present
-
-    - name: Update apt
-      apt: update_cache=yes
-      
+     
     - name: Install Postgres
-      apt: name=postgresql-12 state=latest
+      apt: name=postgresql-12 state=latest update_cache=yes
 
     - name: Ensure Postgres is running
       service: name=postgresql state=started enabled=yes
@@ -205,6 +199,20 @@
         role_attr_flags: NOCREATEDB
         state: present
       become_user: postgres
+
+# Deploy
+    - name: Copy db migration script
+      template:
+        src: templates/migrate.sh.j2
+        dest: /home/{{ deploy_user }}/migrate_staging.sh
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_user }}"
+        mode: u=rwx,g=r,o=r
+      vars:
+        path: "/home/{{ deploy_user }}/staging"
+        host: staging.recake.se
+        secret_key_base: "{{ staging_secret_key_base }}"
+        db_url: "postgresql://{{ staging_db_username }}:{{ staging_db_password }}@localhost/{{ staging_db_name }}"
 
 # Recake service
 

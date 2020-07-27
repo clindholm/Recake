@@ -85,5 +85,5 @@ jobs:
         key: ${{ secrets.STAGING_KEY }}
         passphrase: ${{ secrets.STAGING_PASSPHRASE }}
         source: './_build/prod/rel/recake/'
-        target: '~/recake/staging/'
-        strip_components: 4
+        target: '~/staging/'
+        strip_components: 5
