@@ -86,3 +86,4 @@ jobs:
         passphrase: ${{ secrets.STAGING_PASSPHRASE }}
         source: './_build/prod/rel/recake/'
         target: '~/recake/staging/'
+        strip_components: 4
