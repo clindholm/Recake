@@ -84,5 +84,5 @@ jobs:
         username: recake_deploy
         key: ${{ secrets.STAGING_KEY }}
         passphrase: ${{ secrets.STAGING_PASSPHRASE }}
-        source: 'README.md'
+        source: './_build/prod/rel/recake/'
         target: '~/recake/staging/'
