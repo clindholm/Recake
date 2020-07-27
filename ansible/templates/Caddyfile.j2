@@ -1,6 +1,5 @@
 staging.recake.se {
-    root * /usr/share/caddy
-    file_server browse
+    reverse_proxy localhost:{{ staging_port }}
 }
 
 app.recake.se {

@@ -8,8 +8,10 @@
     main_user_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
     deploy_user: "recake_deploy"
     deploy_user_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/recake_github.pub') }}"
+    staging_port: 4500
     staging_db_name: "recake_db_staging"
     staging_db_username: "recake_user_staging"
+    production_port: 4800
     production_db_name: "recake_db_production"
     production_db_username: "recake_user_production"
   
@@ -74,12 +76,14 @@
 
     - name: Install required packages
       apt: 
-        name: ['ufw', 'unattended-upgrades', 'python3-pip', 'libpq-dev', 'acl']
+        name: ['ufw', 'unattended-upgrades', 'python3-pip', 'libpq-dev', 'acl', 'libtinfo5', 'openssl', 'libssl-dev', 'erlang-crypto']
         state: latest
         update_cache: yes
 
     - name: pip install psycopg
-      shell: pip3 install psycopg2
+      pip: 
+        name: psycopg2
+        executable: pip3
 
 # Setup unattended-upgrades
 
@@ -199,6 +203,12 @@
         role_attr_flags: NOCREATEDB
         state: present
       become_user: postgres
+    
+    - name: Install citext
+      postgresql_ext:
+        db: "{{ staging_db_name }}"
+        name: citext
+      become_user: postgres
 
 # Deploy
     - name: Copy db migration script
@@ -216,19 +226,28 @@
 
 # Recake service
 
-    # - name: Setup systemd file
-    #   template:
-    #     src: templates/recake.service.j2
-    #     dest: /etc/systemd/system/recake.service
+    - name: Setup systemd file
+      template:
+        src: templates/systemd.service.j2
+        dest: /etc/systemd/system/recake_staging.service
+      vars:
+        user: "{{ main_user }}"
+        server_type: "Staging"
+        working_directory: /home/{{ deploy_user }}/staging
+        domain: staging.recake.se
+        port: "{{ staging_port }}"
+        secret_key_base: "{{ staging_secret_key_base }}"
+        db_url: "postgresql://{{ staging_db_username }}:{{ staging_db_password }}@localhost/{{ staging_db_name }}"
+        syslog_id: "recake_staging"
+      register: staging_service
 
-    # - name: Reload Systemd
-    #   systemd:
-    #     daemon_reload: yes
+    - name: Reload Systemd
+      systemd:
+        daemon_reload: yes
+      when: staging_service.changed
 
-    # - name: Enable Recake service
-    #   systemd:
-    #     name: recake
-    #     state: started
-    #     enabled: yes
-
-    
+    - name: Enable Recake service
+      systemd:
+        name: recake_staging
+        state: started
+        enabled: yes
