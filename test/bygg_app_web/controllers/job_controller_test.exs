@@ -20,38 +20,6 @@ defmodule RecakeWeb.JobControllerTest do
     }
   end
 
-  describe "GET /jobs" do
-    test "redirects if user is not logged in" do
-      conn = build_conn()
-      conn = get(conn, Routes.job_path(conn, :index))
-      assert redirected_to(conn) == "/users/login"
-    end
-
-    test "renders flash", %{conn: conn} do
-      assert_render_flash(conn, &get(&1, Routes.job_path(conn, :index)), :success)
-    end
-
-    test "renders empty state", %{conn: conn} do
-      conn
-      |> get(Routes.job_path(conn, :index))
-      |> html_document()
-      |> assert_selector_content("h2", gettext("You have no active jobs"))
-      |> assert_selector("a[href=\"#{Routes.job_path(conn, :new)}\"]")
-    end
-
-    test "renders active user jobs", %{conn: conn, user: user} do
-      active_job = job_fixture(user, %{identifier: "Active Job"})
-      closed_job = job_fixture(user, %{is_closed: true, identifier: "Closed Job"})
-
-      conn
-      |> get(Routes.job_path(conn, :index))
-      |> html_document()
-      |> assert_selector_content(".project-id", active_job.identifier)
-      |> refute_selector_content(".project-id", closed_job.identifier)
-      |> assert_selector("a[href=\"#{Routes.job_path(conn, :edit, active_job.id)}\"]")
-    end
-  end
-
   describe "GET /jobs/new" do
     test "redirects if user is not logged in" do
       conn = build_conn()

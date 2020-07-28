@@ -5,7 +5,9 @@ defmodule RecakeWeb.InboxController do
 
   def index(conn, _params) do
     job_requests = Jobs.list_user_job_requests(conn.assigns.current_user)
-    render(conn, "index.html", job_requests: job_requests)
+    jobs = Jobs.list_user_jobs(conn.assigns.current_user)
+
+    render(conn, "index.html", job_requests: job_requests, jobs: jobs)
   end
 
   def resolve(conn, %{"id" => id, "accept" => _}) do

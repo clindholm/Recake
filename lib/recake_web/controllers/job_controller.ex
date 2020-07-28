@@ -9,17 +9,6 @@ defmodule RecakeWeb.JobController do
 
   plug :authorize_job_edit when action in [:edit, :update]
 
-  def index(conn, _params) do
-    jobs = Jobs.list_user_jobs(conn.assigns.current_user)
-
-    conn
-    |> assign(:page_header, %{
-      title: gettext("Your jobs"),
-      action: %{label: gettext("Create new job"), url: Routes.job_path(conn, :new), icon: "plus-circle"}
-    })
-    |> render("index.html", jobs: jobs)
-  end
-
   def new(conn, _params) do
     changeset = Jobs.change_job(%Job{})
     render(conn, "new.html", changeset: changeset)

@@ -60,6 +60,18 @@ defmodule RecakeWeb.InboxControllerTest do
         "button[name=\"reject\"]",
       ])
     end
+
+    test "renders active user jobs", %{conn: conn, user: user} do
+      active_job = job_fixture(user, %{identifier: "Active Job"})
+      closed_job = job_fixture(user, %{is_closed: true, identifier: "Closed Job"})
+
+      conn
+      |> get(Routes.inbox_path(conn, :index))
+      |> html_document()
+      |> assert_selector_content(".project-id", active_job.identifier)
+      |> refute_selector_content(".project-id", closed_job.identifier)
+      |> assert_selector("a[href=\"#{Routes.job_path(conn, :edit, active_job.id)}\"]")
+    end
   end
 
   # describe "POST /requests/:id/resolve" do
