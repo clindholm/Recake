@@ -1,4 +1,4 @@
-defmodule RecakeWeb.JobRequestController do
+defmodule RecakeWeb.InboxController do
   use RecakeWeb, :controller
 
   alias Recake.Jobs
@@ -37,7 +37,7 @@ defmodule RecakeWeb.JobRequestController do
   end
 
   def resolve(conn, _) do
-    redirect(conn, to: Routes.job_request_path(conn, :index))
+    redirect(conn, to: Routes.inbox_path(conn, :index))
   end
 
   defp resolve(conn, request_id, action, flash_f) do
@@ -48,9 +48,9 @@ defmodule RecakeWeb.JobRequestController do
 
       conn
       |> flash_f.(request.job.user.company)
-      |> redirect(to: Routes.job_request_path(conn, :index))
+      |> redirect(to: Routes.inbox_path(conn, :index))
     else
-      redirect(conn, to: Routes.job_request_path(conn, :index))
+      redirect(conn, to: Routes.inbox_path(conn, :index))
     end
   end
 end

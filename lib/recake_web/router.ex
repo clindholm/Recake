@@ -47,8 +47,8 @@ defmodule RecakeWeb.Router do
     put "/users/settings/update_email", UserSettingsController, :update_email
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
-    get "/", JobRequestController, :index
-    post "/requests/:id/resolve", JobRequestController, :resolve
+    get "/", InboxController, :index
+    post "/requests/:id/resolve", InboxController, :resolve
 
     resources "/jobs", JobController, except: [:show, :delete]
   end

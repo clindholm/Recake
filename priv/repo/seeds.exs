@@ -1,11 +1,43 @@
 # Script for populating the database. You can run it as:
 #
 #     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Recake.Repo.insert!(%Recake.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+
+user1 = Recake.Repo.insert!(
+  Recake.Accounts.User.registration_changeset(%Recake.Accounts.User{}, %{
+    email: "a@admin.com",
+    password: "password",
+    company: "Admin Company",
+    phone: "1234"
+  })
+)
+
+user2 = Recake.Repo.insert!(
+  Recake.Accounts.User.registration_changeset(%Recake.Accounts.User{}, %{
+    email: "b@admin.com",
+    password: "password",
+    company: "Admin B Company",
+    phone: "1234"
+  })
+)
+
+_job1 = Recake.Repo.insert!(
+  Recake.Jobs.Job.changeset(%Recake.Jobs.Job{ user_id: user1.id}, %{
+    identifier: "Job A",
+    description: "A job description",
+    location: "Location",
+    timespan: "2 days"
+  })
+)
+
+job2 = Recake.Repo.insert!(
+  Recake.Jobs.Job.changeset(%Recake.Jobs.Job{ user_id: user2.id}, %{
+    identifier: "Job B",
+    description: "A job description",
+    location: "Location",
+    timespan: "2 days"
+  })
+)
+
+job2 = Recake.Repo.insert!(
+  %Recake.Jobs.Request{ job_id: job2.id, recipient_id: user1.id}
+)
