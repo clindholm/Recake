@@ -2,6 +2,8 @@
 <%= render_alert(@conn, :error) %>
 <%= render_alert(@conn, :info) %>
 
+<h1 class="section-title"><%= gettext("Settings") %></h1>
+
 <div class="card mt-6">
   <h3 class="text-xl text-gray-800 border-b mb-4"><%= gettext("Change e-mail") %></h3>
   <%= form_for @email_changeset, Routes.user_settings_path(@conn, :update_email), fn f -> %>

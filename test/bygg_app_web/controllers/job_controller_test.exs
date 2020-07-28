@@ -35,7 +35,6 @@ defmodule RecakeWeb.JobControllerTest do
       conn
       |> get(Routes.job_path(conn, :index))
       |> html_document()
-      |> assert_section_header(gettext("Your jobs"))
       |> assert_selector_content("h2", gettext("You have no active jobs"))
       |> assert_selector("a[href=\"#{Routes.job_path(conn, :new)}\"]")
     end
@@ -47,7 +46,6 @@ defmodule RecakeWeb.JobControllerTest do
       conn
       |> get(Routes.job_path(conn, :index))
       |> html_document()
-      |> assert_section_header(gettext("Your jobs"))
       |> assert_selector_content(".project-id", active_job.identifier)
       |> refute_selector_content(".project-id", closed_job.identifier)
       |> assert_selector("a[href=\"#{Routes.job_path(conn, :edit, active_job.id)}\"]")
@@ -65,7 +63,6 @@ defmodule RecakeWeb.JobControllerTest do
       conn
       |> get(Routes.job_path(conn, :new))
       |> html_document()
-      |> assert_section_header(gettext("Create new job"))
       |> assert_form(Routes.job_path(conn, :create), [
         "input[name=\"job[identifier]\"]",
         "textarea[name=\"job[description]\"]",
@@ -109,7 +106,6 @@ defmodule RecakeWeb.JobControllerTest do
       conn
       |> post(Routes.job_path(conn, :create), %{"job" => %{}})
       |> html_document()
-      |> assert_section_header(gettext("Create new job"))
       |> assert_selector_content(".validation-error", dgettext("errors", "can't be blank"))
     end
   end
@@ -127,7 +123,6 @@ defmodule RecakeWeb.JobControllerTest do
       conn
       |> get(Routes.job_path(conn, :edit, job))
       |> html_document()
-      |> assert_section_header(gettext("Edit job"))
       |> assert_form(Routes.job_path(conn, :update, job), [
         "input[name=\"job[identifier]\"]",
         "textarea[name=\"job[description]\"]",
@@ -185,7 +180,6 @@ defmodule RecakeWeb.JobControllerTest do
           "job" => %{"identifier" => ""}
         })
       |> html_document()
-      |> assert_selector_content("h1", gettext("Edit job"))
       |> assert_selector_content(
         ".validation-error",
         dgettext("errors", "can't be blank")

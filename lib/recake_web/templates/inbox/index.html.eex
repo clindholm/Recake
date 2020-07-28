@@ -1,6 +1,19 @@
-<div class="mt-6">
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:none">
+    <symbol viewBox="0 0 576 512" id="inbox">
+        <path d="M10 10H90V90H10Z"/>
+    </symbol>
+</svg>
+
+<div class="pt-12">
   <%= render_alert(@conn, :success) %>
   <%= render_alert(@conn, :info) %>
+
+  <div class="flex items-center">
+    <svg class="text-white bg-blue-500 flex items-center justify-center p-2 rounded-lg" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 576 512"><path fill="currentColor" d="M567.938 243.908L462.25 85.374A48.003 48.003 0 0 0 422.311 64H153.689a48 48 0 0 0-39.938 21.374L8.062 243.908A47.994 47.994 0 0 0 0 270.533V400c0 26.51 21.49 48 48 48h480c26.51 0 48-21.49 48-48V270.533a47.994 47.994 0 0 0-8.062-26.625zM162.252 128h251.497l85.333 128H376l-32 64H232l-32-64H76.918l85.334-128z"></path></svg>
+    <p class="ml-4 text-lg">
+      <%= gettext("Inbox") %>
+    </p>
+  </div>
 
   <%= if Enum.empty?(@job_requests) do %>
   <div class="card my-6">
@@ -9,14 +22,19 @@
     </div>
   </div>
   <% else %>
+
+
   <div class="mt-6 card-grid">
     <%= for request <- @job_requests do %>
     <div class="card p-0 flex flex-col">
       <div class="p-4 border-b flex-1">
-        <h3 class="text-xl text-gray-800">
+        <h3 class="text-lg font-bold text-gray-800">
           <%= request.job.user.company %>
         </h3>
-        <div class="flex justify-between">
+        <p class="mt-1 text-gray-700">
+          <%= request.job.description %>
+        </p>
+        <div class="mt-4 flex justify-between">
           <p>
             <i class="fas fa-map-marker-alt text-blue-600"></i>
             <%= request.job.location %>
@@ -26,9 +44,6 @@
             <%= request.job.timespan %>
           </p>
         </div>
-        <p class="mt-2">
-          <%= request.job.description %>
-        </p>
       </div>
 
       <%= form_for @conn, Routes.inbox_path(@conn, :resolve, request), [class: "flex p-4"], fn _f -> %>

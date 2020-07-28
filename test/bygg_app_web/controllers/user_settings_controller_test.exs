@@ -23,7 +23,6 @@ defmodule RecakeWeb.UserSettingsControllerTest do
       conn
       |> get(Routes.user_settings_path(conn, :edit))
       |> html_document()
-      |> assert_section_header(gettext("Settings"))
       |> assert_form(Routes.user_settings_path(conn, :update_password), [
         "input[name=\"user[password]\"][type=password]",
         "input[name=\"user[password_confirmation]\"][type=password]",
@@ -67,7 +66,6 @@ defmodule RecakeWeb.UserSettingsControllerTest do
 
       old_password_conn
       |> html_document()
-      |> assert_section_header(gettext("Settings"))
       |> assert_selector_content(".validation-error", dngettext("errors", "should be at least %{count} character(s)", "should be at least %{count} character(s)", 8))
       |> assert_selector_content(".validation-error", dgettext("errors", "does not match password"))
       |> assert_selector_content(".validation-error", dgettext("errors", "is not valid"))
@@ -97,7 +95,6 @@ defmodule RecakeWeb.UserSettingsControllerTest do
         "user" => %{"email" => "with spaces"}
       })
       |> html_document()
-      |> assert_section_header(gettext("Settings"))
       |> assert_selector_content(".validation-error", dgettext("errors", "must include @ sign and no spaces"))
       |> assert_selector_content(".validation-error", dgettext("errors", "is not valid"))
     end

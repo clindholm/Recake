@@ -7,9 +7,9 @@ defmodule RecakeWeb.LayoutView do
     current_page? = opts[:to] == conn.request_path
 
     classes = class_list([
-      {"py-2 px-4 text-gray-100 border-b-4 border-transparent hover:no-underline", true},
-      {"border-blue-500", current_page?},
-      {"hover:border-orange-600", !current_page?}
+      {"py-2 px-4 text-gray-700 border-b-4 border-transparent hover:no-underline", true},
+      {"border-gray-400", current_page?},
+      {"hover:border-blue-600", !current_page?}
     ])
 
     opts = Keyword.put(opts, :class, classes)
