@@ -49,7 +49,7 @@ defmodule RecakeWeb.JobControllerTest do
     end
 
     test "creates a job", %{conn: conn, user: user} do
-      post(conn, Routes.job_path(conn, :create), %{
+      conn = post(conn, Routes.job_path(conn, :create), %{
         "job" => %{
           "identifier" => "Identifier",
           "description" => "Description",
@@ -68,6 +68,8 @@ defmodule RecakeWeb.JobControllerTest do
                timespan: "Timespan",
                user_id: ^user_id
              } = List.first(jobs)
+
+      assert redirected_to(conn) == "/"
     end
 
     test "renders errors for invalid data", %{conn: conn} do
@@ -102,7 +104,7 @@ defmodule RecakeWeb.JobControllerTest do
 
     test "redirects if job doesn't exist", %{conn: conn} do
       conn = get(conn, Routes.job_path(conn, :edit, 1))
-      assert redirected_to(conn) == Routes.job_path(conn, :index)
+      assert redirected_to(conn) == Routes.inbox_path(conn, :index)
     end
 
     test "redirects if job belongs to other user", %{conn: conn} do
@@ -110,7 +112,7 @@ defmodule RecakeWeb.JobControllerTest do
       job = job_fixture(other_user)
 
       conn = get(conn, Routes.job_path(conn, :edit, job))
-      assert redirected_to(conn) == Routes.job_path(conn, :index)
+      assert redirected_to(conn) == Routes.inbox_path(conn, :index)
     end
   end
 
@@ -131,7 +133,7 @@ defmodule RecakeWeb.JobControllerTest do
 
       updated_job = Repo.get!(Job, job.id)
 
-      assert redirected_to(conn) == Routes.job_path(conn, :index)
+      assert redirected_to(conn) == Routes.inbox_path(conn, :index)
 
       assert get_flash(conn, :success) =~
                gettext("'%{project_id}' was updated", project_id: updated_job.identifier)
@@ -156,7 +158,7 @@ defmodule RecakeWeb.JobControllerTest do
 
     test "redirects if job doesn't exist", %{conn: conn} do
       conn = put(conn, Routes.job_path(conn, :update, 1))
-      assert redirected_to(conn) == Routes.job_path(conn, :index)
+      assert redirected_to(conn) == Routes.inbox_path(conn, :index)
     end
 
     test "redirects if job belongs to other user", %{conn: conn} do
@@ -164,7 +166,7 @@ defmodule RecakeWeb.JobControllerTest do
       job = job_fixture(other_user)
 
       conn = put(conn, Routes.job_path(conn, :update, job))
-      assert redirected_to(conn) == Routes.job_path(conn, :index)
+      assert redirected_to(conn) == Routes.inbox_path(conn, :index)
     end
   end
 end

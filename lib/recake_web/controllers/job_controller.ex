@@ -19,7 +19,7 @@ defmodule RecakeWeb.JobController do
       {:ok, _job} ->
         conn
         |> put_flash(:success, gettext("Job created"))
-        |> redirect(to: Routes.job_path(conn, :index))
+        |> redirect(to: Routes.inbox_path(conn, :index))
 
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
@@ -35,7 +35,7 @@ defmodule RecakeWeb.JobController do
       {:ok, job} ->
         conn
         |> put_flash(:success, gettext("'%{project_id}' was updated", project_id: job.identifier))
-        |> redirect(to: Routes.job_path(conn, :index))
+        |> redirect(to: Routes.inbox_path(conn, :index))
 
       {:error, changeset} ->
         render(conn, "edit.html", changeset: changeset)
@@ -53,7 +53,7 @@ defmodule RecakeWeb.JobController do
       |> assign(:changeset, Jobs.change_job(job))
     else
       conn
-      |> redirect(to: Routes.job_path(conn, :index))
+      |> redirect(to: Routes.inbox_path(conn, :index))
       |> halt()
     end
   end
