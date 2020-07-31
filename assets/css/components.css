@@ -8,12 +8,28 @@
 }
 
 .btn:hover {
-  @apply border-blue-600 bg-blue-400;
+  @apply border-blue-600 bg-blue-400 no-underline;
 }
 
 .btn:focus {
   @apply outline-none;
   box-shadow: 0 0 0 3px rgba(225, 191, 66, 0.5);
+}
+
+.btn-success {
+  @apply bg-green-500 border-green-800;
+}
+
+.btn-success:hover {
+  @apply border-green-600 bg-green-400;
+}
+
+.btn-success:focus {
+  box-shadow: 0 0 0 3px rgba(118, 255, 55, 0.5);
+}
+
+.btn-small {
+  @apply py-0 px-3 border-b-2 text-sm leading-none;
 }
 
 .alert {
@@ -37,7 +53,7 @@
 }
 
 .card {
-  @apply bg-white shadow-md p-8 rounded;
+  @apply bg-white shadow-md rounded;
 }
 
 .card-grid {

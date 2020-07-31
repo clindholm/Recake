@@ -1,4 +1,4 @@
-<div class="card mt-6">
+<div class="card p-8 mt-6">
   <%= form_for @changeset, @action, fn f -> %>
     <%= Form.text_input f, :identifier, label: gettext("Identifier") %>
     <%= Form.textarea_with_counter f, :description, rows: 6, label: gettext("Description") %>
