@@ -36,7 +36,8 @@ defmodule RecakeWeb.InboxControllerTest do
       conn
       |> get(Routes.inbox_path(conn, :index))
       |> html_document()
-      |> assert_selector_content("h2", gettext("You have no requests at this time"))
+      |> assert_selector_content("h2", gettext("No active requests"))
+      |> assert_selector_content("h2", gettext("empty"))
     end
 
     test "lists current pending requests of the user", %{conn: conn, user: user} do
