@@ -18,7 +18,7 @@
       </div>
 
       <%= if Enum.empty?(@job_requests) do %>
-        <h2 class="my-6 bg-gray-200 p-2 text-center text-base text-gray-600 italic"><%= gettext "empty" %></h2>
+        <h2 class="my-6 bg-gray-200 p-2 text-center text-base text-gray-600 italic"><%= gettext "empty inbox" %></h2>
       <% else %>
 
 
@@ -45,8 +45,8 @@
           </div>
 
           <%= form_for @conn, Routes.inbox_path(@conn, :resolve, request), [class: "flex p-4"], fn _f -> %>
-            <button name="accept" class="flex-1 py-2 text-green-500 border border-r-0 border-green-500 hover:bg-green-500 hover:text-white rounded-l"><%= gettext("Available") %></button>
-            <button name="reject" class="flex-1 py-2 text-red-500 border border-red-500 hover:bg-red-500 hover:text-white rounded-r"><%= gettext("Not available") %></button>
+            <button name="accept" class="flex-1 py-2 text-green-500 border border-r-0 border-green-500 hover:bg-green-500 hover:text-white rounded-l"><%= gettext("Show interest") %></button>
+            <button name="reject" class="flex-1 py-2 text-red-500 border border-red-500 hover:bg-red-500 hover:text-white rounded-r"><%= gettext("No thanks") %></button>
           <% end %>
 
         </div>
@@ -59,7 +59,7 @@
         <div class="flex items-center">
           <svg class="text-white bg-blue-500 flex items-center justify-center p-2 rounded-lg" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><path fill="currentColor" d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32zm114.1 163.8l-131 130c-4.3 4.3-11.3 4.3-15.6-.1l-75.7-76.3c-4.3-4.3-4.2-11.3.1-15.6l26-25.8c4.3-4.3 11.3-4.2 15.6.1l42.1 42.5 97.2-96.4c4.3-4.3 11.3-4.2 15.6.1l25.8 26c4.2 4.3 4.2 11.3-.1 15.5z"></path></svg>
           <p class="ml-4 text-lg">
-            <%= gettext("Responses") %>
+            <%= gettext("Recruits") %>
           </p>
         </div>
 
@@ -70,11 +70,11 @@
       </div>
 
       <%= if Enum.empty?(@jobs) do %>
-        <h2 class="my-6 bg-gray-200 p-2 text-center text-base text-gray-600 italic"><%= gettext "No active requests" %></h2>
+        <h2 class="my-6 bg-gray-200 p-2 text-center text-base text-gray-600 italic"><%= gettext "empty recruitments" %></h2>
       <% else %>
       <div class="mt-6 space-y-4">
         <%= for job <- @jobs do %>
-        <div class="card p-4 space-y-4">
+        <div class="job card p-4 space-y-4">
           <h3 class="text-lg project-id flex justify-between">
             <%= job.identifier %>
             <%= link to: Routes.job_path(@conn, :edit, job), class: "text-base" do %>
@@ -84,23 +84,25 @@
           <p><%= ngettext("%{count} sent request", "%{count} sent requests", Enum.count(job.requests)) %></p>
 
           <h4 class="uppercase text-gray-600"><%= gettext("Interested recipients") %></h4>
-          <%= for request <- filter_requests(job.requests, :accepted) do %>
-          <div class="bg-gray-300 rounded p-4">
-            <p class="text-lg font-bold">
-              <%= request.recipient.company %>
-            </p>
-            <p class="text-2xl">
-              <a href="tel:<%= request.recipient.phone %>" class="text-gray-900 underline"><%= request.recipient.phone %></a>
-            </p>
-            <p>
-              <a href="mailto:<%= request.recipient.email %>" class="text-gray-900 underline"><%= request.recipient.email %></a>
-            </p>
+          <div class="active-recruits">
+            <%= for request <- filter_requests(job.requests, "accepted") do %>
+            <div class="bg-gray-300 rounded p-4">
+              <p class="text-lg font-bold">
+                <%= request.recipient.company %>
+              </p>
+              <p class="text-2xl">
+                <a href="tel:<%= request.recipient.phone %>" class="text-gray-900 underline"><%= request.recipient.phone %></a>
+              </p>
+              <p>
+                <a href="mailto:<%= request.recipient.email %>" class="text-gray-900 underline"><%= request.recipient.email %></a>
+              </p>
+            </div>
+            <% end %>
           </div>
-          <% end %>
-          <details>
+          <details class="inactive-recruits">
             <summary class="uppercase text-gray-600"><%= gettext("Pending or declined") %></summary>
 
-            <%= for request <- filter_requests(job.requests, [:pending, :rejected]) do %>
+            <%= for request <- filter_requests(job.requests, ["pending", "rejected"]) do %>
             <p class="mt-2">
               <%= request_status_badge(request) %>
               <%= request.recipient.company %>

@@ -3,7 +3,7 @@ defmodule RecakeWeb.InboxView do
 
   import Phoenix.HTML
 
-  def filter_requests(requests, state) when is_atom(state) do
+  def filter_requests(requests, state) when is_binary(state) do
     requests
     |> Enum.filter(& &1.state == state)
   end
@@ -15,8 +15,8 @@ defmodule RecakeWeb.InboxView do
   def request_status_badge(request) do
     {text, colors} =
       case request.state do
-        :pending -> {"pending", "bg-blue-200 text-blue-900"}
-        :rejected -> {"declined", "bg-red-200 text-red-900"}
+        "pending" -> {"pending", "bg-blue-200 text-blue-900"}
+        "rejected" -> {"declined", "bg-red-200 text-red-900"}
 
       end
 
