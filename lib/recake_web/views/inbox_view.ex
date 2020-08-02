@@ -16,7 +16,7 @@ defmodule RecakeWeb.InboxView do
     {text, colors} =
       case request.state do
         "pending" -> {"pending", "bg-blue-200 text-blue-900"}
-        "rejected" -> {"declined", "bg-red-200 text-red-900"}
+        "unavailable" -> {"declined", "bg-red-200 text-red-900"}
 
       end
 

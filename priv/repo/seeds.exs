@@ -22,19 +22,15 @@ user2 = Recake.Repo.insert!(
 
 _job1 = Recake.Repo.insert!(
   Recake.Jobs.Job.changeset(%Recake.Jobs.Job{ user_id: user1.id}, %{
-    identifier: "Job A",
     description: "A job description",
     location: "Location",
-    timespan: "2 days"
   })
 )
 
 job2 = Recake.Repo.insert!(
   Recake.Jobs.Job.changeset(%Recake.Jobs.Job{ user_id: user2.id}, %{
-    identifier: "Job B",
     description: "A job description",
     location: "Location",
-    timespan: "2 days"
   })
 )
 

@@ -34,7 +34,7 @@ defmodule RecakeWeb.JobController do
     case Jobs.update_job(conn.assigns.job, job_params) do
       {:ok, job} ->
         conn
-        |> put_flash(:success, gettext("'%{project_id}' was updated", project_id: job.identifier))
+        |> put_flash(:success, gettext("Request was updated"))
         |> redirect(to: Routes.inbox_path(conn, :index))
 
       {:error, changeset} ->

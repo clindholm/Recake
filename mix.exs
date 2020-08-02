@@ -46,7 +46,8 @@ defmodule Recake.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.1", override: true}
+      {:plug_cowboy, "~> 2.1", override: true},
+      {:timex, "~> 3.0"},
     ]
   end
 

@@ -37,10 +37,6 @@
                 <i class="fas fa-map-marker-alt text-blue-600"></i>
                 <%= request.job.location %>
               </p>
-              <p>
-                <i class="far fa-stopwatch text-blue-600"></i>
-                <%= request.job.timespan %>
-              </p>
             </div>
           </div>
 
@@ -76,7 +72,7 @@
         <%= for job <- @jobs do %>
         <div class="job card p-4 space-y-4">
           <h3 class="text-lg project-id flex justify-between">
-            <%= job.identifier %>
+            <%= job.inserted_at %>
             <%= link to: Routes.job_path(@conn, :edit, job), class: "text-base" do %>
               <i class="fas fa-edit mr-1 text-blue-300"></i><%= gettext("Edit") %>
             <% end %>
@@ -85,7 +81,7 @@
 
           <h4 class="uppercase text-gray-600"><%= gettext("Interested recipients") %></h4>
           <div class="active-recruits">
-            <%= for request <- filter_requests(job.requests, "accepted") do %>
+            <%= for request <- filter_requests(job.requests, "available") do %>
             <div class="bg-gray-300 rounded p-4">
               <p class="text-lg font-bold">
                 <%= request.recipient.company %>
@@ -102,7 +98,7 @@
           <details class="inactive-recruits">
             <summary class="uppercase text-gray-600"><%= gettext("Pending or declined") %></summary>
 
-            <%= for request <- filter_requests(job.requests, ["pending", "rejected"]) do %>
+            <%= for request <- filter_requests(job.requests, ["pending", "unavailable"]) do %>
             <p class="mt-2">
               <%= request_status_badge(request) %>
               <%= request.recipient.company %>

@@ -3,11 +3,9 @@ defmodule Recake.Jobs.Job do
   import Ecto.Changeset
 
   schema "jobs" do
-    field :identifier, :string
     field :description, :string
     field :location, :string
-    field :timespan, :string
-    field :is_closed, :boolean, default: false
+    field :state, :string, default: "active"
     belongs_to :user, Recake.Accounts.User
     has_many(:requests, Recake.Jobs.Request)
 
@@ -16,9 +14,8 @@ defmodule Recake.Jobs.Job do
 
   def changeset(job, attrs) do
     job
-    |> cast(attrs, [:identifier, :description, :location, :timespan, :is_closed])
-    |> validate_required([:identifier, :description, :location, :timespan, :is_closed, :user_id])
-    |> validate_length(:identifier, min: 1, max: 40)
+    |> cast(attrs, [:description, :location])
+    |> validate_required([:description, :location, :user_id])
     |> validate_length(:description, min: 1, max: 300)
   end
 end

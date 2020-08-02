@@ -32,10 +32,8 @@ defmodule RecakeWeb.JobControllerTest do
       |> get(Routes.job_path(conn, :new))
       |> html_document()
       |> assert_form(Routes.job_path(conn, :create), [
-        "input[name=\"job[identifier]\"]",
         "textarea[name=\"job[description]\"]",
         "input[name=\"job[location]\"]",
-        "input[name=\"job[timespan]\"]",
         "*[type=submit]"
       ])
     end
@@ -51,10 +49,8 @@ defmodule RecakeWeb.JobControllerTest do
     test "creates a job", %{conn: conn, user: user} do
       conn = post(conn, Routes.job_path(conn, :create), %{
         "job" => %{
-          "identifier" => "Identifier",
           "description" => "Description",
           "location" => "Location",
-          "timespan" => "Timespan"
         }
       })
 
@@ -65,7 +61,7 @@ defmodule RecakeWeb.JobControllerTest do
       assert %{
                description: "Description",
                location: "Location",
-               timespan: "Timespan",
+               state: "active",
                user_id: ^user_id
              } = List.first(jobs)
 
@@ -94,10 +90,8 @@ defmodule RecakeWeb.JobControllerTest do
       |> get(Routes.job_path(conn, :edit, job))
       |> html_document()
       |> assert_form(Routes.job_path(conn, :update, job), [
-        "input[name=\"job[identifier]\"]",
         "textarea[name=\"job[description]\"]",
         "input[name=\"job[location]\"]",
-        "input[name=\"job[timespan]\"]",
         "*[type=submit]"
       ])
     end
@@ -128,7 +122,7 @@ defmodule RecakeWeb.JobControllerTest do
 
       conn =
         put(conn, Routes.job_path(conn, :update, job), %{
-          "job" => %{"identifier" => "Updated identifier", "description" => "Updated description"}
+          "job" => %{"description" => "Updated description"}
         })
 
       updated_job = Repo.get!(Job, job.id)
@@ -136,9 +130,8 @@ defmodule RecakeWeb.JobControllerTest do
       assert redirected_to(conn) == Routes.inbox_path(conn, :index)
 
       assert get_flash(conn, :success) =~
-               gettext("'%{project_id}' was updated", project_id: updated_job.identifier)
+               gettext("Request was updated")
 
-      assert updated_job.identifier == "Updated identifier"
       assert updated_job.description == "Updated description"
     end
 
@@ -147,7 +140,7 @@ defmodule RecakeWeb.JobControllerTest do
 
       conn
       |> put(Routes.job_path(conn, :update, job), %{
-          "job" => %{"identifier" => ""}
+          "job" => %{"description" => ""}
         })
       |> html_document()
       |> assert_selector_content(

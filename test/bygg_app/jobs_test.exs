@@ -57,7 +57,7 @@ defmodule Recake.JobsTest do
     test "returns active jobs" do
       user = user_fixture()
       active_job = job_fixture(user)
-      _closed_job = job_fixture(user, %{is_closed: true})
+      _closed_job = job_fixture(user, %{state: "closed"})
 
       job_ids =
         Jobs.list_user_jobs(user)
@@ -152,11 +152,8 @@ defmodule Recake.JobsTest do
       assert %Ecto.Changeset{} = changeset = Jobs.change_job(%Job{})
 
       assert changeset.required == [
-               :identifier,
                :description,
                :location,
-               :timespan,
-               :is_closed,
                :user_id
              ]
     end
@@ -174,10 +171,8 @@ defmodule Recake.JobsTest do
 
       assert %{
                user_id: [^error],
-               identifier: [^error],
                description: [^error],
                location: [^error],
-               timespan: [^error]
              } = errors_on(changeset)
     end
 
@@ -185,15 +180,7 @@ defmodule Recake.JobsTest do
       too_long = String.duplicate("A", 301)
 
       {:error, changeset} =
-        Jobs.publish_job(%User{}, %{identifier: too_long, description: too_long})
-
-      identifier_error =
-        dngettext(
-          "errors",
-          "should be at most %{count} character(s)",
-          "should be at most %{count} character(s)",
-          40
-        )
+        Jobs.publish_job(%User{}, %{description: too_long})
 
       description_error =
         dngettext(
@@ -204,7 +191,6 @@ defmodule Recake.JobsTest do
         )
 
       assert %{
-               identifier: [^identifier_error],
                description: [^description_error]
              } = errors_on(changeset)
     end
@@ -212,10 +198,8 @@ defmodule Recake.JobsTest do
     test "publishes job for user", %{user: user} do
       {:ok, job} =
         Jobs.publish_job(user, %{
-          identifier: "Identifier",
           description: "Description",
           location: "Location",
-          timespan: "Timespan"
         })
 
       assert job == Jobs.get_job(job.id)
@@ -229,10 +213,8 @@ defmodule Recake.JobsTest do
 
       {:ok, job} =
         Jobs.publish_job(job_creator, %{
-          identifier: "Identifier",
           description: "Description",
           location: "Location",
-          timespan: "Timespan"
         })
 
       job = Recake.Repo.preload(job, :requests)
@@ -264,26 +246,22 @@ defmodule Recake.JobsTest do
 
     test "updates the job", %{job: job} do
       {:ok, job} = Jobs.update_job(job, %{
-        identifier: "Updated identifier",
         description: "Updated description",
       })
 
       updated_job = Repo.get!(Job, job.id)
 
-      assert updated_job.identifier == "Updated identifier"
       assert updated_job.description == "Updated description"
     end
 
     test "validates the job", %{job: job} do
       {:error, changeset} = Jobs.update_job(job, %{
-        identifier: "",
         description: "",
       })
 
       error = dgettext("errors", "can't be blank")
 
       assert %{
-        identifier: [^error],
         description: [^error]
       } = errors_on(changeset)
     end
@@ -303,14 +281,14 @@ defmodule Recake.JobsTest do
     test "accepts request", %{request: request} do
       {:ok, updated_request} = Jobs.resolve_request(request, :accept)
 
-      assert updated_request.state == "accepted"
+      assert updated_request.state == "available"
       assert ^updated_request = Repo.get!(Request, request.id)
     end
 
     test "rejects request", %{request: request} do
       {:ok, updated_request} = Jobs.resolve_request(request, :reject)
 
-      assert updated_request.state == "rejected"
+      assert updated_request.state == "unavailable"
       assert ^updated_request = Repo.get!(Request, request.id)
     end
 

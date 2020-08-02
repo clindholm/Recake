@@ -17,7 +17,7 @@ defmodule Recake.Jobs do
 
   def list_user_jobs(user) do
     from(j in Job,
-      where: j.user_id == ^user.id and not j.is_closed,
+      where: j.user_id == ^user.id and j.state == ^"active",
       preload: [requests: :recipient]
     )
     |> Repo.all()
@@ -67,13 +67,13 @@ defmodule Recake.Jobs do
 
   def resolve_request(request, :accept) do
     request
-    |> Ecto.Changeset.change(state: "accepted")
+    |> Ecto.Changeset.change(state: "available")
     |> Repo.update()
   end
 
   def resolve_request(request, :reject) do
     request
-    |> Ecto.Changeset.change(state: "rejected")
+    |> Ecto.Changeset.change(state: "unavailable")
     |> Repo.update()
   end
 
