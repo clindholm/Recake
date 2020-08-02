@@ -26,9 +26,14 @@
         <%= for request <- @job_requests do %>
         <div class="card p-0 flex flex-col">
           <div class="p-4 border-b flex-1">
-            <h3 class="text-lg font-bold text-gray-800">
-              <%= request.job.user.company %>
-            </h3>
+            <div class="flex justify-between">
+              <h3 class="text-lg font-bold text-gray-800">
+                <%= request.job.user.company %>
+              </h3>
+              <p class="text-gray-600 text-sm">
+                <%= Timex.Format.DateTime.Formatters.Relative.format!(request.inserted_at, "{relative}") %>
+              </p>
+            </div>
             <p class="mt-1 text-gray-700">
               <%= request.job.description %>
             </p>
@@ -87,17 +92,17 @@
               <div class="progress-bar-segment bg-green-400" style="width: <%= job.requests["available"].percent %>%" data-tooltip="<%= job.requests["available"].total %>"></div>
               <div class="progress-bar-segment bg-red-400" style="width: <%= job.requests["unavailable"].percent %>%" data-tooltip="<%= job.requests["unavailable"].total %>"></div>
             </div>
-            <div class="mt-2 flex space-x-6">
+            <div class="mt-2 flex space-x-6 text-xs text-gray-600">
 
-              <p class="text-xs text-gray-700 flex items-center">
+              <p class="flex items-center">
                 <span class="bg-green-400 h-2 w-2 inline-block rounded-full mr-1"></span>
                 <%= gettext("Available") %>
               </p>
-              <p class="text-xs text-gray-700 flex items-center">
+              <p class="flex items-center">
                 <span class="bg-red-400 h-2 w-2 inline-block rounded-full mr-1"></span>
                 <%= gettext("Unavailable") %>
               </p>
-              <p class="text-xs text-gray-700 flex items-center">
+              <p class="flex items-center">
                 <span class="bg-gray-300 h-2 w-2 inline-block rounded-full mr-1"></span>
                 <%= gettext("Pending") %>
               </p>
@@ -105,7 +110,7 @@
           </div>
 
 
-          <h4 class="small-caps font-bold text-gray-600 mt-6"><%= gettext("Available recruits") %></h4>
+          <h4 class="text-gray-600 mt-6"><%= gettext("Available recruits") %></h4>
           <div class="active-recruits space-y-1">
             <%= for request <- job.requests["available"].recruits do %>
             <div class="bg-gray-100 rounded p-4">
@@ -122,7 +127,7 @@
             <% end %>
           </div>
           <details class="inactive-recruits mt-6">
-            <summary class="small-caps font-bold text-gray-600"><%= gettext("Pending or declined") %></summary>
+            <summary class="text-gray-600"><%= gettext("Pending or declined") %></summary>
 
             <%= for request <- (job.requests["pending"].recruits ++ job.requests["unavailable"].recruits) do %>
             <p class="mt-2">
