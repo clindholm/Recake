@@ -53,7 +53,7 @@
     <div class="flex-1">
       <div class="flex justify-between">
         <div class="flex items-center">
-          <svg class="text-white bg-blue-500 flex items-center justify-center p-2 rounded-lg" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><path fill="currentColor" d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32zm114.1 163.8l-131 130c-4.3 4.3-11.3 4.3-15.6-.1l-75.7-76.3c-4.3-4.3-4.2-11.3.1-15.6l26-25.8c4.3-4.3 11.3-4.2 15.6.1l42.1 42.5 97.2-96.4c4.3-4.3 11.3-4.2 15.6.1l25.8 26c4.2 4.3 4.2 11.3-.1 15.5z"></path></svg>
+          <svg class="text-white bg-blue-500 flex items-center justify-center p-1 rounded-lg" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 640 512"><g class="fa-group"><path class="fa-secondary" fill="currentColor" d="M96 224a64 64 0 1 0-64-64 64.06 64.06 0 0 0 64 64zm480 32h-64a63.81 63.81 0 0 0-45.1 18.6A146.27 146.27 0 0 1 542 384h66a32 32 0 0 0 32-32v-32a64.06 64.06 0 0 0-64-64zm-512 0a64.06 64.06 0 0 0-64 64v32a32 32 0 0 0 32 32h65.9a146.64 146.64 0 0 1 75.2-109.4A63.81 63.81 0 0 0 128 256zm480-32a64 64 0 1 0-64-64 64.06 64.06 0 0 0 64 64z" opacity="0.4"></path><path class="fa-primary" fill="currentColor" d="M396.8 288h-8.3a157.53 157.53 0 0 1-68.5 16c-24.6 0-47.6-6-68.5-16h-8.3A115.23 115.23 0 0 0 128 403.2V432a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48v-28.8A115.23 115.23 0 0 0 396.8 288zM320 256a112 112 0 1 0-112-112 111.94 111.94 0 0 0 112 112z"></path></g></svg>
           <p class="ml-4 text-lg">
             <%= gettext("Recruits") %>
           </p>
@@ -70,19 +70,45 @@
       <% else %>
       <div class="mt-6 space-y-4">
         <%= for job <- @jobs do %>
-        <div class="job card p-4 space-y-4">
-          <h3 class="text-lg project-id flex justify-between">
-            <%= job.inserted_at %>
+        <div class="job card p-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-xs text-gray-600 -mb-1"><%= gettext("job created at") %></p>
+              <p class="text-lg"><%= readable_datetime(job.inserted_at) %></p>
+            </div>
             <%= link to: Routes.job_path(@conn, :edit, job), class: "text-base" do %>
               <i class="fas fa-edit mr-1 text-blue-300"></i><%= gettext("Edit") %>
             <% end %>
-          </h3>
-          <p><%= ngettext("%{count} sent request", "%{count} sent requests", Enum.count(job.requests)) %></p>
+          </div>
 
-          <h4 class="uppercase text-gray-600"><%= gettext("Interested recipients") %></h4>
-          <div class="active-recruits">
-            <%= for request <- filter_requests(job.requests, "available") do %>
-            <div class="bg-gray-300 rounded p-4">
+          <div class="mt-2">
+            <p class="text-xs text-right text-gray-700"><%= ngettext("%{count} sent request", "%{count} sent", job.requests[:total]) %></p>
+            <div class="bg-gray-300 h-2 rounded-full flex justify-full">
+              <div class="progress-bar-segment bg-green-400" style="width: <%= job.requests["available"].percent %>%" data-tooltip="<%= job.requests["available"].total %>"></div>
+              <div class="progress-bar-segment bg-red-400" style="width: <%= job.requests["unavailable"].percent %>%" data-tooltip="<%= job.requests["unavailable"].total %>"></div>
+            </div>
+            <div class="mt-2 flex space-x-6">
+
+              <p class="text-xs text-gray-700 flex items-center">
+                <span class="bg-green-400 h-2 w-2 inline-block rounded-full mr-1"></span>
+                <%= gettext("Available") %>
+              </p>
+              <p class="text-xs text-gray-700 flex items-center">
+                <span class="bg-red-400 h-2 w-2 inline-block rounded-full mr-1"></span>
+                <%= gettext("Unavailable") %>
+              </p>
+              <p class="text-xs text-gray-700 flex items-center">
+                <span class="bg-gray-300 h-2 w-2 inline-block rounded-full mr-1"></span>
+                <%= gettext("Pending") %>
+              </p>
+            </div>
+          </div>
+
+
+          <h4 class="small-caps font-bold text-gray-600 mt-6"><%= gettext("Available recruits") %></h4>
+          <div class="active-recruits space-y-1">
+            <%= for request <- job.requests["available"].recruits do %>
+            <div class="bg-gray-100 rounded p-4">
               <p class="text-lg font-bold">
                 <%= request.recipient.company %>
               </p>
@@ -95,10 +121,10 @@
             </div>
             <% end %>
           </div>
-          <details class="inactive-recruits">
-            <summary class="uppercase text-gray-600"><%= gettext("Pending or declined") %></summary>
+          <details class="inactive-recruits mt-6">
+            <summary class="small-caps font-bold text-gray-600"><%= gettext("Pending or declined") %></summary>
 
-            <%= for request <- filter_requests(job.requests, ["pending", "unavailable"]) do %>
+            <%= for request <- (job.requests["pending"].recruits ++ job.requests["unavailable"].recruits) do %>
             <p class="mt-2">
               <%= request_status_badge(request) %>
               <%= request.recipient.company %>

@@ -61,3 +61,37 @@
   grid-template-columns: repeat(auto-fill, minmax(22em, 1fr));
   grid-auto-rows: min-content;
 }
+
+.progress-bar-segment {
+  @apply relative;
+}
+.progress-bar-segment:first-child {
+  @apply rounded-l-full;
+}
+.progress-bar-segment:last-child {
+  @apply rounded-r-full;
+}
+.progress-bar-segment:before {
+  @apply bg-gray-700 text-gray-100 text-xs font-bold py-1 px-3 rounded ;
+  content: attr(data-tooltip);
+  bottom: calc(100% + theme('spacing.1'));
+  left: 50%;
+  transform: translateX(-50%);
+}
+.progress-bar-segment:after {
+  @apply border-4 border-b-0 border-transparent;
+  content: '';
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-top-color: theme('colors.gray.700');
+}
+
+.progress-bar-segment:before, .progress-bar-segment:after {
+  @apply absolute transition duration-200 ease-in-out opacity-0;
+}
+.progress-bar-segment:hover:before, .progress-bar-segment:hover:after {
+  @apply opacity-100;
+}

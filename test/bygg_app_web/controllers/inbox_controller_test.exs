@@ -61,11 +61,33 @@ defmodule RecakeWeb.InboxControllerTest do
       ])
     end
 
+    test "transforms job requests", %{conn: conn, user: user} do
+      active_job = job_fixture(user)
+
+      [pending_recruit, available_recruit1, available_recruit2, unavailable_recruit] =
+        create_recruits_for_job(active_job, ["pending", "available", "available", "unavailable"])
+
+      conn =
+        conn
+        |> get(Routes.inbox_path(conn, :index))
+
+      job =
+        conn.assigns.jobs
+        |> List.first()
+
+      assert job.requests == %{
+        :total => 4,
+        "available" => %{recruits: [available_recruit1, available_recruit2], total: 2, percent: 50},
+        "unavailable" => %{recruits: [unavailable_recruit], total: 1, percent: 25},
+        "pending" => %{recruits: [pending_recruit], total: 1, percent: 25}
+      }
+    end
+
     test "renders active user jobs and recruits", %{conn: conn, user: user} do
       active_job = job_fixture(user)
       closed_job = job_fixture(user, %{state: "closed"})
 
-      [pending_recruit, accepted_recruit, rejected_recruit] =
+      [pending_recruit, available_recruit, unavailable_recruit] =
         create_recruits_for_job(active_job, ["pending", "available", "unavailable"])
 
       conn
@@ -73,9 +95,9 @@ defmodule RecakeWeb.InboxControllerTest do
       |> html_document()
       |> assert_selector("a[href=\"#{Routes.job_path(conn, :edit, active_job.id)}\"]")
       |> refute_selector("a[href=\"#{Routes.job_path(conn, :edit, closed_job.id)}\"]")
-      |> assert_selector_content(".job .active-recruits", accepted_recruit.recipient.company)
+      |> assert_selector_content(".job .active-recruits", available_recruit.recipient.company)
       |> assert_selector_content(".job .inactive-recruits", pending_recruit.recipient.company)
-      |> assert_selector_content(".job .inactive-recruits", rejected_recruit.recipient.company)
+      |> assert_selector_content(".job .inactive-recruits", unavailable_recruit.recipient.company)
     end
   end
 

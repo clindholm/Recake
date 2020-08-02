@@ -28,4 +28,10 @@ defmodule RecakeWeb.HtmlHelpers do
     <% end %>
     """
   end
+
+  def readable_datetime(datetime) do
+    datetime
+    |> Timex.Timezone.convert("Europe/Stockholm")
+    |> Timex.format!("{D} {Mshort} {YYYY}, {h24}:{m}")
+  end
 end
