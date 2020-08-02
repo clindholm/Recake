@@ -32,7 +32,7 @@ defmodule RecakeWeb.JobController do
 
   def update(conn, %{"job" => job_params}) do
     case Jobs.update_job(conn.assigns.job, job_params) do
-      {:ok, job} ->
+      {:ok, _job} ->
         conn
         |> put_flash(:success, gettext("Request was updated"))
         |> redirect(to: Routes.inbox_path(conn, :index))

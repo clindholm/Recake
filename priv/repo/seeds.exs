@@ -2,38 +2,26 @@
 #
 #     mix run priv/repo/seeds.exs
 
-user1 = Recake.Repo.insert!(
-  Recake.Accounts.User.registration_changeset(%Recake.Accounts.User{}, %{
-    email: "a@admin.com",
-    password: "password",
-    company: "Admin Company",
-    phone: "1234"
-  })
-)
+time =
+  NaiveDateTime.utc_now()
+  |> NaiveDateTime.truncate(:second)
 
-user2 = Recake.Repo.insert!(
-  Recake.Accounts.User.registration_changeset(%Recake.Accounts.User{}, %{
-    email: "b@admin.com",
-    password: "password",
-    company: "Admin B Company",
-    phone: "1234"
-  })
-)
+password =
+  Pbkdf2.hash_pwd_salt("password")
 
-_job1 = Recake.Repo.insert!(
-  Recake.Jobs.Job.changeset(%Recake.Jobs.Job{ user_id: user1.id}, %{
-    description: "A job description",
-    location: "Location",
-  })
-)
+users =
+  ?a..?z
+  |> Enum.map(fn c ->
+    c = to_string([c])
 
-job2 = Recake.Repo.insert!(
-  Recake.Jobs.Job.changeset(%Recake.Jobs.Job{ user_id: user2.id}, %{
-    description: "A job description",
-    location: "Location",
-  })
-)
+    %{
+      email: "#{c}@admin.com",
+      hashed_password: password,
+      company: "Admin #{String.upcase(c)} Company",
+      phone: "1234",
+      inserted_at: time,
+      updated_at: time
+    }
+  end)
 
-job2 = Recake.Repo.insert!(
-  %Recake.Jobs.Request{ job_id: job2.id, recipient_id: user1.id}
-)
+Recake.Repo.insert_all(Recake.Accounts.User, users)
