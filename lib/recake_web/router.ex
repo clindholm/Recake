@@ -49,6 +49,7 @@ defmodule RecakeWeb.Router do
 
     get "/", InboxController, :index
     post "/requests/:id/resolve", InboxController, :resolve
+    put "/requests/:id", JobRequestController, :update
 
     resources "/jobs", JobController, except: [:show, :delete]
   end

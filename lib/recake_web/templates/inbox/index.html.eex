@@ -45,9 +45,9 @@
             </div>
           </div>
 
-          <%= form_for @conn, Routes.inbox_path(@conn, :resolve, request), [class: "flex p-4"], fn _f -> %>
-            <button name="accept" class="flex-1 py-2 text-green-500 border border-r-0 border-green-500 hover:bg-green-500 hover:text-white rounded-l"><%= gettext("Show interest") %></button>
-            <button name="reject" class="flex-1 py-2 text-red-500 border border-red-500 hover:bg-red-500 hover:text-white rounded-r"><%= gettext("No thanks") %></button>
+          <%= form_for @conn, Routes.job_request_path(@conn, :update, request), [class: "flex p-4", method: :put], fn _f -> %>
+            <button name="available" class="flex-1 py-2 text-green-500 border border-r-0 border-green-500 hover:bg-green-500 hover:text-white rounded-l"><%= gettext("Show interest") %></button>
+            <button name="unavailable" class="flex-1 py-2 text-red-500 border border-red-500 hover:bg-red-500 hover:text-white rounded-r"><%= gettext("No thanks") %></button>
           <% end %>
 
         </div>

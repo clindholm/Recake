@@ -65,13 +65,13 @@ defmodule Recake.Jobs do
     |> Repo.update()
   end
 
-  def resolve_request(request, :accept) do
+  def resolve_request(request, :available) do
     request
     |> Ecto.Changeset.change(state: "available")
     |> Repo.update()
   end
 
-  def resolve_request(request, :reject) do
+  def resolve_request(request, :unavailable) do
     request
     |> Ecto.Changeset.change(state: "unavailable")
     |> Repo.update()

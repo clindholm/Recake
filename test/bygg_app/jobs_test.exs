@@ -279,14 +279,14 @@ defmodule Recake.JobsTest do
     end
 
     test "accepts request", %{request: request} do
-      {:ok, updated_request} = Jobs.resolve_request(request, :accept)
+      {:ok, updated_request} = Jobs.resolve_request(request, :available)
 
       assert updated_request.state == "available"
       assert ^updated_request = Repo.get!(Request, request.id)
     end
 
     test "rejects request", %{request: request} do
-      {:ok, updated_request} = Jobs.resolve_request(request, :reject)
+      {:ok, updated_request} = Jobs.resolve_request(request, :unavailable)
 
       assert updated_request.state == "unavailable"
       assert ^updated_request = Repo.get!(Request, request.id)
