@@ -90,7 +90,7 @@
 }
 
 .progress-bar-segment:before, .progress-bar-segment:after {
-  @apply absolute transition duration-200 ease-in-out opacity-0;
+  @apply absolute transition duration-200 ease-in-out opacity-0 pointer-events-none;
 }
 .progress-bar-segment:hover:before, .progress-bar-segment:hover:after {
   @apply opacity-100;
