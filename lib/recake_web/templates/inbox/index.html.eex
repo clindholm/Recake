@@ -111,22 +111,22 @@
 
 
           <h4 class="text-gray-600 mt-6"><%= gettext("Available recruits") %></h4>
-          <div class="active-recruits space-y-1">
+          <div class="active-recruits mt-4 space-y-10 px-4">
             <%= for request <- job.requests["available"].recruits do %>
-            <div class="bg-gray-100 rounded p-4">
-              <p class="text-lg font-bold">
+            <div class="">
+              <p class="text-lg text-blue-800">
                 <%= request.recipient.company %>
               </p>
               <p class="text-2xl">
-                <a href="tel:<%= request.recipient.phone %>" class="text-gray-900 underline"><%= request.recipient.phone %></a>
+                <a href="tel:<%= request.recipient.phone %>" class="text-gray-700"><%= request.recipient.phone %></a>
               </p>
               <p>
-                <a href="mailto:<%= request.recipient.email %>" class="text-gray-900 underline"><%= request.recipient.email %></a>
+                <a href="mailto:<%= request.recipient.email %>" class="text-gray-700"><%= request.recipient.email %></a>
               </p>
             </div>
             <% end %>
           </div>
-          <details class="inactive-recruits mt-6">
+          <details class="inactive-recruits mt-8">
             <summary class="text-gray-600"><%= gettext("Pending or declined") %></summary>
 
             <%= for request <- (job.requests["pending"].recruits ++ job.requests["unavailable"].recruits) do %>
