@@ -9,6 +9,8 @@ defmodule Recake.AccountsFixtures do
         email: unique_user_email(),
         password: valid_user_password(),
         company: "Company Inc.",
+        organization_number: "12345654",
+        contact_name: "Contact Person",
         phone: "(233) 555-123 456"
       })
       |> (& Recake.Accounts.change_user_registration(%Recake.Accounts.User{}, &1)).()

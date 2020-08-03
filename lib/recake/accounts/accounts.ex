@@ -72,6 +72,17 @@ defmodule Recake.Accounts do
     User.registration_changeset(user, attrs)
   end
 
+  def change_user_profile(%User{} = user, attrs \\ %{}) do
+    User.profile_changeset(user, attrs)
+  end
+
+  def update_user_profile(user, password, attrs) do
+    user
+    |> User.profile_changeset(attrs)
+    |> User.validate_current_password(password)
+    |> Repo.update()
+  end
+
   def change_user_email(user, attrs \\ %{}) do
     User.email_changeset(user, attrs)
   end

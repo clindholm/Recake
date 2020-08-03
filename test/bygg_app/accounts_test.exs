@@ -146,6 +146,8 @@ defmodule Recake.AccountsTest do
           email: email,
           password: valid_user_password(),
           company: "C",
+          organization_number: "123456",
+          contact_name: "C",
           phone: "123"
         })
 
@@ -160,6 +162,8 @@ defmodule Recake.AccountsTest do
           email: email,
           password: valid_user_password(),
           company: "C",
+          organization_number: "123456",
+          contact_name: "C",
           phone: "123"
         })
 
@@ -177,7 +181,9 @@ defmodule Recake.AccountsTest do
           email: email,
           password: valid_user_password(),
           company: "C",
-          phone: "123"
+          organization_number: "123456",
+          contact_name: "C",
+          phone: "123",
         })
 
       refute Accounts.verify_invitation(token)
@@ -187,9 +193,47 @@ defmodule Recake.AccountsTest do
   describe "change_user_registration/2" do
     test "returns a changeset" do
       assert %Ecto.Changeset{} = changeset = Accounts.change_user_registration(%User{})
-      assert changeset.required == [:password, :email, :company, :phone]
+      assert changeset.required == [:password, :email, :company, :organization_number, :contact_name, :phone]
     end
   end
+
+  describe "change_user_profile/2" do
+    test "returns a changeset" do
+      assert %Ecto.Changeset{} = changeset = Accounts.change_user_profile(%User{})
+      assert changeset.required == [:company, :organization_number, :contact_name, :phone]
+    end
+  end
+
+  describe "update_user_profile/3" do
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "validates current password", %{user: user} do
+      {:error, changeset} =
+        Accounts.update_user_profile(user, "invalid", %{})
+
+      error_msg = dgettext("errors", "is not valid")
+      assert %{current_password: [^error_msg]} = errors_on(changeset)
+    end
+
+    test "updates profile", %{user: user} do
+      {:ok, user} =
+        Accounts.update_user_profile(user, valid_user_password(), %{
+          company: "updated company",
+          organization_number: "updated number",
+          contact_name: "updated contact name",
+          phone: "updated phone",
+        })
+
+      user = Accounts.get_user!(user.id)
+      assert user.company == "updated company"
+      assert user.organization_number == "updated number"
+      assert user.contact_name == "updated contact name"
+      assert user.phone == "updated phone"
+    end
+  end
+
 
   describe "change_user_email/2" do
     test "returns a user changeset" do

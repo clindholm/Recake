@@ -11,6 +11,8 @@ defmodule Recake.Accounts.User do
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
     field :company, :string
+    field :organization_number, :string
+    field :contact_name, :string
     field :phone, :string
 
     has_many(:job_requests, Recake.Jobs.Request, foreign_key: :recipient_id)
@@ -20,8 +22,8 @@ defmodule Recake.Accounts.User do
 
   def registration_changeset(user, attrs) do
     user
-    |> cast(attrs, [:email, :password, :company, :phone])
-    |> validate_required([:company, :phone])
+    |> cast(attrs, [:email, :password, :company, :organization_number, :contact_name, :phone])
+    |> validate_required([:company, :organization_number, :contact_name, :phone])
     |> validate_email()
     |> validate_password()
   end
@@ -53,6 +55,12 @@ defmodule Recake.Accounts.User do
     else
       changeset
     end
+  end
+
+  def profile_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:company, :organization_number, :contact_name, :phone])
+    |> validate_required([:company, :organization_number, :contact_name, :phone])
   end
 
   def email_changeset(user, attrs) do

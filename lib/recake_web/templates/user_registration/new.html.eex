@@ -4,6 +4,8 @@
   <%= Form.text_input f, :email, label: gettext("Email") %>
   <%= Form.password_input f, :password, label: gettext("Password") %>
   <%= Form.text_input f, :company, label: gettext("Company name") %>
+  <%= Form.text_input f, :organization_number, label: gettext("Organization number") %>
+  <%= Form.text_input f, :contact_name, label: gettext("Contact name") %>
   <%= Form.text_input f, :phone, label: gettext("Phone number") %>
   <%= Form.submit gettext("Register"), class: "w-full" %>
 <% end %>

@@ -118,10 +118,10 @@
                 <%= request.recipient.company %>
               </p>
               <p class="text-2xl">
-                <a href="tel:<%= request.recipient.phone %>" class="text-gray-700"><%= request.recipient.phone %></a>
+                <a href="tel:<%= request.recipient.phone %>"><%= request.recipient.phone %></a>
               </p>
               <p>
-                <a href="mailto:<%= request.recipient.email %>" class="text-gray-700"><%= request.recipient.email %></a>
+                <a href="mailto:<%= request.recipient.email %>"><%= request.recipient.email %></a>
               </p>
             </div>
             <% end %>

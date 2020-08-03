@@ -15,6 +15,8 @@ defmodule RecakeWeb.UserRegistrationControllerTest do
         "input[name=\"user[email]\"]",
         "input[name=\"user[password]\"][type=password]",
         "input[name=\"user[company]\"",
+        "input[name=\"user[organization_number]\"",
+        "input[name=\"user[contact_name]\"",
         "input[name=\"user[phone]\"",
         "button[type=submit]"
       ])
@@ -55,6 +57,8 @@ defmodule RecakeWeb.UserRegistrationControllerTest do
             "email" => email,
             "password" => valid_user_password(),
             "company" => "Company name",
+            "organization_number" => "123456",
+            "contact_name" => "C",
             "phone" => "12334556"
           }
         })

@@ -23,6 +23,14 @@ defmodule RecakeWeb.UserSettingsControllerTest do
       conn
       |> get(Routes.user_settings_path(conn, :edit))
       |> html_document()
+      |> assert_form(Routes.user_settings_path(conn, :update_profile), [
+        "input[name=\"user[company]\"]",
+        "input[name=\"user[organization_number]\"]",
+        "input[name=\"user[contact_name]\"]",
+        "input[name=\"user[phone]\"]",
+        "input[name=\"current_password\"][type=password]",
+        "button[type=\"submit\"]"
+      ])
       |> assert_form(Routes.user_settings_path(conn, :update_password), [
         "input[name=\"user[password]\"][type=password]",
         "input[name=\"user[password_confirmation]\"][type=password]",
@@ -34,6 +42,45 @@ defmodule RecakeWeb.UserSettingsControllerTest do
         "input[name=\"current_password\"][type=password]",
         "button[type=\"submit\"]"
       ])
+    end
+  end
+
+  describe "PUT /users/settings/update_profile" do
+    test "updates user profile", %{conn: conn, user: user} do
+      new_profile_conn =
+        put(conn, Routes.user_settings_path(conn, :update_profile), %{
+          "current_password" => valid_user_password(),
+          "user" => %{
+            "company" => "updated company",
+            "organization_number" => "updated number",
+            "contact_name" => "updated contact name",
+            "phone" => "updated phone",
+          }
+        })
+
+      assert redirected_to(new_profile_conn) == "/users/settings"
+      assert get_flash(new_profile_conn, :success) =~ gettext("Profile updated successfully")
+
+      user = Accounts.get_user!(user.id)
+      assert user.company == "updated company"
+      assert user.organization_number == "updated number"
+      assert user.contact_name == "updated contact name"
+      assert user.phone == "updated phone"
+    end
+
+    test "does not update profile on invalid data", %{conn: conn} do
+      old_profile_conn =
+        put(conn, Routes.user_settings_path(conn, :update_profile), %{
+          "current_password" => "invalid",
+          "user" => %{
+            "company" => "",
+          }
+        })
+
+      old_profile_conn
+      |> html_document()
+      |> assert_selector_content(".validation-error", dgettext("errors", "can't be blank"))
+      |> assert_selector_content(".validation-error", dgettext("errors", "is not valid"))
     end
   end
 
