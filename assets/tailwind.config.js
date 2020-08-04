@@ -6,6 +6,7 @@ module.exports = {
     extend: {},
   },
   variants: {
+    backgroundColor: ['responsive', 'hover', 'focus', 'focus-within'],
     borderColor: ['responsive', 'hover', 'focus', 'group-hover'],
     display: ['responsive', 'group-hover'],
     rotate: ['responsive', 'hover', 'focus', 'group-hover'],
