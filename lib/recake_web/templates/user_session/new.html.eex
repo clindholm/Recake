@@ -16,7 +16,9 @@
   <%= Form.submit gettext("Login"), class: "w-full" %>
 <% end %>
 
+<!--
 <div class="mt-12 text-center">
   <p><%= link gettext("Forgot password?"), to: Routes.user_reset_password_path(@conn, :new) %></p>
   <p class="text-gray-600"><%= gettext "Not a member?" %> <%= link gettext("Create account"), to: Routes.user_registration_path(@conn, :new) %></p>
 </div>
+-->

@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <%= csrf_meta_tag() %>
   </head>
-  <body class="bg-blue-900 flex justify-center items-center h-screen">
-    <main role="main" class="bg-white p-10 w-full max-w-md mx-2">
+  <body class="bg-app font-sans flex justify-center items-center h-screen">
+    <main role="main" class="bg-white p-10 w-full max-w-md mx-2 shadow-lg rounded-lg border-t-8 border-blue-500">
       <%= @inner_content %>
     </main>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
