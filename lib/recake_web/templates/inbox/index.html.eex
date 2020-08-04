@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:none">
-    <symbol viewBox="0 0 576 512" id="inbox">
-        <path d="M10 10H90V90H10Z"/>
+    <symbol viewBox="0 0 384 512" id="icon-location">
+        <path fill="currentColor" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
     </symbol>
 </svg>
 
@@ -34,12 +34,15 @@
                 <%= Timex.Format.DateTime.Formatters.Relative.format!(request.inserted_at, "{relative}") %>
               </p>
             </div>
-            <p class="mt-1 text-gray-700">
+            <p class="text-gray-600 text-sm -mt-1"><%= request.job.user.organization_number %></p>
+            <p class="mt-2 text-gray-700">
               <%= request.job.description %>
             </p>
             <div class="mt-4 flex justify-between">
-              <p>
-                <i class="fas fa-map-marker-alt text-blue-600"></i>
+              <p class="flex items-center">
+                <svg class="text-blue-500 mr-1" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                  <use href="#icon-location" />
+                </svg>
                 <%= request.job.location %>
               </p>
             </div>
@@ -114,15 +117,26 @@
           <div class="active-recruits mt-4 space-y-10 px-4">
             <%= for request <- job.requests["available"].recruits do %>
             <div class="">
-              <p class="text-lg text-blue-800">
+              <p class="text-lg text-gray-800">
                 <%= request.recipient.company %>
               </p>
-              <p class="text-2xl">
-                <a href="tel:<%= request.recipient.phone %>"><%= request.recipient.phone %></a>
+              <p class="text-sm text-gray-600 -mt-1">
+                <%= request.recipient.organization_number %>
               </p>
-              <p>
-                <a href="mailto:<%= request.recipient.email %>"><%= request.recipient.email %></a>
-              </p>
+
+              <div class="pl-2">
+                <p class="text-gray-700 mt-1 -mb-1">
+                  <%= request.recipient.contact_name %>
+                </p>
+                <div class="flex items-baseline space-x-8">
+                  <p class="text-2xl">
+                    <a href="tel:<%= request.recipient.phone %>"><%= request.recipient.phone %></a>
+                  </p>
+                  <p>
+                    <a href="mailto:<%= request.recipient.email %>"><%= request.recipient.email %></a>
+                  </p>
+                </div>
+              </div>
             </div>
             <% end %>
           </div>
