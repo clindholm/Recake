@@ -317,7 +317,7 @@ msgstr "Inställningar"
 #, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:52
 msgid "Show interest"
-msgstr "Meddela intresse"
+msgstr "Visa intresse"
 
 #, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:110
