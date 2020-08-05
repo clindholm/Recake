@@ -352,7 +352,7 @@ msgstr "Du har inga pågående rekryteringssökningar"
 #, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:84
 msgid "job created at"
-msgstr "jobb skapat"
+msgstr "skickat"
 
 #, elixir-format
 #: lib/recake_web/templates/job/edit.html.eex:1
