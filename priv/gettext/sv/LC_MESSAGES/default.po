@@ -36,7 +36,7 @@ msgstr "URL-koden är ogiltig eller för gammal"
 #, elixir-format
 #: lib/recake_web/templates/job/new.html.eex:2
 msgid "Create"
-msgstr "Skapa"
+msgstr "Skicka"
 
 #, elixir-format
 #: lib/recake_web/templates/user_reset_password/edit.html.eex:12
@@ -286,7 +286,7 @@ msgstr "Väntar"
 #, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:147
 msgid "Pending or declined"
-msgstr "Avvaktande"
+msgstr "Övriga rekryter"
 
 #, elixir-format
 #: lib/recake_web/templates/user_settings/edit.html.eex:8
