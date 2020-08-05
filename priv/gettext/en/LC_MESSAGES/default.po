@@ -358,3 +358,13 @@ msgstr ""
 #: lib/recake_web/templates/job/edit.html.eex:1
 msgid "Edit request"
 msgstr ""
+
+#, elixir-format
+#: lib/recake_web/views/inbox_view.ex:19
+msgid "declined"
+msgstr ""
+
+#, elixir-format, fuzzy
+#: lib/recake_web/views/inbox_view.ex:18
+msgid "pending"
+msgstr ""

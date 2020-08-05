@@ -15,8 +15,8 @@ defmodule RecakeWeb.InboxView do
   def request_status_badge(request) do
     {text, colors} =
       case request.state do
-        "pending" -> {"pending", "bg-blue-200 text-blue-900"}
-        "unavailable" -> {"declined", "bg-red-200 text-red-900"}
+        "pending" -> {gettext("pending"), "bg-blue-200 text-blue-900"}
+        "unavailable" -> {gettext("declined"), "bg-red-200 text-red-900"}
 
       end
 
