@@ -92,8 +92,12 @@
           <div class="mt-2">
             <p class="text-xs text-right text-gray-700"><%= ngettext("%{count} sent request", "%{count} sent", job.requests.statistics.total) %></p>
             <div class="bg-gray-300 h-2 rounded-full flex justify-full">
-              <div class="progress-bar-segment bg-green-400" style="width: <%= job.requests.statistics.available.percent %>%" data-tooltip="<%= job.requests.statistics.available.total %>"></div>
-              <div class="progress-bar-segment bg-red-400" style="width: <%= job.requests.statistics.unavailable.percent %>%" data-tooltip="<%= job.requests.statistics.unavailable.total %>"></div>
+              <%= if job.requests.statistics.available.total > 0 do %>
+                <div class="progress-bar-segment bg-green-400" style="width: <%= job.requests.statistics.available.percent %>%" data-tooltip="<%= job.requests.statistics.available.total %>"></div>
+              <% end %>
+              <%= if job.requests.statistics.unavailable.total > 0 do %>
+                <div class="progress-bar-segment bg-red-400" style="width: <%= job.requests.statistics.unavailable.percent %>%" data-tooltip="<%= job.requests.statistics.unavailable.total %>"></div>
+              <% end %>
             </div>
             <div class="mt-2 flex space-x-6 text-xs text-gray-600">
 
