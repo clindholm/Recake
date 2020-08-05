@@ -19,6 +19,7 @@ config :recake, RecakeWeb.Endpoint,
   live_view: [signing_salt: "2EhAYCIL"]
 
 config :recake, RecakeWeb.Gettext, default_locale: "sv", locales: ~w(sv en)
+config :timex, default_locale: "sv"
 
 # Configures Elixir's Logger
 config :logger, :console,

@@ -4,9 +4,6 @@ defmodule RecakeWeb.JobController do
   alias Recake.Jobs
   alias Recake.Jobs.Job
 
-  plug :page_header, gettext("Create new job") when action in [:new, :create]
-  plug :page_header, gettext("Edit job") when action in [:edit, :update]
-
   plug :authorize_job_edit when action in [:edit, :update]
 
   def new(conn, _params) do

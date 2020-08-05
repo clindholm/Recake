@@ -24,7 +24,6 @@ defmodule RecakeWeb do
       import Plug.Conn
       import RecakeWeb.Gettext
       alias RecakeWeb.Router.Helpers, as: Routes
-      import RecakeWeb.Plugs
     end
   end
 

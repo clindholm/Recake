@@ -11,22 +11,19 @@ msgid ""
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/controllers/user_settings_controller.ex:42
-msgid "A link to confirm your e-mail change has been sent to the new address."
-msgstr ""
-
-#, elixir-format
 #: lib/recake_web/controllers/user_confirmation_controller.ex:30
 msgid "Account confirmed successfully"
 msgstr ""
 
 #, elixir-format
 #: lib/recake_web/templates/user_registration/new.html.eex:6
+#: lib/recake_web/templates/user_settings/edit.html.eex:10
 msgid "Company name"
 msgstr ""
 
 #, elixir-format
 #: lib/recake_web/templates/user_reset_password/edit.html.eex:5
+#: lib/recake_web/templates/user_settings/edit.html.eex:32
 msgid "Confirm new password"
 msgstr ""
 
@@ -36,40 +33,19 @@ msgid "Confirmation token is invalid or it has expired"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/job/new.html.eex:8
+#: lib/recake_web/templates/job/new.html.eex:2
 msgid "Create"
 msgstr ""
 
 #, elixir-format
 #: lib/recake_web/templates/user_reset_password/edit.html.eex:12
-#: lib/recake_web/templates/user_reset_password/new.html.eex:13 lib/recake_web/templates/user_session/new.html.eex:21
+#: lib/recake_web/templates/user_reset_password/new.html.eex:13 lib/recake_web/templates/user_session/new.html.eex:22
 msgid "Create account"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/controllers/job_controller.ex:8
-#: lib/recake_web/templates/job/index.html.eex:8
-msgid "Create new job"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/controllers/job_request_controller.ex:6
-msgid "Current requests"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/controllers/user_settings_controller.ex:60
-msgid "E-mail change url is invalid. Try again below."
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/controllers/user_settings_controller.ex:55
-msgid "E-mail changed successfully"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/templates/user_registration/new.html.eex:13
-#: lib/recake_web/templates/user_session/new.html.eex:20
+#: lib/recake_web/templates/user_registration/new.html.eex:15
+#: lib/recake_web/templates/user_session/new.html.eex:21
 msgid "Forgot password?"
 msgstr ""
 
@@ -89,13 +65,8 @@ msgid "Invalid e-mail or password"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/controllers/job_controller.ex:24
+#: lib/recake_web/controllers/job_controller.ex:18
 msgid "Job created"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/templates/layout/app.html.eex:17
-msgid "Jobs"
 msgstr ""
 
 #, elixir-format
@@ -104,25 +75,26 @@ msgid "Logged out successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/user_registration/new.html.eex:12
+#: lib/recake_web/templates/user_registration/new.html.eex:14
 #: lib/recake_web/templates/user_reset_password/edit.html.eex:11 lib/recake_web/templates/user_reset_password/new.html.eex:12
 #: lib/recake_web/templates/user_session/new.html.eex:1 lib/recake_web/templates/user_session/new.html.eex:16
 msgid "Login"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/layout/app.html.eex:18
+#: lib/recake_web/templates/layout/app.html.eex:27
 msgid "Logout"
 msgstr ""
 
 #, elixir-format
 #: lib/recake_web/templates/user_reset_password/edit.html.eex:4
+#: lib/recake_web/templates/user_settings/edit.html.eex:31
 msgid "New password"
 msgstr ""
 
 #, elixir-format
 #: lib/recake_web/templates/user_reset_password/edit.html.eex:12
-#: lib/recake_web/templates/user_session/new.html.eex:21
+#: lib/recake_web/templates/user_session/new.html.eex:22
 msgid "Not a member?"
 msgstr ""
 
@@ -132,24 +104,20 @@ msgid "Password reset successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/controllers/user_settings_controller.ex:19
+#: lib/recake_web/controllers/user_settings_controller.ex:33
 msgid "Password updated successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/user_registration/new.html.eex:7
+#: lib/recake_web/templates/user_registration/new.html.eex:9
+#: lib/recake_web/templates/user_settings/edit.html.eex:13
 msgid "Phone number"
 msgstr ""
 
 #, elixir-format
 #: lib/recake_web/templates/user_registration/new.html.eex:1
-#: lib/recake_web/templates/user_registration/new.html.eex:8
+#: lib/recake_web/templates/user_registration/new.html.eex:10
 msgid "Register"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/templates/layout/app.html.eex:16
-msgid "Requests"
 msgstr ""
 
 #, elixir-format
@@ -169,22 +137,12 @@ msgid "Send"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/controllers/user_registration_controller.ex:23
+#: lib/recake_web/controllers/user_registration_controller.ex:29
 msgid "User created successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/job/index.html.eex:7
-msgid "You have no active jobs"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/templates/job_request/index.html.eex:7
-msgid "You have no requests at this time"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/controllers/user_auth.ex:83
+#: lib/recake_web/controllers/user_auth.ex:88
 msgid "You must login to access this page."
 msgstr ""
 
@@ -194,28 +152,19 @@ msgid "You will receive instructions to reset your password to your e-mail short
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/controllers/job_controller.ex:7
-msgid "Your jobs"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/templates/job/index.html.eex:8
-msgid "if you're looking for workers."
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/templates/job/new.html.eex:4
+#: lib/recake_web/templates/job/_form.html.eex:3
 msgid "Description"
 msgstr ""
 
 #, elixir-format
 #: lib/recake_web/templates/user_registration/new.html.eex:4
 #: lib/recake_web/templates/user_reset_password/new.html.eex:6 lib/recake_web/templates/user_session/new.html.eex:13
+#: lib/recake_web/templates/user_settings/edit.html.eex:22
 msgid "Email"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/job/new.html.eex:5
+#: lib/recake_web/templates/job/_form.html.eex:4
 msgid "Location"
 msgstr ""
 
@@ -231,11 +180,180 @@ msgid "Remember me"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/job/new.html.eex:6
-msgid "Timespan"
+#: lib/recake_web/templates/inbox/index.html.eex:93
+msgid "%{count} sent request"
+msgid_plural "%{count} sent"
+msgstr[0] ""
+msgstr[1] ""
+
+#, elixir-format
+#: lib/recake_web/controllers/job_request_controller.ex:14
+msgid "%{company} has been notifed of your interest"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/job/new.html.eex:3
-msgid "Identifier"
+#: lib/recake_web/controllers/job_request_controller.ex:27
+msgid "%{company} has been notifed of your lack of interest"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/controllers/user_settings_controller.ex:56
+msgid "A link to confirm your e-mail has been sent to the new address."
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:106
+msgid "Available"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:119
+msgid "Available recruits"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/user_settings/edit.html.eex:20
+#: lib/recake_web/templates/user_settings/edit.html.eex:25
+msgid "Change e-mail"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/user_settings/edit.html.eex:29
+#: lib/recake_web/templates/user_settings/edit.html.eex:35
+msgid "Change password"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/user_registration/new.html.eex:8
+#: lib/recake_web/templates/user_settings/edit.html.eex:12
+msgid "Contact name"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:72
+#: lib/recake_web/templates/job/new.html.eex:1
+msgid "Create request"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/user_settings/edit.html.eex:14
+#: lib/recake_web/templates/user_settings/edit.html.eex:23 lib/recake_web/templates/user_settings/edit.html.eex:33
+msgid "Current password"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/controllers/user_settings_controller.ex:74
+msgid "E-mail update url is invalid. Try updating your e-mail again below."
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/controllers/user_settings_controller.ex:69
+msgid "E-mail updated successfully"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:88
+msgid "Edit"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:16
+msgid "Inbox"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/views/form_helpers.ex:88
+msgid "Max %{count} characters"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:53
+msgid "No thanks"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/user_registration/new.html.eex:7
+#: lib/recake_web/templates/user_settings/edit.html.eex:11
+msgid "Organization number"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:114
+msgid "Pending"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:147
+msgid "Pending or declined"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/user_settings/edit.html.eex:8
+msgid "Profile"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/controllers/user_settings_controller.ex:19
+msgid "Profile updated successfully"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:66
+msgid "Recruits"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/controllers/job_controller.ex:34
+msgid "Request was updated"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/layout/app.html.eex:26
+#: lib/recake_web/templates/user_settings/edit.html.eex:5
+msgid "Settings"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:52
+msgid "Show interest"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:110
+msgid "Unavailable"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/job/edit.html.eex:2
+msgid "Update"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/user_settings/edit.html.eex:16
+msgid "Update profile"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/user_registration/invalid_token.html.eex:2
+msgid "You need an invitation to register a new account"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:21
+msgid "empty inbox"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:77
+msgid "empty recruitments"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:84
+msgid "job created at"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/job/edit.html.eex:1
+msgid "Edit request"
 msgstr ""

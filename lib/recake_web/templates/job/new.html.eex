@@ -1,1 +1,2 @@
+<h1 class="section-title"><%= gettext("Create request") %></h1>
 <%= render "_form.html", changeset: @changeset, action: Routes.job_path(@conn, :create), submit_label: gettext("Create") %>

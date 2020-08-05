@@ -4,7 +4,6 @@ defmodule RecakeWeb.UserSettingsController do
   alias Recake.Accounts
   alias RecakeWeb.UserAuth
 
-  plug :page_header, gettext("Settings")
   plug :assign_changesets
 
   def edit(conn, _params) do
