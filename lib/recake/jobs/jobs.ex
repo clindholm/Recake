@@ -23,7 +23,7 @@ defmodule Recake.Jobs do
     |> Repo.all()
   end
 
-  def list_user_job_requests(user) do
+  def list_user_incoming_requests(user) do
     from(r in Request,
       where: r.recipient_id == ^user.id and r.state == ^"pending",
       preload: [job: :user]

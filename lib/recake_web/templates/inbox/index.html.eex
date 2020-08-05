@@ -17,13 +17,13 @@
         </p>
       </div>
 
-      <%= if Enum.empty?(@job_requests) do %>
+      <%= if Enum.empty?(@incoming_requests) do %>
         <h2 class="my-6 bg-gray-200 p-2 text-center text-base text-gray-600 italic"><%= gettext "empty inbox" %></h2>
       <% else %>
 
 
       <div class="mt-6 space-y-4">
-        <%= for request <- @job_requests do %>
+        <%= for request <- @incoming_requests do %>
         <div class="card p-0 flex flex-col">
           <div class="p-4 border-b flex-1">
             <div class="flex justify-between">
@@ -90,10 +90,10 @@
           </div>
 
           <div class="mt-2">
-            <p class="text-xs text-right text-gray-700"><%= ngettext("%{count} sent request", "%{count} sent", job.requests[:total]) %></p>
+            <p class="text-xs text-right text-gray-700"><%= ngettext("%{count} sent request", "%{count} sent", job.requests.statistics.total) %></p>
             <div class="bg-gray-300 h-2 rounded-full flex justify-full">
-              <div class="progress-bar-segment bg-green-400" style="width: <%= job.requests["available"].percent %>%" data-tooltip="<%= job.requests["available"].total %>"></div>
-              <div class="progress-bar-segment bg-red-400" style="width: <%= job.requests["unavailable"].percent %>%" data-tooltip="<%= job.requests["unavailable"].total %>"></div>
+              <div class="progress-bar-segment bg-green-400" style="width: <%= job.requests.statistics.available.percent %>%" data-tooltip="<%= job.requests.statistics.available.total %>"></div>
+              <div class="progress-bar-segment bg-red-400" style="width: <%= job.requests.statistics.unavailable.percent %>%" data-tooltip="<%= job.requests.statistics.unavailable.total %>"></div>
             </div>
             <div class="mt-2 flex space-x-6 text-xs text-gray-600">
 
@@ -114,7 +114,7 @@
 
           <h4 class="text-gray-600 mt-6"><%= gettext("Available recruits") %></h4>
           <div class="active-recruits mt-4 space-y-4">
-            <%= for request <- job.requests["available"].recruits do %>
+            <%= for request <- job.requests.available do %>
             <div class="hover:bg-gray-100 focus-within:bg-gray-100 p-4 rounded">
               <p class="text-lg text-gray-800">
                 <%= request.recipient.company %>
@@ -142,7 +142,7 @@
           <details class="inactive-recruits mt-8">
             <summary class="text-gray-600"><%= gettext("Pending or declined") %></summary>
 
-            <%= for request <- (job.requests["pending"].recruits ++ job.requests["unavailable"].recruits) do %>
+            <%= for request <- job.requests.hidden do %>
             <p class="mt-2">
               <%= request_status_badge(request) %>
               <%= request.recipient.company %>

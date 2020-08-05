@@ -50,7 +50,7 @@ defmodule RecakeWeb.InboxControllerTest do
 
       conn = get(conn, Routes.inbox_path(conn, :index))
 
-      assert [^pending_request1] = conn.assigns.job_requests
+      assert [^pending_request1] = conn.assigns.incoming_requests
 
       conn
       |> html_document()
@@ -75,12 +75,16 @@ defmodule RecakeWeb.InboxControllerTest do
         conn.assigns.jobs
         |> List.first()
 
-      assert job.requests == %{
-        :total => 4,
-        "available" => %{recruits: [available_recruit1, available_recruit2], total: 2, percent: 50},
-        "unavailable" => %{recruits: [unavailable_recruit], total: 1, percent: 25},
-        "pending" => %{recruits: [pending_recruit], total: 1, percent: 25}
-      }
+      assert job.requests.statistics.total == 4
+      assert job.requests.statistics.available.total == 2
+      assert job.requests.statistics.available.percent == 50
+      assert job.requests.statistics.unavailable.total == 1
+      assert job.requests.statistics.unavailable.percent == 25
+      assert job.requests.statistics.pending.total == 1
+      assert job.requests.statistics.pending.percent == 25
+
+      assert job.requests.available == [available_recruit1, available_recruit2]
+      assert job.requests.hidden == [pending_recruit, unavailable_recruit]
     end
 
     test "renders active user jobs and recruits", %{conn: conn, user: user} do
@@ -104,6 +108,7 @@ defmodule RecakeWeb.InboxControllerTest do
   defp create_recruits_for_job(job, statuses) do
     for status <- statuses do
       recruit = user_fixture(%{company: "Company #{status}"})
+
       job_request_fixture(recruit, job, status)
       |> Repo.preload(:recipient)
     end

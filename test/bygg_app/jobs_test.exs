@@ -98,11 +98,11 @@ defmodule Recake.JobsTest do
     end
   end
 
-  describe "list_user_job_requests/1" do
+  describe "list_user_incoming_requests/1" do
     test "no requests" do
       user = user_fixture()
 
-      assert Enum.empty?(Jobs.list_user_job_requests(user))
+      assert Enum.empty?(Jobs.list_user_incoming_requests(user))
     end
 
     test "returns pending requests" do
@@ -113,7 +113,7 @@ defmodule Recake.JobsTest do
       _request2 = job_request_fixture(user, job2, "accepted")
 
       request_ids =
-        Jobs.list_user_job_requests(user)
+        Jobs.list_user_incoming_requests(user)
         |> Enum.map(& &1.id)
 
       assert request_ids == [request1.id]
@@ -127,7 +127,7 @@ defmodule Recake.JobsTest do
       _request2 = job_request_fixture(user2, job, "pending")
 
       request_ids =
-        Jobs.list_user_job_requests(user)
+        Jobs.list_user_incoming_requests(user)
         |> Enum.map(& &1.id)
 
       assert request_ids == [request1.id]
@@ -139,7 +139,7 @@ defmodule Recake.JobsTest do
       _request = job_request_fixture(user, job)
 
       request =
-        Jobs.list_user_job_requests(user)
+        Jobs.list_user_incoming_requests(user)
         |> List.first()
 
       assert request.job.description == job.description
