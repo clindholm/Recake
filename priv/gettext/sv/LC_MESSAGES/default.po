@@ -240,7 +240,7 @@ msgstr "Skapa förfrågan"
 #: lib/recake_web/templates/user_settings/edit.html.eex:14
 #: lib/recake_web/templates/user_settings/edit.html.eex:23 lib/recake_web/templates/user_settings/edit.html.eex:33
 msgid "Current password"
-msgstr "Återställ lösenord"
+msgstr "Nuvarande lösenord"
 
 #, elixir-format
 #: lib/recake_web/controllers/user_settings_controller.ex:74
