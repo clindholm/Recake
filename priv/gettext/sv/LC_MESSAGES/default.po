@@ -63,7 +63,7 @@ msgstr "Om din e-mailadress finns i systemet så kommer du strax få ett e-mail 
 #, elixir-format
 #: lib/recake_web/controllers/user_session_controller.ex:17
 msgid "Invalid e-mail or password"
-msgstr "Felkatig e-mail eller lösenord"
+msgstr "Felaktig e-mail eller lösenord"
 
 #, elixir-format
 #: lib/recake_web/controllers/job_controller.ex:18
