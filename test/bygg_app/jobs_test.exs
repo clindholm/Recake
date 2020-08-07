@@ -110,7 +110,7 @@ defmodule Recake.JobsTest do
       job = job_fixture(user)
       job2 = job_fixture(user)
       request1 = job_request_fixture(user, job, "pending")
-      _request2 = job_request_fixture(user, job2, "accepted")
+      _request2 = job_request_fixture(user, job2, "available")
 
       request_ids =
         Jobs.list_user_incoming_requests(user)
@@ -131,6 +131,38 @@ defmodule Recake.JobsTest do
         |> Enum.map(& &1.id)
 
       assert request_ids == [request1.id]
+    end
+
+    test "orders by oldest creation date" do
+      user = user_fixture()
+      job = job_fixture(user)
+      job2 = job_fixture(user)
+
+      early_date = ~N[2000-01-01 12:00:00]
+      late_date = ~N[2010-01-01 12:00:00]
+
+      Recake.Repo.insert_all(Request, [
+        %{
+          state: "pending",
+          job_id: job.id,
+          recipient_id: user.id,
+          inserted_at: late_date,
+          updated_at: late_date
+        },
+        %{
+          state: "pending",
+          job_id: job2.id,
+          recipient_id: user.id,
+          inserted_at: early_date,
+          updated_at: early_date
+        }
+      ])
+
+      request_ids =
+        Jobs.list_user_incoming_requests(user)
+        |> Enum.map(& &1.inserted_at)
+
+      assert request_ids == [early_date, late_date]
     end
 
     test "preloads job and job creator" do
@@ -174,7 +206,7 @@ defmodule Recake.JobsTest do
                user_id: [^error],
                description: [^error],
                location: [^error],
-               internal_id: [^error],
+               internal_id: [^error]
              } = errors_on(changeset)
     end
 
@@ -258,9 +290,10 @@ defmodule Recake.JobsTest do
     end
 
     test "updates the job", %{job: job} do
-      {:ok, job} = Jobs.update_job(job, %{
-        description: "Updated description",
-      })
+      {:ok, job} =
+        Jobs.update_job(job, %{
+          description: "Updated description"
+        })
 
       updated_job = Repo.get!(Job, job.id)
 
@@ -268,15 +301,16 @@ defmodule Recake.JobsTest do
     end
 
     test "validates the job", %{job: job} do
-      {:error, changeset} = Jobs.update_job(job, %{
-        description: "",
-      })
+      {:error, changeset} =
+        Jobs.update_job(job, %{
+          description: ""
+        })
 
       error = dgettext("errors", "can't be blank")
 
       assert %{
-        description: [^error]
-      } = errors_on(changeset)
+               description: [^error]
+             } = errors_on(changeset)
     end
   end
 

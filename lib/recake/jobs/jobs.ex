@@ -16,6 +16,8 @@ defmodule Recake.Jobs do
   end
 
   def list_user_jobs(user) do
+    # requests_query = from(req in Request, order_by: [asc: req.inserted_at])
+
     from(j in Job,
       where: j.user_id == ^user.id and j.state == ^"active",
       preload: [requests: :recipient]
@@ -26,6 +28,7 @@ defmodule Recake.Jobs do
   def list_user_incoming_requests(user) do
     from(r in Request,
       where: r.recipient_id == ^user.id and r.state == ^"pending",
+      order_by: [asc: r.inserted_at],
       preload: [job: :user]
     )
     |> Repo.all()
