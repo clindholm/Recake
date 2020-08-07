@@ -51,6 +51,7 @@ defmodule RecakeWeb.JobControllerTest do
         "job" => %{
           "description" => "Description",
           "location" => "Location",
+          "internal_id" => "Internal Id"
         }
       })
 
@@ -61,6 +62,7 @@ defmodule RecakeWeb.JobControllerTest do
       assert %{
                description: "Description",
                location: "Location",
+               internal_id: "Internal Id",
                state: "active",
                user_id: ^user_id
              } = List.first(jobs)

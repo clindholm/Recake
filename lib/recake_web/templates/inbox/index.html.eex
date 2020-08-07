@@ -81,8 +81,8 @@
         <div class="job card p-4">
           <div class="flex justify-between items-center">
             <div>
-              <p class="text-xs text-gray-600 -mb-1"><%= gettext("job created at") %></p>
-              <p class="text-lg"><%= readable_datetime(job.inserted_at) %></p>
+              <p class="text-xs text-gray-600 -mb-1"><%= readable_datetime(job.inserted_at) %></p>
+              <p class="text-lg"><%= job.internal_id %></p>
             </div>
             <%= link to: Routes.job_path(@conn, :edit, job), class: "text-base" do %>
               <i class="fas fa-edit mr-1 text-blue-300"></i><%= gettext("Edit") %>
@@ -90,7 +90,7 @@
           </div>
 
           <div class="mt-2">
-            <p class="text-xs text-right text-gray-700"><%= ngettext("%{count} sent request", "%{count} sent", job.requests.statistics.total) %></p>
+            <p class="text-xs text-right text-gray-700"><%= {:safe, ngettext("%{count} sent request", "%{count} sent", job.requests.statistics.total)} %></p>
             <div class="bg-gray-300 h-2 rounded-full flex justify-full">
               <%= if job.requests.statistics.available.total > 0 do %>
                 <div class="progress-bar-segment bg-green-400" style="width: <%= job.requests.statistics.available.percent %>%" data-tooltip="<%= job.requests.statistics.available.total %>"></div>

@@ -10,6 +10,7 @@ defmodule Recake.JobsFixtures do
     |> Ecto.Changeset.change(Enum.into(attrs, %{
       description: "Job description",
       location: "Job location",
+      internal_id: "Internal Id"
     }))
     |> Repo.insert!()
   end

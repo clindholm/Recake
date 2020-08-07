@@ -180,12 +180,12 @@ msgstr "Lösenord"
 msgid "Remember me"
 msgstr "Kom ihåg mig"
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:93
 msgid "%{count} sent request"
 msgid_plural "%{count} sent"
-msgstr[0] "%{count} skickad"
-msgstr[1] "%{count} skickade"
+msgstr[0] "skickat till <strong>%{count}</strong>st"
+msgstr[1] "skickat till <strong>%{count}</strong>st"
 
 #, elixir-format
 #: lib/recake_web/controllers/job_request_controller.ex:14
@@ -364,7 +364,12 @@ msgstr "Redigera förfrågan"
 msgid "declined"
 msgstr "otillgänglig"
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/recake_web/views/inbox_view.ex:18
 msgid "pending"
 msgstr "väntar"
+
+#, elixir-format
+#: lib/recake_web/templates/job/_form.html.eex:5
+msgid "Internal ID"
+msgstr "Intern märkning (syns endast för dig)"

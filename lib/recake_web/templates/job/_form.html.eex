@@ -2,6 +2,7 @@
   <%= form_for @changeset, @action, fn f -> %>
     <%= Form.textarea_with_counter f, :description, rows: 6, label: gettext("Description") %>
     <%= Form.text_input f, :location, label: gettext("Location") %>
+    <%= Form.text_input f, :internal_id, label: gettext("Internal ID") %>
     <%= Form.layout_right do %>
       <%= Form.submit @submit_label %>
     <% end %>

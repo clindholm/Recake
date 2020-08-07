@@ -364,7 +364,12 @@ msgstr ""
 msgid "declined"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/recake_web/views/inbox_view.ex:18
 msgid "pending"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/job/_form.html.eex:5
+msgid "Internal ID"
 msgstr ""

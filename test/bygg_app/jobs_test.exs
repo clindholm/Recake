@@ -154,6 +154,7 @@ defmodule Recake.JobsTest do
       assert changeset.required == [
                :description,
                :location,
+               :internal_id,
                :user_id
              ]
     end
@@ -173,6 +174,7 @@ defmodule Recake.JobsTest do
                user_id: [^error],
                description: [^error],
                location: [^error],
+               internal_id: [^error],
              } = errors_on(changeset)
     end
 
@@ -180,7 +182,7 @@ defmodule Recake.JobsTest do
       too_long = String.duplicate("A", 301)
 
       {:error, changeset} =
-        Jobs.publish_job(%User{}, %{description: too_long})
+        Jobs.publish_job(%User{}, %{description: too_long, internal_id: too_long})
 
       description_error =
         dngettext(
@@ -190,8 +192,17 @@ defmodule Recake.JobsTest do
           300
         )
 
+      internal_id_error =
+        dngettext(
+          "errors",
+          "should be at most %{count} character(s)",
+          "should be at most %{count} character(s)",
+          30
+        )
+
       assert %{
-               description: [^description_error]
+               description: [^description_error],
+               internal_id: [^internal_id_error]
              } = errors_on(changeset)
     end
 
@@ -200,6 +211,7 @@ defmodule Recake.JobsTest do
         Jobs.publish_job(user, %{
           description: "Description",
           location: "Location",
+          internal_id: "Internal Id"
         })
 
       assert job == Jobs.get_job(job.id)
@@ -215,6 +227,7 @@ defmodule Recake.JobsTest do
         Jobs.publish_job(job_creator, %{
           description: "Description",
           location: "Location",
+          internal_id: "Internal Id"
         })
 
       job = Recake.Repo.preload(job, :requests)
