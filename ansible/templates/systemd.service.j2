@@ -11,6 +11,8 @@ Environment=HOST_URL="{{ domain }}"
 Environment=PORT="{{ port }}"
 Environment=SECRET_KEY_BASE="{{ secret_key_base }}"
 Environment=DATABASE_URL="{{ db_url }}"
+Environment=RELEASE_DISTRIBUTION="name"
+Environment=RELEASE_NODE="recake_{{ server_type }}@127.0.0.1"
 ExecStart={{ working_directory }}/bin/recake start
 SyslogIdentifier={{ syslog_id }}
 RemainAfterExit=no
