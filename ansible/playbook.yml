@@ -90,6 +90,22 @@
         line: '{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl stop recake_staging'
         validate: '/usr/sbin/visudo -cf %s'
 
+    - name: Allow deploy_user to start production service
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl start recake_production'
+        line: '{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl start recake_production'
+        validate: '/usr/sbin/visudo -cf %s'
+
+    - name: Allow deploy_user to stop production service
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl stop recake_production'
+        line: '{{ deploy_user }} ALL=(ALL) NOPASSWD: /bin/systemctl stop recake_production'
+        validate: '/usr/sbin/visudo -cf %s'
+
 # Install packages
     - name: Add older APT repo
       apt_repository:
@@ -239,12 +255,12 @@
     - name: Ensure Postgres is running
       service: name=postgresql state=started enabled=yes
 
-    - name: Create database
+    - name: Create staging database
       postgresql_db:
         name: "{{ staging_db_name }}"
       become_user: postgres
 
-    - name: Create db user
+    - name: Create staging db user
       postgresql_user:
         db: "{{ staging_db_name }}"
         name: "{{ staging_db_username }}"
@@ -253,15 +269,36 @@
         role_attr_flags: NOCREATEDB
         state: present
       become_user: postgres
+
+    - name: Create production database
+      postgresql_db:
+        name: "{{ production_db_name }}"
+      become_user: postgres
+
+    - name: Create production db user
+      postgresql_user:
+        db: "{{ production_db_name }}"
+        name: "{{ production_db_username }}"
+        password: "{{ production_db_password }}"
+        priv: ALL
+        role_attr_flags: NOCREATEDB
+        state: present
+      become_user: postgres
     
-    - name: Install citext
+    - name: Install citext - staging
       postgresql_ext:
         db: "{{ staging_db_name }}"
         name: citext
       become_user: postgres
 
+    - name: Install citext - production
+      postgresql_ext:
+        db: "{{ production_db_name }}"
+        name: citext
+      become_user: postgres
+
 # Deploy
-    - name: Copy db migration script
+    - name: Copy db migration script - staging
       template:
         src: templates/migrate.sh.j2
         dest: /home/{{ deploy_user }}/migrate_staging.sh
@@ -274,10 +311,24 @@
         host: staging.recake.se
         secret_key_base: "{{ staging_secret_key_base }}"
         db_url: "postgresql://{{ staging_db_username }}:{{ staging_db_password }}@localhost/{{ staging_db_name }}"
+    
+    - name: Copy db migration script - production
+      template:
+        src: templates/migrate.sh.j2
+        dest: /home/{{ deploy_user }}/migrate_production.sh
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_user }}"
+        mode: u=rwx,g=r,o=r
+      vars:
+        service: recake_staging
+        path: "/home/{{ deploy_user }}/production"
+        host: app.recake.se
+        secret_key_base: "{{ production_secret_key_base }}"
+        db_url: "postgresql://{{ production_db_username }}:{{ production_db_password }}@localhost/{{ production_db_name }}"
 
 # Recake service
 
-    - name: Setup systemd file
+    - name: Setup systemd file - staging
       template:
         src: templates/systemd.service.j2
         dest: /etc/systemd/system/recake_staging.service
@@ -292,13 +343,39 @@
         syslog_id: "recake_staging"
       register: staging_service
 
-    - name: Reload Systemd
+    - name: Reload Systemd - staging
       systemd:
         daemon_reload: yes
       when: staging_service.changed
 
-    - name: Enable Recake service
+    - name: Enable Recake service - staging
       systemd:
         name: recake_staging
+        state: started
+        enabled: yes
+
+    - name: Setup systemd file - production
+      template:
+        src: templates/systemd.service.j2
+        dest: /etc/systemd/system/recake_production.service
+      vars:
+        user: "{{ deploy_user }}"
+        server_type: "production"
+        working_directory: /home/{{ deploy_user }}/production
+        domain: app.recake.se
+        port: "{{ production_port }}"
+        secret_key_base: "{{ production_secret_key_base }}"
+        db_url: "postgresql://{{ production_db_username }}:{{ production_db_password }}@localhost/{{ production_db_name }}"
+        syslog_id: "recake_production"
+      register: production_service
+
+    - name: Reload Systemd - production
+      systemd:
+        daemon_reload: yes
+      when: production_service.changed
+
+    - name: Enable Recake service - production
+      systemd:
+        name: recake_production
         state: started
         enabled: yes
