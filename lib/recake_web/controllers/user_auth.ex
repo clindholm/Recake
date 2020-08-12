@@ -1,7 +1,6 @@
 defmodule RecakeWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
-  import RecakeWeb.Gettext
 
   alias Recake.Accounts
   alias RecakeWeb.Router.Helpers, as: Routes
@@ -85,7 +84,6 @@ defmodule RecakeWeb.UserAuth do
       conn
     else
       conn
-      |> put_flash(:error, gettext("You must login to access this page."))
       |> maybe_store_return_to()
       |> redirect(to: Routes.user_session_path(conn, :new))
       |> halt()
