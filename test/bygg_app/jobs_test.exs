@@ -187,6 +187,7 @@ defmodule Recake.JobsTest do
                :description,
                :location,
                :internal_id,
+               :id06_required,
                :user_id
              ]
     end
@@ -243,7 +244,8 @@ defmodule Recake.JobsTest do
         Jobs.publish_job(user, %{
           description: "Description",
           location: "Location",
-          internal_id: "Internal Id"
+          internal_id: "Internal Id",
+          id06_required: true
         })
 
       assert job == Jobs.get_job(job.id)

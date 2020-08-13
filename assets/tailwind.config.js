@@ -1,7 +1,8 @@
 module.exports = {
   theme: {
     fontFamily: {
-      'sans': ['Inter', 'sans-serif']
+      'sans': ['Inter', 'sans-serif'],
+      'arial': ['Arial', 'Helvetica', 'sans-serif']
     },
     extend: {},
   },

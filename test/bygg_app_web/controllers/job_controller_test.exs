@@ -34,6 +34,7 @@ defmodule RecakeWeb.JobControllerTest do
       |> assert_form(Routes.job_path(conn, :create), [
         "textarea[name=\"job[description]\"]",
         "input[name=\"job[location]\"]",
+        "input[name=\"job[id06_required]\"]",
         "*[type=submit]"
       ])
     end
@@ -51,7 +52,8 @@ defmodule RecakeWeb.JobControllerTest do
         "job" => %{
           "description" => "Description",
           "location" => "Location",
-          "internal_id" => "Internal Id"
+          "internal_id" => "Internal Id",
+          "id06_required" => "true"
         }
       })
 
@@ -63,6 +65,7 @@ defmodule RecakeWeb.JobControllerTest do
                description: "Description",
                location: "Location",
                internal_id: "Internal Id",
+               id06_required: true,
                state: "active",
                user_id: ^user_id
              } = List.first(jobs)

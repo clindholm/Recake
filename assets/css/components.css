@@ -3,6 +3,48 @@
   background: linear-gradient(0deg, rgba(247,250,252,1) 0%, rgba(224,229,232,1) 100%);
 }
 
+.toggle {
+  @apply cursor-pointer flex items-center;
+}
+.toggle div {
+  @apply flex relative bg-gray-300 rounded-full p-1 w-12;
+  height: theme('spacing.8');
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+.toggle input[type=checkbox] {
+  @apply absolute opacity-0;
+  z-index: -1;
+}
+.toggle input[type=checkbox]:focus + div {
+  @apply shadow-outline;
+}
+.toggle div span {
+  @apply flex items-center justify-center bg-gray-500 rounded-full;
+  width: 1.5rem;
+  margin-left: 0;
+  transition-property: margin-left, background-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+.toggle div span:before {
+  @apply text-white text-lg font-bold m-0 font-arial;
+  content: "\00D7";
+}
+.toggle :checked + div {
+  @apply bg-green-400
+}
+.toggle :checked + div span {
+  @apply bg-green-700;
+  margin-left: 38%;
+}
+.toggle :checked + div span:before {
+  @apply text-xs;
+  content: "\2714";
+  margin-left: -2px;
+}
+
 .btn {
   @apply bg-blue-500 py-2 px-6 border-b-4 border-blue-800 rounded text-white;
 }

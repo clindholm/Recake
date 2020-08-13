@@ -98,9 +98,25 @@ defmodule RecakeWeb.FormHelpers do
 
     ~E"""
     <div class="mb-4">
-      <label class="flex items-center mb-4">
+      <label class="flex items-center">
         <%= Phoenix.HTML.Form.checkbox form, field, class: "form-checkbox" %>
         <span class="text-gray-700 ml-2"><%= label %></span>
+      </label>
+    </div>
+    """
+  end
+
+  def toggle(form, field, opts \\ []) do
+    label = Keyword.get(opts, :label) || Phoenix.HTML.Form.humanize(field)
+
+    ~E"""
+    <div class="my-6">
+      <label class="toggle">
+        <span class="text-gray-700 mr-2"><%= label %></span>
+        <%= Phoenix.HTML.Form.checkbox form, field, class: "form-checkbox" %>
+        <div>
+          <span></span>
+        </div>
       </label>
     </div>
     """
