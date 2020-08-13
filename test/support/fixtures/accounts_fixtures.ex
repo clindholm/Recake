@@ -4,16 +4,16 @@ defmodule Recake.AccountsFixtures do
 
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
-      attrs
-      |> Enum.into(%{
+      %Recake.Accounts.User{}
+      |> Ecto.Changeset.change(Enum.into(attrs, %{
         email: unique_user_email(),
-        password: valid_user_password(),
+        hashed_password: Pbkdf2.hash_pwd_salt(valid_user_password()),
         company: "Company Inc.",
         organization_number: "12345654",
         contact_name: "Contact Person",
-        phone: "(233) 555-123 456"
-      })
-      |> (& Recake.Accounts.change_user_registration(%Recake.Accounts.User{}, &1)).()
+        phone: "(233) 555-123 456",
+        admin_permissions: []
+      }))
       |> Recake.Repo.insert()
     user
   end

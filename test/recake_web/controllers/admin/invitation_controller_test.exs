@@ -56,8 +56,8 @@ defmodule RecakeWeb.Admin.InvitationControllerTest do
       assert redirected_to(conn) == "/"
     end
 
-    test "creates invitation", %{conn: conn, user: user} do
-      conn = post(conn, Routes.admin_invitation_path(conn, :create))
+    test "creates invitation", %{conn: conn} do
+      _conn = post(conn, Routes.admin_invitation_path(conn, :create))
 
       invitations = Repo.all(Invitation)
 
