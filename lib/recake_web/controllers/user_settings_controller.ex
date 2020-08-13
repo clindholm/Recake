@@ -10,10 +10,10 @@ defmodule RecakeWeb.UserSettingsController do
     render(conn, "edit.html")
   end
 
-  def update_profile(conn, %{"current_password" => password, "user" => user_params}) do
+  def update_profile(conn, %{"user" => user_params}) do
     user = conn.assigns.current_user
 
-    case Accounts.update_user_profile(user, password, user_params) do
+    case Accounts.update_user_profile(user, user_params) do
       {:ok, _user} ->
         conn
         |> put_flash(:success, gettext("Profile updated successfully"))

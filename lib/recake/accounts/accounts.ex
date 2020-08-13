@@ -76,10 +76,9 @@ defmodule Recake.Accounts do
     User.profile_changeset(user, attrs)
   end
 
-  def update_user_profile(user, password, attrs) do
+  def update_user_profile(user, attrs) do
     user
     |> User.profile_changeset(attrs)
-    |> User.validate_current_password(password)
     |> Repo.update()
   end
 

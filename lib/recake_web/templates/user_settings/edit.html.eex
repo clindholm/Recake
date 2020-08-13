@@ -11,7 +11,6 @@
     <%= Form.text_input f, :organization_number, label: gettext("Organization number") %>
     <%= Form.text_input f, :contact_name, label: gettext("Contact name") %>
     <%= Form.text_input f, :phone, label: gettext("Phone number") %>
-    <%= Form.password_input f, :current_password, label: gettext("Current password"), name: "current_password", id: "current_password_for_email"  %>
     <%= Form.layout_right do %>
       <%= Form.submit gettext("Update profile") %>
     <% end %>

@@ -209,17 +209,9 @@ defmodule Recake.AccountsTest do
       %{user: user_fixture()}
     end
 
-    test "validates current password", %{user: user} do
-      {:error, changeset} =
-        Accounts.update_user_profile(user, "invalid", %{})
-
-      error_msg = dgettext("errors", "is not valid")
-      assert %{current_password: [^error_msg]} = errors_on(changeset)
-    end
-
     test "updates profile", %{user: user} do
       {:ok, user} =
-        Accounts.update_user_profile(user, valid_user_password(), %{
+        Accounts.update_user_profile(user, %{
           company: "updated company",
           organization_number: "updated number",
           contact_name: "updated contact name",

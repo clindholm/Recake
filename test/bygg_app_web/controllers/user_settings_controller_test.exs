@@ -28,7 +28,6 @@ defmodule RecakeWeb.UserSettingsControllerTest do
         "input[name=\"user[organization_number]\"]",
         "input[name=\"user[contact_name]\"]",
         "input[name=\"user[phone]\"]",
-        "input[name=\"current_password\"][type=password]",
         "button[type=\"submit\"]"
       ])
       |> assert_form(Routes.user_settings_path(conn, :update_password), [
@@ -49,7 +48,6 @@ defmodule RecakeWeb.UserSettingsControllerTest do
     test "updates user profile", %{conn: conn, user: user} do
       new_profile_conn =
         put(conn, Routes.user_settings_path(conn, :update_profile), %{
-          "current_password" => valid_user_password(),
           "user" => %{
             "company" => "updated company",
             "organization_number" => "updated number",
@@ -71,7 +69,6 @@ defmodule RecakeWeb.UserSettingsControllerTest do
     test "does not update profile on invalid data", %{conn: conn} do
       old_profile_conn =
         put(conn, Routes.user_settings_path(conn, :update_profile), %{
-          "current_password" => "invalid",
           "user" => %{
             "company" => "",
           }
@@ -80,7 +77,6 @@ defmodule RecakeWeb.UserSettingsControllerTest do
       old_profile_conn
       |> html_document()
       |> assert_selector_content(".validation-error", dgettext("errors", "can't be blank"))
-      |> assert_selector_content(".validation-error", dgettext("errors", "is not valid"))
     end
   end
 
