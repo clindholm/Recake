@@ -176,7 +176,7 @@ msgid "Remember me"
 msgstr "Kom ihåg mig"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:93
+#: lib/recake_web/templates/inbox/index.html.eex:108
 msgid "%{count} sent request"
 msgid_plural "%{count} sent"
 msgstr[0] "skickat till <strong>%{count}</strong>st"
@@ -198,12 +198,12 @@ msgid "A link to confirm your e-mail has been sent to the new address."
 msgstr "En länk för att bekräfta din e-mail har skickats till den nya adressen."
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:106
+#: lib/recake_web/templates/inbox/index.html.eex:121
 msgid "Available"
 msgstr "Tillgänglig"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:119
+#: lib/recake_web/templates/inbox/index.html.eex:134
 msgid "Available recruits"
 msgstr "Tillgängliga rekryter"
 
@@ -226,7 +226,7 @@ msgid "Contact name"
 msgstr "Kontaktperson"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:72
+#: lib/recake_web/templates/inbox/index.html.eex:87
 #: lib/recake_web/templates/job/new.html.eex:1
 msgid "Create request"
 msgstr "Skapa förfrågan"
@@ -248,12 +248,12 @@ msgid "E-mail updated successfully"
 msgstr "E-mail uppdaterad"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:88
+#: lib/recake_web/templates/inbox/index.html.eex:103
 msgid "Edit"
 msgstr "Redigera"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:16
+#: lib/recake_web/templates/inbox/index.html.eex:19
 msgid "Inbox"
 msgstr "Inbox"
 
@@ -263,7 +263,7 @@ msgid "Max %{count} characters"
 msgstr "Högst %{count} tecken"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:53
+#: lib/recake_web/templates/inbox/index.html.eex:68
 msgid "No thanks"
 msgstr "Nej tack"
 
@@ -274,12 +274,12 @@ msgid "Organization number"
 msgstr "Organisationsnummer"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:114
+#: lib/recake_web/templates/inbox/index.html.eex:129
 msgid "Pending"
 msgstr "Väntar"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:147
+#: lib/recake_web/templates/inbox/index.html.eex:162
 msgid "Pending or declined"
 msgstr "Övriga rekryter"
 
@@ -294,7 +294,7 @@ msgid "Profile updated successfully"
 msgstr "Profilen uppdaterad"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:66
+#: lib/recake_web/templates/inbox/index.html.eex:81
 msgid "Recruits"
 msgstr "Rekryter"
 
@@ -310,12 +310,12 @@ msgid "Settings"
 msgstr "Inställningar"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:52
+#: lib/recake_web/templates/inbox/index.html.eex:67
 msgid "Show interest"
 msgstr "Visa intresse"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:110
+#: lib/recake_web/templates/inbox/index.html.eex:125
 msgid "Unavailable"
 msgstr "Otillgänglig"
 
@@ -335,12 +335,12 @@ msgid "You need an invitation to register a new account"
 msgstr "Du behöver en inbjudan för att kunna registrera dig"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:21
+#: lib/recake_web/templates/inbox/index.html.eex:24
 msgid "empty inbox"
 msgstr "Du har inga ohanterade förfrågningar."
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:77
+#: lib/recake_web/templates/inbox/index.html.eex:92
 msgid "empty recruitments"
 msgstr "Du har inga pågående rekryteringssökningar"
 
@@ -368,3 +368,8 @@ msgstr "Intern märkning (syns endast för dig)"
 #: lib/recake_web/templates/job/_form.html.eex:6
 msgid "Is ID06 required?"
 msgstr "Krävs ID06?"
+
+#, elixir-format, fuzzy
+#: lib/recake_web/templates/inbox/index.html.eex:48
+msgid "ID06 is required"
+msgstr "ID06 krävs"
