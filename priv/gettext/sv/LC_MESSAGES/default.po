@@ -143,11 +143,6 @@ msgid "User created successfully"
 msgstr "Kontot skapat"
 
 #, elixir-format
-#: lib/recake_web/controllers/user_auth.ex:88
-msgid "You must login to access this page."
-msgstr "Du måste vara inloggad för att komma åt sidan"
-
-#, elixir-format
 #: lib/recake_web/controllers/user_reset_password_controller.ex:23
 msgid "You will receive instructions to reset your password to your e-mail shortly."
 msgstr "Du kommer få instruktioner till din e-mail om att återställa lösenordet strax."
@@ -350,11 +345,6 @@ msgid "empty recruitments"
 msgstr "Du har inga pågående rekryteringssökningar"
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:84
-msgid "job created at"
-msgstr "förfrågan skickad"
-
-#, elixir-format
 #: lib/recake_web/templates/job/edit.html.eex:1
 msgid "Edit request"
 msgstr "Redigera förfrågan"
@@ -373,3 +363,8 @@ msgstr "väntar"
 #: lib/recake_web/templates/job/_form.html.eex:5
 msgid "Internal ID"
 msgstr "Intern märkning (syns endast för dig)"
+
+#, elixir-format
+#: lib/recake_web/templates/job/_form.html.eex:6
+msgid "Is ID06 required?"
+msgstr "Krävs ID06?"
