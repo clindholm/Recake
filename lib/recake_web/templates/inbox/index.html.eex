@@ -40,7 +40,7 @@
             <p class="text-gray-600 text-sm -mt-1"><%= request.job.user.organization_number %></p>
 
             <%= if request.job.id06_required do %>
-            <div class="mt-2 mb-3 flex justify-between text-base text-yellow-800">
+            <div class="mt-2 mb-3 flex justify-between text-base text-yellow-800 id06-warning">
               <p class="flex items-center">
                 <svg class="text-yellow-600 mr-1" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
                   <use href="#icon-warning" />

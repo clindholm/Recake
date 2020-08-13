@@ -61,6 +61,19 @@ defmodule RecakeWeb.InboxControllerTest do
       ])
     end
 
+    test "renders ID06 requirements", %{conn: conn, user: user} do
+      job1 = job_fixture(user)
+      job2 = job_fixture(user, %{ id06_required: true })
+      _pending_request1 = job_request_fixture(user, job1)
+      _pending_request2 = job_request_fixture(user, job2)
+
+      conn = get(conn, Routes.inbox_path(conn, :index))
+
+      conn
+      |> html_document()
+      |> assert_selector_times(".id06-warning", 1)
+    end
+
     test "transforms job requests", %{conn: conn, user: user} do
       active_job = job_fixture(user)
 
