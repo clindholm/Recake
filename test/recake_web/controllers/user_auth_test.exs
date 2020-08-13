@@ -159,4 +159,19 @@ defmodule RecakeWeb.UserAuthTest do
       refute conn.status
     end
   end
+
+  describe "require_authorized_user/2" do
+    test "redirects if user is not authorized", %{conn: conn, user: user} do
+      conn = conn |> assign(:current_user, user) |> UserAuth.require_authorized_user("permission")
+      assert conn.halted
+      assert redirected_to(conn) == "/"
+    end
+
+    test "does not redirect if user is not authenticated", %{conn: conn, user: user} do
+      user = %{ user | admin_permissions: ["permission"]}
+      conn = conn |> assign(:current_user, user) |> UserAuth.require_authenticated_user("permission")
+      refute conn.halted
+      refute conn.status
+    end
+  end
 end

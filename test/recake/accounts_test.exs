@@ -645,6 +645,18 @@ defmodule Recake.AccountsTest do
     end
   end
 
+  describe "list_invitations/0" do
+    test "returns all invitations, newest first" do
+      Accounts.create_invitation()
+      Accounts.create_invitation()
+
+      invitations = Accounts.list_invitations()
+
+      assert Enum.count(invitations) == 2
+      assert Enum.sort_by(invitations, &(&1.inserted_at), :desc) == invitations
+    end
+  end
+
   describe "create_invitation/0" do
     test "returns encoded token" do
       token = Accounts.create_invitation()

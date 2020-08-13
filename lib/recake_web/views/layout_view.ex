@@ -3,39 +3,30 @@ defmodule RecakeWeb.LayoutView do
 
   import Phoenix.HTML
 
-  def nav_link(conn, label, opts) do
-    current_page? = opts[:to] == conn.request_path
+  @nav_link_classes "px-6 py-2 bg-white text-blue-800 hover:bg-gray-200 hover:no-underline"
 
-    classes = class_list([
-      {"py-2 px-4 text-gray-700 border-b-4 border-transparent hover:no-underline", true},
-      {"border-gray-400", current_page?},
-      {"hover:border-blue-600", !current_page?}
-    ])
+  def nav_link(label, opts) do
+    classes = Keyword.get(opts, :class)
+
+    classes =
+      if classes do
+        "#{classes} #{@nav_link_classes}"
+      else
+        @nav_link_classes
+      end
 
     opts = Keyword.put(opts, :class, classes)
+
     ~E"""
       <%= link label, opts %>
     """
   end
 
-  def page_header(%{title: title, action: %{label: label, url: url} = action}) do
-    ~E"""
-    <div class="flex justify-between items-center">
-      <h1 class="section-title"><%= title %></h1>
-      <a href="<%= url %>" class="btn bg-white border-gray-500 hover:no-underline hover:bg-blue-100 text-blue-900 font-bold lowercase">
-        <%= if action[:icon] do %>
-        <i class="fas fa-<%= action.icon %> mr-1"></i>
-        <% end %>
-        <%= label %>
-      </a>
-    </div>
-    """
+  def render_with_permission(user, permission, do: block) do
+    if Enum.member?(user.admin_permissions, permission) do
+      block
+    else
+      {:safe, ""}
+    end
   end
-  def page_header(header) when is_binary(header) do
-    ~E"""
-      <h1 class="section-title"><%= header %></h1>
-    """
-  end
-
-  def page_header(_), do: nil
 end

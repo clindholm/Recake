@@ -42,14 +42,33 @@ defmodule RecakeWeb.ConnCase do
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 
-  def html_document(conn) do
+  def html_document(%Plug.Conn{} = conn) do
     conn
     |> Phoenix.ConnTest.html_response(200)
     |> Floki.parse_document!()
   end
 
+  def html_document(string) when is_binary(string) do
+    string
+    |> Floki.parse_document!()
+  end
+
   def assert_selector(document, selector) do
     assert not Enum.empty?(Floki.find(document, selector)), "\"#{selector}\" not found"
+
+    document
+  end
+
+  def assert_selector_attr(document, selector, attr, value) do
+    attrs =
+      document
+      |> Floki.find(selector)
+      |> Enum.flat_map(fn {_, attrs, _} ->
+        attrs
+        |> Enum.filter(fn {attr_, _} -> attr == attr_ end)
+      end)
+
+    assert Enum.all?(attrs, fn {_, value_} -> value == value_ end)
 
     document
   end
@@ -66,7 +85,8 @@ defmodule RecakeWeb.ConnCase do
       document
       |> Floki.find(selector)
 
-    assert Enum.any?(els, fn {_,_,children} -> Floki.raw_html(children) =~ content end), "\"#{content}\" in \"#{selector}\" not found"
+    assert Enum.any?(els, fn {_, _, children} -> Floki.raw_html(children) =~ content end),
+           "\"#{content}\" in \"#{selector}\" not found"
 
     document
   end
@@ -82,7 +102,8 @@ defmodule RecakeWeb.ConnCase do
       document
       |> Floki.find(selector)
 
-    refute Enum.any?(els, fn {_,_,children} -> Floki.raw_html(children) =~ content end), "\"#{content}\" in \"#{selector}\" found"
+    refute Enum.any?(els, fn {_, _, children} -> Floki.raw_html(children) =~ content end),
+           "\"#{content}\" in \"#{selector}\" found"
 
     document
   end
@@ -91,13 +112,6 @@ defmodule RecakeWeb.ConnCase do
     html = Floki.raw_html(document)
 
     assert html =~ content, "\"#{content}\" not present in \"#{html}\""
-
-    document
-  end
-
-  def assert_section_header(document, label) do
-    document
-    |> assert_selector_content("h1.section-title", label)
 
     document
   end
@@ -111,7 +125,7 @@ defmodule RecakeWeb.ConnCase do
     conn
     |> route_f.()
     |> html_document()
-    |> assert_selector_content(".alert-#{ to_string(type) } > p", "Flash")
+    |> assert_selector_content(".alert-#{to_string(type)} > p", "Flash")
   end
 
   def assert_form(document, action, inputs) do

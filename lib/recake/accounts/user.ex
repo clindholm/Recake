@@ -15,6 +15,8 @@ defmodule Recake.Accounts.User do
     field :contact_name, :string
     field :phone, :string
 
+    field :admin_permissions, {:array, :string}, default: []
+
     has_many(:job_requests, Recake.Jobs.Request, foreign_key: :recipient_id)
 
     timestamps()

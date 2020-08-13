@@ -90,6 +90,17 @@ defmodule RecakeWeb.UserAuth do
     end
   end
 
+  def require_authorized_user(conn, permission) do
+    if Enum.member?(conn.assigns[:current_user].admin_permissions, permission) do
+      conn
+    else
+      conn
+      |> maybe_store_return_to()
+      |> redirect(to: Routes.inbox_path(conn, :index))
+      |> halt()
+    end
+  end
+
   defp maybe_store_return_to(%{method: "GET", request_path: request_path} = conn) do
     put_session(conn, :user_return_to, request_path)
   end

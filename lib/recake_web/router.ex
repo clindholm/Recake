@@ -55,6 +55,12 @@ defmodule RecakeWeb.Router do
     resources "/jobs", JobController, except: [:show, :delete]
   end
 
+  scope "/admin", RecakeWeb.Admin, as: :admin do
+    pipe_through [:browser, :require_authenticated_user]
+
+    resources "/invitations", InvitationController, only: [:index, :create]
+  end
+
   scope "/", RecakeWeb do
     pipe_through [:browser, :minimal_layout]
 

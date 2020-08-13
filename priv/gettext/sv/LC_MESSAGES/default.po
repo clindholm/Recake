@@ -24,7 +24,7 @@ msgstr "Företagsnamn"
 
 #, elixir-format
 #: lib/recake_web/templates/user_reset_password/edit.html.eex:5
-#: lib/recake_web/templates/user_settings/edit.html.eex:32
+#: lib/recake_web/templates/user_settings/edit.html.eex:31
 msgid "Confirm new password"
 msgstr "Bekräfta nytt lösenord"
 
@@ -83,13 +83,13 @@ msgid "Login"
 msgstr "Logga in"
 
 #, elixir-format
-#: lib/recake_web/templates/layout/app.html.eex:27
+#: lib/recake_web/templates/layout/app.html.eex:30
 msgid "Logout"
 msgstr "Logga ut"
 
 #, elixir-format
 #: lib/recake_web/templates/user_reset_password/edit.html.eex:4
-#: lib/recake_web/templates/user_settings/edit.html.eex:31
+#: lib/recake_web/templates/user_settings/edit.html.eex:30
 msgid "New password"
 msgstr "Nytt lösenord"
 
@@ -155,7 +155,7 @@ msgstr "Beskrivning"
 #, elixir-format
 #: lib/recake_web/templates/user_registration/new.html.eex:4
 #: lib/recake_web/templates/user_reset_password/new.html.eex:6 lib/recake_web/templates/user_session/new.html.eex:13
-#: lib/recake_web/templates/user_settings/edit.html.eex:22
+#: lib/recake_web/templates/user_settings/edit.html.eex:21
 msgid "Email"
 msgstr "E-mail"
 
@@ -208,14 +208,14 @@ msgid "Available recruits"
 msgstr "Tillgängliga rekryter"
 
 #, elixir-format
-#: lib/recake_web/templates/user_settings/edit.html.eex:20
-#: lib/recake_web/templates/user_settings/edit.html.eex:25
+#: lib/recake_web/templates/user_settings/edit.html.eex:19
+#: lib/recake_web/templates/user_settings/edit.html.eex:24
 msgid "Change e-mail"
 msgstr "Ändra e-mail"
 
 #, elixir-format
-#: lib/recake_web/templates/user_settings/edit.html.eex:29
-#: lib/recake_web/templates/user_settings/edit.html.eex:35
+#: lib/recake_web/templates/user_settings/edit.html.eex:28
+#: lib/recake_web/templates/user_settings/edit.html.eex:34
 msgid "Change password"
 msgstr "Ändra lösenord"
 
@@ -232,8 +232,8 @@ msgid "Create request"
 msgstr "Skapa förfrågan"
 
 #, elixir-format
-#: lib/recake_web/templates/user_settings/edit.html.eex:14
-#: lib/recake_web/templates/user_settings/edit.html.eex:23 lib/recake_web/templates/user_settings/edit.html.eex:33
+#: lib/recake_web/templates/user_settings/edit.html.eex:22
+#: lib/recake_web/templates/user_settings/edit.html.eex:32
 msgid "Current password"
 msgstr "Nuvarande lösenord"
 
@@ -304,7 +304,7 @@ msgid "Request was updated"
 msgstr "Förfrågan uppdaterad"
 
 #, elixir-format
-#: lib/recake_web/templates/layout/app.html.eex:26
+#: lib/recake_web/templates/layout/app.html.eex:29
 #: lib/recake_web/templates/user_settings/edit.html.eex:5
 msgid "Settings"
 msgstr "Inställningar"
@@ -325,7 +325,7 @@ msgid "Update"
 msgstr "Spara"
 
 #, elixir-format
-#: lib/recake_web/templates/user_settings/edit.html.eex:16
+#: lib/recake_web/templates/user_settings/edit.html.eex:15
 msgid "Update profile"
 msgstr "Uppdatera profil"
 
@@ -369,7 +369,23 @@ msgstr "Intern märkning (syns endast för dig)"
 msgid "Is ID06 required?"
 msgstr "Krävs ID06?"
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:48
 msgid "ID06 is required"
 msgstr "ID06 krävs"
+
+#, elixir-format
+#: lib/recake_web/templates/admin/invitation/index.html.eex:9
+msgid "Create invitation"
+msgstr "Skapa inbjudan"
+
+#, elixir-format
+#: lib/recake_web/controllers/admin/invitation_controller.ex:21
+msgid "Invitation created"
+msgstr "Inbjudan skapad"
+
+#, elixir-format
+#: lib/recake_web/templates/admin/invitation/index.html.eex:6
+#: lib/recake_web/templates/layout/app.html.eex:27
+msgid "Invitations"
+msgstr "Inbjudningar"

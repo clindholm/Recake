@@ -212,6 +212,12 @@ defmodule Recake.Accounts do
     end
   end
 
+  def list_invitations() do
+    from(i in Invitation,
+      order_by: [desc: i.inserted_at])
+    |> Repo.all()
+  end
+
   def create_invitation() do
     {token, invitation} = Invitation.invitation_token()
 
