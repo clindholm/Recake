@@ -2,6 +2,9 @@
     <symbol viewBox="0 0 384 512" id="icon-location">
         <path fill="currentColor" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
     </symbol>
+    <symbol viewBox="0 0 576 512" id="icon-warning">
+        <g class="fa-group"><path fill="currentColor" d="M569.52 440L329.58 24c-18.44-32-64.69-32-83.16 0L6.48 440c-18.42 31.94 4.64 72 41.57 72h479.89c36.87 0 60.06-40 41.58-72zM288 448a32 32 0 1 1 32-32 32 32 0 0 1-32 32zm38.24-238.41l-12.8 128A16 16 0 0 1 297.52 352h-19a16 16 0 0 1-15.92-14.41l-12.8-128A16 16 0 0 1 265.68 192h44.64a16 16 0 0 1 15.92 17.59z" opacity="0.4"></path><path fill="currentColor" d="M310.32 192h-44.64a16 16 0 0 0-15.92 17.59l12.8 128A16 16 0 0 0 278.48 352h19a16 16 0 0 0 15.92-14.41l12.8-128A16 16 0 0 0 310.32 192zM288 384a32 32 0 1 0 32 32 32 32 0 0 0-32-32z"></path></g>
+    </symbol>
 </svg>
 
 <div class="pt-4 sm:pt-12">
@@ -35,6 +38,18 @@
               </p>
             </div>
             <p class="text-gray-600 text-sm -mt-1"><%= request.job.user.organization_number %></p>
+
+            <%= if request.job.id06_required do %>
+            <div class="mt-2 mb-3 flex justify-between text-base text-yellow-800">
+              <p class="flex items-center">
+                <svg class="text-yellow-600 mr-1" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+                  <use href="#icon-warning" />
+                </svg>
+                <%= gettext("ID06 is required") %>
+              </p>
+            </div>
+            <% end %>
+
             <p class="mt-2 text-gray-700">
               <%= request.job.description %>
             </p>
