@@ -306,7 +306,7 @@ msgstr "Rekryter"
 #, elixir-format
 #: lib/recake_web/controllers/job_controller.ex:34
 msgid "Request was updated"
-msgstr "Förfrågningar"
+msgstr "Förfrågan uppdaterad"
 
 #, elixir-format
 #: lib/recake_web/templates/layout/app.html.eex:26
