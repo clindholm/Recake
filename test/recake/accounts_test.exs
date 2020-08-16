@@ -3,6 +3,7 @@ defmodule Recake.AccountsTest do
 
   import RecakeWeb.Gettext
   import Recake.AccountsFixtures
+  import Recake.JobsFixtures
 
   alias Recake.Accounts
   alias Recake.Accounts.{User, UserToken, Invitation}
@@ -57,7 +58,14 @@ defmodule Recake.AccountsTest do
     end
 
     test "fails on invalid token" do
-      assert {:error, :invalid_token} = Accounts.register_user("Invalid", %{})
+      assert {:error, :invalid_token} = Accounts.register_user("Invalid", %{
+        email: unique_user_email(),
+        password: valid_user_password(),
+        company: "C",
+        phone: "123",
+        organization_number: "123",
+        contact_name: "CN",
+      })
     end
 
     test "fails on used token", %{token: token} do
@@ -71,7 +79,9 @@ defmodule Recake.AccountsTest do
                  email: email,
                  password: valid_user_password(),
                  company: "C",
-                 phone: "123"
+                 phone: "123",
+                 organization_number: "123",
+                 contact_name: "CN",
                })
     end
 
@@ -82,6 +92,8 @@ defmodule Recake.AccountsTest do
 
       assert %{
                company: [^error],
+               contact_name: [^error],
+               organization_number: [^error],
                phone: [^error],
                password: [^error],
                email: [^error]
@@ -187,6 +199,26 @@ defmodule Recake.AccountsTest do
         })
 
       refute Accounts.verify_invitation(token)
+    end
+
+    test "creates a job_request if a newly created, ongoing job is available", %{token: token} do
+      previous_user = user_fixture()
+      previous_job = job_fixture(previous_user)
+
+      email = unique_user_email()
+
+      {:ok, user} =
+        Accounts.register_user(token, %{
+          email: email,
+          password: valid_user_password(),
+          company: "C",
+          organization_number: "123456",
+          contact_name: "C",
+          phone: "123",
+        })
+
+      user = Recake.Repo.preload(user, :job_requests)
+      assert List.first(user.job_requests).job_id == previous_job.id
     end
   end
 

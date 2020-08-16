@@ -17,55 +17,51 @@ defmodule Recake.Accounts do
   def get_user!(id), do: Repo.get!(User, id)
 
   def register_user(invitation_token, attrs) do
-    # changeset = User.registration_changeset(%User{}, attrs)
+    changeset = User.registration_changeset(%User{}, attrs)
 
-    # Ecto.Multi.new()
-    # |> Ecto.Multi.run(:invitation, fn repo, _ ->
-    #   case Base.url_decode64(invitation_token, padding: false) do
-    #     {:ok, token} ->
-    #       from(i in Invitation,
-    #         where: i.token == ^token
-    #       )
-    #       |> repo.delete_all()
-    #       |> case do
-    #         {1, _} -> {:ok, :ok}
-    #         _ -> {:error, :invalid_token}
-    #       end
-
-    #     :error ->
-    #       {:error, :invalid_token}
-    #   end
-    # end)
-    # |> Ecto.Multi.insert(:user, changeset)
-    # |> Repo.transaction()
-    # |> case do
-    #   {:ok, %{user: user}} -> {:ok, user}
-    #   {:error, :invitation, _, _} -> {:error, :invalid_token}
-    #   {:error, :user, changeset, _} -> {:error, changeset}
-    # end
-
-    Repo.transaction(fn repo ->
+    Ecto.Multi.new()
+    |> Ecto.Multi.run(:invitation, fn repo, _ ->
       case Base.url_decode64(invitation_token, padding: false) do
         {:ok, token} ->
-          {n, _} =
-            from(i in Invitation,
-              where: i.token == ^token
-            )
-            |> repo.delete_all()
-
-          if n != 1, do: repo.rollback(:invalid_token)
+          from(i in Invitation,
+            where: i.token == ^token
+          )
+          |> repo.delete_all()
+          |> case do
+            {1, _} -> {:ok, :ok}
+            _ -> {:error, :invalid_token}
+          end
 
         :error ->
-          repo.rollback(:invalid_token)
-      end
-      %User{}
-      |> User.registration_changeset(attrs)
-      |> repo.insert()
-      |> case do
-        {:ok, user} -> user
-        {:error, changeset} -> repo.rollback(changeset)
+          {:error, :invalid_token}
       end
     end)
+    |> Ecto.Multi.insert(:user, changeset)
+    |> Ecto.Multi.run(:job_request, fn repo, %{user: user} ->
+      jobs =
+        from(j in Recake.Jobs.Job,
+          where: j.state == ^"active",
+          order_by: [desc: j.inserted_at],
+          limit: 1
+        )
+        |> Recake.Repo.all()
+
+      case jobs do
+        [job] ->
+          repo.insert(%Recake.Jobs.Request{recipient_id: user.id, job_id: job.id})
+
+          {:ok, :request_created}
+
+        [] ->
+          {:ok, :request_not_created}
+      end
+    end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{user: user}} -> {:ok, user}
+      {:error, :invitation, _, _} -> {:error, :invalid_token}
+      {:error, :user, changeset, _} -> {:error, changeset}
+    end
   end
 
   def change_user_registration(%User{} = user, attrs \\ %{}) do
@@ -214,7 +210,8 @@ defmodule Recake.Accounts do
 
   def list_invitations() do
     from(i in Invitation,
-      order_by: [desc: i.inserted_at])
+      order_by: [desc: i.inserted_at]
+    )
     |> Repo.all()
   end
 
