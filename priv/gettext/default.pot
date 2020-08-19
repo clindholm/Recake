@@ -175,19 +175,19 @@ msgid "Remember me"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:108
+#: lib/recake_web/templates/inbox/index.html.eex:111
 msgid "%{count} sent request"
 msgid_plural "%{count} sent"
 msgstr[0] ""
 msgstr[1] ""
 
 #, elixir-format
-#: lib/recake_web/controllers/job_request_controller.ex:14
+#: lib/recake_web/controllers/job_request_controller.ex:25
 msgid "%{company} has been notifed of your interest"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/controllers/job_request_controller.ex:27
+#: lib/recake_web/controllers/job_request_controller.ex:39
 msgid "%{company} has been notifed of your lack of interest"
 msgstr ""
 
@@ -197,12 +197,12 @@ msgid "A link to confirm your e-mail has been sent to the new address."
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:121
+#: lib/recake_web/templates/inbox/index.html.eex:124
 msgid "Available"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:134
+#: lib/recake_web/templates/inbox/index.html.eex:137
 msgid "Available recruits"
 msgstr ""
 
@@ -225,7 +225,7 @@ msgid "Contact name"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:87
+#: lib/recake_web/templates/inbox/index.html.eex:90
 #: lib/recake_web/templates/job/new.html.eex:1
 msgid "Create request"
 msgstr ""
@@ -247,22 +247,22 @@ msgid "E-mail updated successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:103
+#: lib/recake_web/templates/inbox/index.html.eex:106
 msgid "Edit"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:19
+#: lib/recake_web/templates/inbox/index.html.eex:22
 msgid "Inbox"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/views/form_helpers.ex:88
+#: lib/recake_web/views/form_helpers.ex:93
 msgid "Max %{count} characters"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:68
+#: lib/recake_web/templates/inbox/index.html.eex:71
 msgid "No thanks"
 msgstr ""
 
@@ -273,12 +273,12 @@ msgid "Organization number"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:129
+#: lib/recake_web/templates/inbox/index.html.eex:132
 msgid "Pending"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:162
+#: lib/recake_web/templates/inbox/index.html.eex:175
 msgid "Pending or declined"
 msgstr ""
 
@@ -293,7 +293,7 @@ msgid "Profile updated successfully"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:81
+#: lib/recake_web/templates/inbox/index.html.eex:84
 msgid "Recruits"
 msgstr ""
 
@@ -309,12 +309,12 @@ msgid "Settings"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:67
+#: lib/recake_web/views/inbox_view.ex:18
 msgid "Show interest"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:125
+#: lib/recake_web/templates/inbox/index.html.eex:128
 msgid "Unavailable"
 msgstr ""
 
@@ -334,12 +334,12 @@ msgid "You need an invitation to register a new account"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:24
+#: lib/recake_web/templates/inbox/index.html.eex:27
 msgid "empty inbox"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:92
+#: lib/recake_web/templates/inbox/index.html.eex:95
 msgid "empty recruitments"
 msgstr ""
 
@@ -349,12 +349,12 @@ msgid "Edit request"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/views/inbox_view.ex:19
+#: lib/recake_web/views/inbox_view.ex:50
 msgid "declined"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/views/inbox_view.ex:18
+#: lib/recake_web/views/inbox_view.ex:49
 msgid "pending"
 msgstr ""
 
@@ -369,7 +369,7 @@ msgid "Is ID06 required?"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:48
+#: lib/recake_web/templates/inbox/index.html.eex:51
 msgid "ID06 is required"
 msgstr ""
 
@@ -387,4 +387,19 @@ msgstr ""
 #: lib/recake_web/templates/admin/invitation/index.html.eex:6
 #: lib/recake_web/templates/layout/app.html.eex:27
 msgid "Invitations"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/job/_form.html.eex:7
+msgid "How many recruits are needed?"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/views/inbox_view.ex:23
+msgid "How many recruits do you have available?"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/controllers/job_request_controller.ex:60
+msgid "Your number of available recruits can't exceed the number requested"
 msgstr ""
