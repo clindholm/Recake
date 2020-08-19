@@ -188,6 +188,7 @@ defmodule Recake.JobsTest do
                :location,
                :internal_id,
                :id06_required,
+               :recruit_count,
                :user_id
              ]
     end
@@ -239,13 +240,30 @@ defmodule Recake.JobsTest do
              } = errors_on(changeset)
     end
 
+    test "validates minimum recruit_count" do
+      {:error, changeset} =
+        Jobs.publish_job(%User{}, %{recruit_count: 0})
+
+      error =
+        dgettext(
+          "errors",
+          "must be greater than %{number}",
+          number: 0
+        )
+
+      assert %{
+        recruit_count: [^error]
+      } = errors_on(changeset)
+    end
+
     test "publishes job for user", %{user: user} do
       {:ok, job} =
         Jobs.publish_job(user, %{
           description: "Description",
           location: "Location",
           internal_id: "Internal Id",
-          id06_required: true
+          id06_required: true,
+          recruit_count: 5
         })
 
       assert job == Jobs.get_job(job.id)
@@ -323,7 +341,8 @@ defmodule Recake.JobsTest do
       request = job_request_fixture(user, job)
 
       %{
-        request: request
+        request: request,
+        job: job
       }
     end
 
@@ -332,6 +351,20 @@ defmodule Recake.JobsTest do
 
       assert updated_request.state == "available"
       assert ^updated_request = Repo.get!(Request, request.id)
+    end
+
+    test "registers recruit count", %{request: request, job: job} do
+      Repo.update!(Ecto.Changeset.change(job, recruit_count: 3))
+
+      {:ok, updated_request} = Jobs.resolve_request(request, :available, 2)
+
+      assert updated_request.recruit_count == 2
+    end
+
+    test "does not register recruit count if it exceeds job recruit count", %{request: request, job: job} do
+      Repo.update!(Ecto.Changeset.change(job, recruit_count: 3))
+
+      assert {:error, :recruit_count_exceeded} = Jobs.resolve_request(request, :available, 5)
     end
 
     test "rejects request", %{request: request} do

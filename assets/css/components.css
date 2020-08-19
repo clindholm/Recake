@@ -122,6 +122,8 @@
   bottom: calc(100% + theme('spacing.1'));
   left: 50%;
   transform: translateX(-50%);
+  width: max-content;
+  max-width: theme('spacing.64');
 }
 [data-tooltip]:after {
   @apply border-4 border-b-0 border-transparent;
@@ -136,6 +138,6 @@
 [data-tooltip]:before, [data-tooltip]:after {
   @apply absolute transition duration-200 ease-in-out opacity-0 pointer-events-none;
 }
-[data-tooltip]:hover:before, [data-tooltip]:hover:after {
+[data-tooltip]:hover:before, [data-tooltip]:focus-within:before, [data-tooltip]:hover:after, [data-tooltip]:focus-within:after {
   @apply opacity-100;
 }

@@ -16,11 +16,11 @@ defmodule Recake.Jobs do
   end
 
   def list_user_jobs(user) do
-    # requests_query = from(req in Request, order_by: [asc: req.inserted_at])
+    requests_query = from(req in Request, order_by: [desc: req.recruit_count, asc: req.inserted_at])
 
     from(j in Job,
       where: j.user_id == ^user.id and j.state == ^"active",
-      preload: [requests: :recipient]
+      preload: [requests: ^{requests_query, :recipient}]
     )
     |> Repo.all()
   end
@@ -68,17 +68,26 @@ defmodule Recake.Jobs do
     |> Repo.update()
   end
 
-  def resolve_request(request, :available) do
-    request
-    |> Ecto.Changeset.change(state: "available")
-    |> Repo.update()
+  def resolve_request(request, state, recruit_count \\ 1)
+
+  def resolve_request(request, :available, recruit_count) do
+    job = get_job(request.job_id)
+
+    if recruit_count > job.recruit_count do
+      {:error, :recruit_count_exceeded}
+    else
+      request
+      |> Ecto.Changeset.change(state: "available", recruit_count: recruit_count)
+      |> Repo.update()
+    end
+
   end
 
-  def resolve_request(request, :unavailable) do
+  def resolve_request(request, :unavailable, _) do
     request
     |> Ecto.Changeset.change(state: "unavailable")
     |> Repo.update()
   end
 
-  def resolve_request(_request, _state), do: {:error, :invalid_resolution}
+  def resolve_request(_request, _state, _), do: {:error, :invalid_resolution}
 end

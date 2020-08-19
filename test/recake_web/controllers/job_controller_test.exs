@@ -35,6 +35,7 @@ defmodule RecakeWeb.JobControllerTest do
         "textarea[name=\"job[description]\"]",
         "input[name=\"job[location]\"]",
         "input[name=\"job[id06_required]\"]",
+        "input[name=\"job[recruit_count]\"]",
         "*[type=submit]"
       ])
     end
@@ -97,6 +98,8 @@ defmodule RecakeWeb.JobControllerTest do
       |> assert_form(Routes.job_path(conn, :update, job), [
         "textarea[name=\"job[description]\"]",
         "input[name=\"job[location]\"]",
+        "input[name=\"job[id06_required]\"]",
+        "input[name=\"job[recruit_count]\"]",
         "*[type=submit]"
       ])
     end

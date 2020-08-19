@@ -1,9 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:none">
     <symbol viewBox="0 0 384 512" id="icon-location">
-        <path fill="currentColor" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
+      <path fill="currentColor" d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"></path>
     </symbol>
     <symbol viewBox="0 0 576 512" id="icon-warning">
-        <g class="fa-group"><path fill="currentColor" d="M569.52 440L329.58 24c-18.44-32-64.69-32-83.16 0L6.48 440c-18.42 31.94 4.64 72 41.57 72h479.89c36.87 0 60.06-40 41.58-72zM288 448a32 32 0 1 1 32-32 32 32 0 0 1-32 32zm38.24-238.41l-12.8 128A16 16 0 0 1 297.52 352h-19a16 16 0 0 1-15.92-14.41l-12.8-128A16 16 0 0 1 265.68 192h44.64a16 16 0 0 1 15.92 17.59z" opacity="0.4"></path><path fill="currentColor" d="M310.32 192h-44.64a16 16 0 0 0-15.92 17.59l12.8 128A16 16 0 0 0 278.48 352h19a16 16 0 0 0 15.92-14.41l12.8-128A16 16 0 0 0 310.32 192zM288 384a32 32 0 1 0 32 32 32 32 0 0 0-32-32z"></path></g>
+      <g class="fa-group"><path fill="currentColor" d="M569.52 440L329.58 24c-18.44-32-64.69-32-83.16 0L6.48 440c-18.42 31.94 4.64 72 41.57 72h479.89c36.87 0 60.06-40 41.58-72zM288 448a32 32 0 1 1 32-32 32 32 0 0 1-32 32zm38.24-238.41l-12.8 128A16 16 0 0 1 297.52 352h-19a16 16 0 0 1-15.92-14.41l-12.8-128A16 16 0 0 1 265.68 192h44.64a16 16 0 0 1 15.92 17.59z" opacity="0.4"></path><path fill="currentColor" d="M310.32 192h-44.64a16 16 0 0 0-15.92 17.59l12.8 128A16 16 0 0 0 278.48 352h19a16 16 0 0 0 15.92-14.41l12.8-128A16 16 0 0 0 310.32 192zM288 384a32 32 0 1 0 32 32 32 32 0 0 0-32-32z"></path></g>
+    </symbol>
+    <symbol viewBox="0 0 640 512" id="icon-user-plus">
+      <path fill="currentColor" d="M624 208h-64v-64c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v64h-64c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h64v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-64h64c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zm-400 48c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path>
     </symbol>
 </svg>
 
@@ -27,7 +30,7 @@
 
       <div class="mt-6 space-y-4">
         <%= for request <- @incoming_requests do %>
-        <div class="card p-0 flex flex-col">
+        <div class="card p-0 flex flex-col" id="req-<%= request.id %>">
           <div class="p-4 border-b flex-1">
             <div class="flex justify-between">
               <h3 class="text-lg font-bold text-gray-800">
@@ -64,7 +67,7 @@
           </div>
 
           <%= form_for @conn, Routes.job_request_path(@conn, :update, request), [class: "flex p-4", method: :put], fn _f -> %>
-            <button name="available" class="flex-1 py-2 text-green-500 border border-r-0 border-green-500 hover:bg-green-500 hover:text-white rounded-l"><%= gettext("Show interest") %></button>
+            <%= request_acceptance_input(request) %>
             <button name="unavailable" class="flex-1 py-2 text-red-500 border border-red-500 hover:bg-red-500 hover:text-white rounded-r"><%= gettext("No thanks") %></button>
           <% end %>
 
@@ -142,6 +145,15 @@
                 <%= request.recipient.organization_number %>
               </p>
 
+              <%= if job.recruit_count > 1 do %>
+              <div class="flex mt-2 text-gray-700">
+                <svg class="mr-2 text-gray-600" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+                  <use href="#icon-user-plus" />
+                </svg>
+                <%= request.recruit_count %> / <%= job.recruit_count %>
+              </div>
+              <% end %>
+
               <div class="pl-1">
                 <p class="text-gray-700 mt-1 -mb-1">
                   <%= request.recipient.contact_name %>
@@ -155,6 +167,7 @@
                   </p>
                 </div>
               </div>
+
             </div>
             <% end %>
           </div>

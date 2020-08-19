@@ -75,7 +75,7 @@ msgid "must be less than %{number}"
 msgstr ""
 
 msgid "must be greater than %{number}"
-msgstr ""
+msgstr "måste vara större än %{number}"
 
 msgid "must be less than or equal to %{number}"
 msgstr ""

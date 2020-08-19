@@ -61,6 +61,20 @@ defmodule RecakeWeb.InboxControllerTest do
       ])
     end
 
+    test "renders recruit count input for jobs that need more than one", %{conn: conn, user: user} do
+      job1 = job_fixture(user, %{ recruit_count: 1 })
+      job2 = job_fixture(user, %{ recruit_count: 3 })
+
+      request1 = job_request_fixture(user, job1)
+      request2 = job_request_fixture(user, job2)
+
+      conn
+      |> get(Routes.inbox_path(conn, :index))
+      |> html_document()
+      |> refute_selector("#req-#{request1.id} input[name=\"recruit_count\"]")
+      |> assert_selector("#req-#{request2.id} input[name=\"recruit_count\"]")
+    end
+
     test "renders ID06 requirements", %{conn: conn, user: user} do
       job1 = job_fixture(user)
       job2 = job_fixture(user, %{ id06_required: true })

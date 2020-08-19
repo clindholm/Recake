@@ -326,6 +326,34 @@
         secret_key_base: "{{ production_secret_key_base }}"
         db_url: "postgresql://{{ production_db_username }}:{{ production_db_password }}@localhost/{{ production_db_name }}"
 
+    - name: Copy remote shell script - staging
+      template:
+        src: templates/remote.sh.j2
+        dest: /home/{{ deploy_user }}/remote_staging.sh
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_user }}"
+        mode: u=rwx,g=r,o=r
+      vars:
+        server_type: "Staging"
+        path: "/home/{{ deploy_user }}/staging"
+        host: staging.recake.se
+        secret_key_base: "{{ staging_secret_key_base }}"
+        db_url: "postgresql://{{ staging_db_username }}:{{ staging_db_password }}@localhost/{{ staging_db_name }}"
+
+    - name: Copy remote shell script - production
+      template:
+        src: templates/remote.sh.j2
+        dest: /home/{{ deploy_user }}/remote_production.sh
+        owner: "{{ deploy_user }}"
+        group: "{{ deploy_user }}"
+        mode: u=rwx,g=r,o=r
+      vars:
+        server_type: "production"
+        path: "/home/{{ deploy_user }}/production"
+        host: app.recake.se
+        secret_key_base: "{{ production_secret_key_base }}"
+        db_url: "postgresql://{{ production_db_username }}:{{ production_db_password }}@localhost/{{ production_db_name }}"
+
 # Recake service
 
     - name: Setup systemd file - staging

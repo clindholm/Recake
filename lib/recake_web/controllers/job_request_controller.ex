@@ -3,11 +3,22 @@ defmodule RecakeWeb.JobRequestController do
 
   alias Recake.Jobs
 
-  def update(conn, %{"id" => id, "available" => _}) do
+  def update(conn, %{"id" => id, "available" => _} = props) do
+    recruit_count =
+      if Map.has_key?(props, "recruit_count") do
+        case Integer.parse(Map.get(props, "recruit_count")) do
+          {integer, _} -> integer
+          _ -> 1
+        end
+      else
+        1
+      end
+
     resolve(
       conn,
       id,
       :available,
+      recruit_count,
       &put_flash(
         &1,
         :success,
@@ -21,6 +32,7 @@ defmodule RecakeWeb.JobRequestController do
       conn,
       id,
       :unavailable,
+      1,
       &put_flash(
         &1,
         :info,
@@ -33,15 +45,23 @@ defmodule RecakeWeb.JobRequestController do
     redirect(conn, to: Routes.inbox_path(conn, :index))
   end
 
-  defp resolve(conn, request_id, action, flash_f) do
+  defp resolve(conn, request_id, action, recruit_count, flash_f) do
     request = Jobs.get_job_request(request_id)
 
     if request.recipient_id == conn.assigns.current_user.id && request.state == "pending" do
-      Jobs.resolve_request(request, action)
+      case Jobs.resolve_request(request, action, recruit_count) do
+        {:ok, _} ->
+          conn
+          |> flash_f.(request.job.user.company)
+          |> redirect(to: Routes.inbox_path(conn, :index))
 
-      conn
-      |> flash_f.(request.job.user.company)
-      |> redirect(to: Routes.inbox_path(conn, :index))
+        {:error, :recruit_count_exceeded} ->
+          conn
+          |> put_flash(:error, gettext("Your number of available recruits can't exceed the number requested"))
+          |> redirect(to: Routes.inbox_path(conn, :index))
+
+      end
+
     else
       redirect(conn, to: Routes.inbox_path(conn, :index))
     end

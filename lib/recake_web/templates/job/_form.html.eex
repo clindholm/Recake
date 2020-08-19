@@ -4,6 +4,7 @@
     <%= Form.text_input f, :location, label: gettext("Location") %>
     <%= Form.text_input f, :internal_id, label: gettext("Internal ID") %>
     <%= Form.toggle f, :id06_required, label: gettext("Is ID06 required?") %>
+    <%= Form.number_input f, :recruit_count, min: 1, full?: false, label: gettext("How many recruits are needed?") %>
     <%= Form.layout_right do %>
       <%= Form.submit @submit_label %>
     <% end %>

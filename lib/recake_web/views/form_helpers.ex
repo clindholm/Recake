@@ -14,19 +14,24 @@ defmodule RecakeWeb.FormHelpers do
     input(&Phoenix.HTML.Form.password_input/3, form, field, opts)
   end
 
+  def number_input(form, field, opts \\ []) do
+    input(&Phoenix.HTML.Form.number_input/3, form, field, opts)
+  end
+
   defp input(type_f, form, field, opts) do
     label = Keyword.get(opts, :label) || Phoenix.HTML.Form.humanize(field)
     errors = error_tag(form, field)
 
     input_classes =
       class_list([
-        {"form-input mt-1 block w-full", true},
+        {"w-full", Keyword.get(opts, :full?, true)},
+        {"form-input mt-1 block", true},
         {"border-red-500 border-2", errors}
       ])
 
     opts =
       opts
-      |> Keyword.take([:name, :id])
+      |> Keyword.take([:name, :id, :min, :max])
       |> Keyword.put(:class, input_classes)
 
     ~E"""

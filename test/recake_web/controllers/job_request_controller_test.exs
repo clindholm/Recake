@@ -64,6 +64,25 @@ defmodule ByggAppWeb.JobRequestControllerTest do
       assert Repo.get!(Recake.Jobs.Request, request.id).state == "unavailable"
     end
 
+    test "registers recruit count", %{conn: conn, request: request, job: job} do
+      Repo.update!(Ecto.Changeset.change(job, recruit_count: 3))
+
+      put(conn, Routes.job_request_path(conn, :update, request.id), %{"available" => "", "recruit_count" => "3"})
+
+      assert Repo.get!(Recake.Jobs.Request, request.id).recruit_count == 3
+    end
+
+    test "shows error when request recruit count > job recruit count", %{conn: conn, request: request, job: job} do
+      Repo.update!(Ecto.Changeset.change(job, recruit_count: 2))
+
+      conn = put(conn, Routes.job_request_path(conn, :update, request.id), %{"available" => "", "recruit_count" => "3"})
+      assert get_flash(conn, :error) == gettext("Your number of available recruits can't exceed the number requested")
+
+      current_request = Repo.get!(Recake.Jobs.Request, request.id)
+      assert current_request.recruit_count == 1
+      assert current_request.state == "pending"
+    end
+
     test "does not resolve other user's requests", %{conn: conn, job: job} do
       other_user = user_fixture()
       request = job_request_fixture(other_user, job)
