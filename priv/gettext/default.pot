@@ -403,3 +403,13 @@ msgstr ""
 #: lib/recake_web/controllers/job_request_controller.ex:60
 msgid "Your number of available recruits can't exceed the number requested"
 msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/admin/invitation/index.html.eex:16
+msgid "Created"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/admin/invitation/index.html.eex:17
+msgid "URL"
+msgstr ""

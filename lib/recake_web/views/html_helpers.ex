@@ -34,4 +34,10 @@ defmodule RecakeWeb.HtmlHelpers do
     |> Timex.Timezone.convert("Europe/Stockholm")
     |> Timex.format!("{D} {Mshort} {YYYY}, {h24}:{m}")
   end
+
+  def render_datetime(datetime) do
+    datetime
+    |> Timex.Timezone.convert("Europe/Stockholm")
+    |> Timex.format!("{ISOdate} {ISOtime}")
+  end
 end

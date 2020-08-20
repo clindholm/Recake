@@ -15,7 +15,7 @@ defmodule RecakeWeb.Admin.InvitationController do
   end
 
   def create(conn, _) do
-    Accounts.create_invitation()
+    Accounts.create_invitation(conn.assigns.current_user.id)
 
     conn
     |> put_flash(:success, gettext("Invitation created"))

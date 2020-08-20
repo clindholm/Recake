@@ -10,8 +10,32 @@
   <% end %>
 </div>
 <div class="card p-8 mt-6">
-  <%= for i <- @invitations do %>
-    <% url = Routes.user_registration_url(@conn, :new, token: Base.url_encode64(i.token, padding: false)) %>
-    <p class="mb-2"><%= url %></p>
-  <% end %>
+  <table>
+    <thead>
+      <tr>
+        <th class="pr-4"><%= gettext("Created") %></th>
+        <th><%= gettext("URL") %></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for i <- @invitations do %>
+        <tr class="mb-">
+          <td class="pr-4">
+            <p>
+              <%= if i.creator, do: i.creator.contact_name, else: {:safe, "<em>&lt;system&gt;</em>"} %>
+            </p>
+            <p class="text-xs text-gray-800">
+              <%= render_datetime(i.inserted_at) %>
+            </p>
+          </td>
+          <td class="pb-2">
+            <% url = Routes.user_registration_url(@conn, :new, token: Base.url_encode64(i.token, padding: false)) %>
+            <a href="url" class="break-all"><%= url %></p>
+          </td>
+          <td></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

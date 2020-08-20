@@ -210,13 +210,14 @@ defmodule Recake.Accounts do
 
   def list_invitations() do
     from(i in Invitation,
-      order_by: [desc: i.inserted_at]
+      order_by: [desc: i.inserted_at],
+      preload: :creator
     )
     |> Repo.all()
   end
 
-  def create_invitation() do
-    {token, invitation} = Invitation.invitation_token()
+  def create_invitation(creator_id \\ nil) do
+    {token, invitation} = Invitation.invitation(creator_id)
 
     Repo.insert!(invitation)
 

@@ -696,6 +696,16 @@ defmodule Recake.AccountsTest do
 
       assert Repo.one(from i in Invitation, where: i.token == ^token)
     end
+
+    test "associates optional creator" do
+      creator = user_fixture()
+
+      token = Accounts.create_invitation(creator.id)
+      token = Base.url_decode64!(token, padding: false)
+
+      invitation = Repo.one(from i in Invitation, where: i.token == ^token)
+      assert invitation.creator_id == creator.id
+    end
   end
 
   describe "verify_invitation/0" do
