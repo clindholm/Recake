@@ -40,7 +40,7 @@
                 <%= Timex.format!(request.inserted_at, "{relative}", :relative) %>
               </p>
             </div>
-            <p class="text-gray-600 text-sm -mt-1"><%= request.job.user.organization_number %></p>
+            <p class="text-gray-600 text-sm -mt-1"><%= gettext("org. nr") %>: <%= request.job.user.organization_number %></p>
 
             <%= if request.job.id06_required do %>
             <div class="mt-2 mb-3 flex justify-between text-base text-yellow-800 id06-warning">
@@ -81,7 +81,7 @@
         <div class="flex items-center">
           <svg class="text-white bg-blue-500 flex items-center justify-center p-1 rounded-lg" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 640 512"><g class="fa-group"><path class="fa-secondary" fill="currentColor" d="M96 224a64 64 0 1 0-64-64 64.06 64.06 0 0 0 64 64zm480 32h-64a63.81 63.81 0 0 0-45.1 18.6A146.27 146.27 0 0 1 542 384h66a32 32 0 0 0 32-32v-32a64.06 64.06 0 0 0-64-64zm-512 0a64.06 64.06 0 0 0-64 64v32a32 32 0 0 0 32 32h65.9a146.64 146.64 0 0 1 75.2-109.4A63.81 63.81 0 0 0 128 256zm480-32a64 64 0 1 0-64-64 64.06 64.06 0 0 0 64 64z" opacity="0.4"></path><path class="fa-primary" fill="currentColor" d="M396.8 288h-8.3a157.53 157.53 0 0 1-68.5 16c-24.6 0-47.6-6-68.5-16h-8.3A115.23 115.23 0 0 0 128 403.2V432a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48v-28.8A115.23 115.23 0 0 0 396.8 288zM320 256a112 112 0 1 0-112-112 111.94 111.94 0 0 0 112 112z"></path></g></svg>
           <p class="ml-4 text-lg">
-            <%= gettext("Recruits") %>
+            <%= gettext("Workforce") %>
           </p>
         </div>
 
@@ -134,7 +134,7 @@
             </div>
           </div>
 
-          <h4 class="text-gray-600 mt-6"><%= gettext("Available recruits") %></h4>
+          <h4 class="text-gray-600 mt-6"><%= gettext("Available") %></h4>
           <div class="active-recruits space-y-4">
             <%= for request <- job.requests.available do %>
             <div class="hover:bg-gray-100 focus-within:bg-gray-100 p-4 rounded">
@@ -142,7 +142,7 @@
                 <%= request.recipient.company %>
               </p>
               <p class="text-sm text-gray-600 -mt-1">
-                <%= request.recipient.organization_number %>
+                <%= gettext("org. nr") %>: <%= request.recipient.organization_number %>
               </p>
 
               <%= if job.recruit_count > 1 do %>
@@ -172,7 +172,7 @@
             <% end %>
           </div>
           <details class="inactive-recruits mt-8">
-            <summary class="text-gray-600"><%= gettext("Pending or declined") %></summary>
+            <summary class="text-gray-600"><%= gettext("Other") %></summary>
 
             <%= for request <- job.requests.hidden do %>
             <p class="mt-2">

@@ -199,12 +199,8 @@ msgstr ""
 
 #, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:124
-msgid "Available"
-msgstr ""
-
-#, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:137
-msgid "Available recruits"
+msgid "Available"
 msgstr ""
 
 #, elixir-format
@@ -279,11 +275,6 @@ msgid "Pending"
 msgstr ""
 
 #, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:175
-msgid "Pending or declined"
-msgstr ""
-
-#, elixir-format
 #: lib/recake_web/templates/user_settings/edit.html.eex:8
 msgid "Profile"
 msgstr ""
@@ -291,11 +282,6 @@ msgstr ""
 #, elixir-format
 #: lib/recake_web/controllers/user_settings_controller.ex:19
 msgid "Profile updated successfully"
-msgstr ""
-
-#, elixir-format
-#: lib/recake_web/templates/inbox/index.html.eex:84
-msgid "Recruits"
 msgstr ""
 
 #, elixir-format
@@ -405,7 +391,7 @@ msgstr ""
 msgid "Your number of available recruits can't exceed the number requested"
 msgstr ""
 
-#, elixir-format, fuzzy
+#, elixir-format
 #: lib/recake_web/templates/admin/invitation/index.html.eex:16
 msgid "Created"
 msgstr ""
@@ -413,4 +399,20 @@ msgstr ""
 #, elixir-format
 #: lib/recake_web/templates/admin/invitation/index.html.eex:17
 msgid "URL"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:175
+msgid "Other"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:84
+msgid "Workforce"
+msgstr ""
+
+#, elixir-format
+#: lib/recake_web/templates/inbox/index.html.eex:43
+#: lib/recake_web/templates/inbox/index.html.eex:145
+msgid "org. nr"
 msgstr ""
