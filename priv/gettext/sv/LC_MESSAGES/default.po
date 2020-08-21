@@ -328,7 +328,7 @@ msgstr "Du har inga ohanterade förfrågningar."
 #, elixir-format
 #: lib/recake_web/templates/inbox/index.html.eex:95
 msgid "empty recruitments"
-msgstr "Du har inga pågående rekryteringssökningar"
+msgstr "Du har inga pågående skickade förfrågningar"
 
 #, elixir-format
 #: lib/recake_web/templates/job/edit.html.eex:1
@@ -379,17 +379,17 @@ msgstr "Inbjudningar"
 #, elixir-format
 #: lib/recake_web/templates/job/_form.html.eex:7
 msgid "How many recruits are needed?"
-msgstr "Hur många rekryter behövs?"
+msgstr "Hur mycket arbetskraft behövs?"
 
 #, elixir-format
 #: lib/recake_web/views/inbox_view.ex:23
 msgid "How many recruits do you have available?"
-msgstr "Hur många rekryter finns tillgängliga?"
+msgstr "Hur mycket arbetskraft finns tillgängligt?"
 
 #, elixir-format
 #: lib/recake_web/controllers/job_request_controller.ex:60
 msgid "Your number of available recruits can't exceed the number requested"
-msgstr "Ditt antal rekryter kan inte överstiga det antal som efterfrågas"
+msgstr "Antalet arbetskraft kan inte överstiga det antal som efterfrågas"
 
 #, elixir-format
 #: lib/recake_web/templates/admin/invitation/index.html.eex:16
