@@ -1,5 +1,5 @@
 # Recake
 
-Application to let electrians help each other with assignments.
+Application to let electricians help each other with assignments.
 
-Abandoned in its current state but, basically, a production ready system.
+Abandoned in its current state but, basically, a production-ready system
